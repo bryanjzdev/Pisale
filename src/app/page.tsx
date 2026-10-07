@@ -1,200 +1,249 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { CalendarDays, MapPin, Zap, ArrowRight, Trophy, Timer, TrendingUp, Users, ChevronRight } from "lucide-react";
+import Link from "next/link";
+import {
+  ArrowRight,
+  Zap,
+  Trophy,
+  Timer,
+  Users,
+  QrCode,
+  Activity,
+  ShieldCheck,
+  BadgeCheck,
+  Sparkles,
+  TrendingUp,
+  Building2,
+} from "lucide-react";
+import { RacesSection } from "@/components/RacesSection";
 
-const MOCK_RACES = [
-  {
-    id: "1",
-    title: "Medio Maratón Ciudad de México 2026",
-    date: "15 Nov 2026",
-    location: "CDMX, México",
-    imageUrl: "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&q=80&w=800",
-    price: "$650 MXN",
-    status: "Últimos Lugares",
-    statusColor: "bg-rose-100 text-rose-600 border-rose-200",
-    participants: "15,000+",
-  },
-  {
-    id: "2",
-    title: "Trail Nocturno Desierto de los Leones",
-    date: "03 Dic 2026",
-    location: "Cuajimalpa, CDMX",
-    imageUrl: "https://images.unsplash.com/photo-1502224562085-639556652f33?auto=format&fit=crop&q=80&w=800",
-    price: "$450 MXN",
-    status: "Inscripciones Abiertas",
-    statusColor: "bg-teal-100 text-teal-700 border-teal-200",
-    participants: "2,000+",
-  },
-  {
-    id: "3",
-    title: "5K Neón Night Run",
-    date: "20 Ene 2027",
-    location: "Monterrey, N.L.",
-    imageUrl: "https://images.unsplash.com/photo-1516445084931-15b67bb423e2?auto=format&fit=crop&q=80&w=800",
-    price: "$350 MXN",
-    status: "Early Bird",
-    statusColor: "bg-blue-100 text-blue-700 border-blue-200",
-    participants: "5,000+",
-  }
+const CITIES = ["CDMX", "Monterrey", "Guadalajara", "Puebla", "Querétaro", "Mérida", "Oaxaca", "Tijuana", "León", "Cancún"];
+
+const LIVE_RESULTS = [
+  { pos: 1, name: "Andrea M.", time: "1:12:48", color: "from-amber-300 to-orange-400" },
+  { pos: 2, name: "Luis R.", time: "1:13:05", color: "from-slate-200 to-slate-300" },
+  { pos: 3, name: "Sofía G.", time: "1:13:41", color: "from-orange-200 to-amber-300" },
 ];
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-blue-500/20 selection:text-blue-900">
-      
-      {/* BACKGROUND ELEMENTS - Light & Clean */}
-      <div className="fixed inset-0 z-0 pointer-events-none flex justify-center overflow-hidden">
-        {/* Soft gradient orbs */}
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-400/20 rounded-full blur-[120px] mix-blend-multiply" />
-        <div className="absolute top-[20%] right-[-10%] w-[40%] h-[40%] bg-purple-400/20 rounded-full blur-[100px] mix-blend-multiply" />
-        <div className="absolute bottom-[-10%] left-[20%] w-[60%] h-[60%] bg-cyan-400/10 rounded-full blur-[150px] mix-blend-multiply" />
+    <div className="relative overflow-hidden text-slate-900 selection:bg-fuchsia-200 selection:text-fuchsia-900">
+      {/* ===== Fondo: aurora + grid ===== */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[1100px]">
+        <div className="bg-grid absolute inset-0" />
+        <div className="absolute -left-40 -top-40 h-[620px] w-[620px] rounded-full bg-violet-300/40 blur-[130px]" />
+        <div className="absolute -right-32 top-10 h-[520px] w-[520px] rounded-full bg-fuchsia-300/35 blur-[120px]" />
+        <div className="absolute left-1/3 top-[420px] h-[420px] w-[520px] rounded-full bg-orange-200/40 blur-[120px]" />
       </div>
 
-      {/* HERO SECTION */}
-      <section className="relative z-10 w-full min-h-[85vh] flex flex-col items-center justify-center pt-24 pb-16">
-        
-        <div className="container mx-auto px-4 text-center max-w-5xl">
-          
-          <div className="inline-flex items-center justify-center px-5 py-2 mb-8 rounded-full bg-white/60 border border-slate-200/60 backdrop-blur-md shadow-sm transition-transform hover:scale-105 cursor-pointer group">
-            <span className="flex h-2.5 w-2.5 rounded-full bg-blue-600 mr-3 animate-pulse" />
-            <span className="text-sm font-semibold text-slate-700 group-hover:text-blue-700 transition-colors">
-              Pisale 2.0 ya está disponible <ChevronRight className="inline w-4 h-4 ml-1 opacity-60" />
+      {/* ===== HERO ===== */}
+      <section className="relative z-10 mx-auto grid max-w-7xl items-center gap-16 px-4 pb-20 pt-36 md:pt-44 lg:grid-cols-[1.1fr_1fr]">
+        <div className="text-center lg:text-left">
+          <Link
+            href="#carreras"
+            className="animate-fade-up group mb-8 inline-flex items-center gap-2 rounded-full border border-white bg-white/70 py-1.5 pl-1.5 pr-4 text-sm font-semibold text-slate-700 shadow-sm backdrop-blur-xl transition-all hover:shadow-md"
+          >
+            <span className="flex items-center gap-1 rounded-full bg-linear-to-r from-violet-600 to-fuchsia-600 px-2.5 py-0.5 text-xs font-bold text-white">
+              <Sparkles className="h-3 w-3" /> Nuevo
             </span>
-          </div>
-          
-          <h1 className="text-6xl md:text-8xl font-black tracking-tight mb-6 text-slate-900 leading-[1.1]">
-            Correr nunca había sido <br className="hidden md:block"/>
-            <span className="relative inline-block mt-2">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 drop-shadow-sm">
-                tan extraordinario.
-              </span>
-            </span>
+            Resultados en vivo con chip RFID
+            <ArrowRight className="h-4 w-4 text-slate-400 transition-transform group-hover:translate-x-0.5" />
+          </Link>
+
+          <h1
+            className="animate-fade-up font-display text-5xl font-extrabold leading-[1.02] tracking-tight text-slate-900 sm:text-6xl md:text-7xl xl:text-[5.5rem]"
+            style={{ animationDelay: "80ms" }}
+          >
+            Inscríbete.
+            <br />
+            Corre. <span className="text-brand">Písale.</span>
           </h1>
-          
-          <p className="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto mb-10 font-medium leading-relaxed">
-            Revolucionamos la gestión deportiva. Inscripciones instantáneas, boletos digitales y resultados en vivo. Todo en una sola plataforma diseñada para atletas.
+
+          <p
+            className="animate-fade-up mx-auto mt-7 max-w-xl text-lg font-medium leading-relaxed text-slate-500 md:text-xl lg:mx-0"
+            style={{ animationDelay: "160ms" }}
+          >
+            La plataforma de carreras más rápida de México. Inscripción en segundos, boleto digital con QR y tus tiempos en tiempo real.
           </p>
-          
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button size="lg" className="w-full sm:w-auto h-14 px-8 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-lg font-bold shadow-[0_8px_30px_rgb(37,99,235,0.3)] hover:shadow-[0_8px_40px_rgb(37,99,235,0.4)] hover:-translate-y-0.5 transition-all duration-300">
-              Explorar Carreras <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
-            <Button size="lg" variant="outline" className="w-full sm:w-auto h-14 px-8 text-lg font-bold rounded-xl border-slate-300 bg-white/50 hover:bg-white text-slate-700 shadow-sm backdrop-blur-sm transition-all hover:-translate-y-0.5">
-              Soy Organizador
-            </Button>
+
+          <div
+            className="animate-fade-up mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center lg:justify-start"
+            style={{ animationDelay: "240ms" }}
+          >
+            <Link
+              id="hero-explore"
+              href="#carreras"
+              className="btn-shine group flex h-14 w-full items-center justify-center gap-2 rounded-full bg-linear-to-r from-violet-600 via-fuchsia-600 to-orange-500 px-8 text-base font-bold text-white shadow-[0_14px_40px_-10px_rgba(192,38,211,0.6)] transition-all hover:-translate-y-0.5 hover:shadow-[0_20px_50px_-10px_rgba(192,38,211,0.7)] sm:w-auto"
+            >
+              Explorar carreras
+              <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+            </Link>
+            <Link
+              id="hero-organizer"
+              href="#organizadores"
+              className="flex h-14 w-full items-center justify-center gap-2 rounded-full border border-slate-200 bg-white/80 px-8 text-base font-bold text-slate-700 backdrop-blur-xl transition-all hover:-translate-y-0.5 hover:border-violet-200 hover:text-violet-700 hover:shadow-lg sm:w-auto"
+            >
+              <Building2 className="h-5 w-5" /> Soy organizador
+            </Link>
+          </div>
+
+          {/* Prueba social */}
+          <div
+            className="animate-fade-up mt-10 flex items-center justify-center gap-4 lg:justify-start"
+            style={{ animationDelay: "320ms" }}
+          >
+            <div className="flex -space-x-3">
+              {["from-violet-400 to-indigo-500", "from-fuchsia-400 to-pink-500", "from-orange-300 to-rose-400", "from-emerald-300 to-teal-500"].map((g, i) => (
+                <span key={i} className={`flex h-10 w-10 items-center justify-center rounded-full bg-linear-to-br ${g} text-xs font-bold text-white ring-4 ring-[#fbfaff]`}>
+                  {["AM", "LR", "SG", "JP"][i]}
+                </span>
+              ))}
+            </div>
+            <div className="text-left text-sm">
+              <p className="font-bold text-slate-900">+50,000 corredores</p>
+              <p className="font-medium text-slate-500">ya se inscriben con Písale</p>
+            </div>
           </div>
         </div>
 
-        {/* MOCKUP IMAGE - Light & Premium */}
-        <div className="mt-16 w-full max-w-5xl mx-auto px-4">
-          <div className="relative rounded-2xl border border-slate-200/80 bg-white/40 backdrop-blur-xl shadow-2xl p-2 overflow-hidden ring-1 ring-black/5">
-            <div className="flex items-center gap-2 px-4 py-3 border-b border-slate-200/50 bg-white/60">
-              <div className="w-3 h-3 rounded-full bg-rose-400" />
-              <div className="w-3 h-3 rounded-full bg-amber-400" />
-              <div className="w-3 h-3 rounded-full bg-emerald-400" />
+        {/* Composición flotante */}
+        <div className="relative mx-auto h-[520px] w-full max-w-[480px]">
+          {/* Ticket digital */}
+          <div className="animate-float absolute left-0 top-6 z-20 w-[300px] sm:left-6">
+            <div className="border-beam rounded-[1.75rem] border border-white bg-white/85 p-2 shadow-[0_30px_70px_-20px_rgba(91,33,182,0.45)] backdrop-blur-2xl">
+              <div className="relative overflow-hidden rounded-[1.35rem] bg-linear-to-br from-violet-600 via-fuchsia-600 to-orange-500 p-5 text-white">
+                <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-white/15 blur-xl" />
+                <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-white/75">Boleto digital</p>
+                <p className="mt-1 font-display text-2xl font-extrabold leading-tight">Medio Maratón CDMX</p>
+                <div className="mt-4 flex gap-5 text-sm">
+                  <div><p className="text-[10px] uppercase text-white/70">Fecha</p><p className="font-bold">15 Nov</p></div>
+                  <div><p className="text-[10px] uppercase text-white/70">Salida</p><p className="font-bold">06:30</p></div>
+                  <div><p className="text-[10px] uppercase text-white/70">Bloque</p><p className="font-bold">B</p></div>
+                </div>
+              </div>
+              <div className="flex items-center justify-between px-4 py-4">
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Número</p>
+                  <p className="font-display text-4xl font-extrabold tracking-tight text-slate-900">#2048</p>
+                </div>
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-violet-50 text-violet-700 ring-1 ring-violet-100">
+                  <QrCode className="h-10 w-10" />
+                </div>
+              </div>
             </div>
-            <div className="h-64 md:h-96 w-full bg-[url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center" />
           </div>
+
+          {/* Resultados en vivo */}
+          <div className="animate-float-slow absolute bottom-4 right-0 z-30 w-[280px] rounded-3xl border border-white bg-white/90 p-4 shadow-[0_30px_70px_-20px_rgba(190,24,93,0.35)] backdrop-blur-2xl" style={{ animationDelay: "1.2s" }}>
+            <div className="mb-3 flex items-center justify-between">
+              <p className="flex items-center gap-2 text-sm font-bold text-slate-900">
+                <Activity className="h-4 w-4 text-fuchsia-500" /> Resultados en vivo
+              </p>
+              <span className="flex items-center gap-1 rounded-full bg-rose-50 px-2 py-0.5 text-[10px] font-bold text-rose-600">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-rose-500" /> LIVE
+              </span>
+            </div>
+            <div className="space-y-2">
+              {LIVE_RESULTS.map((r) => (
+                <div key={r.pos} className="flex items-center gap-3 rounded-2xl bg-slate-50/80 p-2">
+                  <span className={`flex h-8 w-8 items-center justify-center rounded-xl bg-linear-to-br ${r.color} font-display text-sm font-extrabold text-slate-900`}>
+                    {r.pos}
+                  </span>
+                  <span className="flex-1 text-sm font-semibold text-slate-700">{r.name}</span>
+                  <span className="font-mono text-sm font-bold text-slate-900">{r.time}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Chip de ritmo */}
+          <div className="animate-float absolute right-4 top-0 z-10 flex items-center gap-3 rounded-2xl border border-white bg-white/85 px-4 py-3 shadow-xl shadow-violet-900/10 backdrop-blur-xl" style={{ animationDelay: "0.6s" }}>
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-emerald-400 to-teal-500 text-white">
+              <TrendingUp className="h-5 w-5" />
+            </span>
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Nuevo PR</p>
+              <p className="font-display text-lg font-extrabold text-slate-900">4:52 /km</p>
+            </div>
+          </div>
+
+          {/* Chip de confirmación */}
+          <div className="animate-float-slow absolute bottom-40 left-0 z-30 flex items-center gap-2 rounded-full border border-white bg-white/90 py-2 pl-2 pr-4 shadow-xl shadow-violet-900/10 backdrop-blur-xl" style={{ animationDelay: "2s" }}>
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-violet-600 text-white">
+              <BadgeCheck className="h-4 w-4" />
+            </span>
+            <p className="text-sm font-bold text-slate-800">Inscripción confirmada</p>
+          </div>
+
+          {/* Halo */}
+          <div className="absolute left-1/2 top-1/2 -z-0 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-linear-to-br from-violet-400/40 via-fuchsia-400/30 to-orange-300/40 blur-3xl" />
         </div>
       </section>
 
-      {/* STATS SECTION */}
-      <section className="relative z-20 py-20 bg-white/60 border-y border-slate-200 backdrop-blur-md">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4 divide-x-0 md:divide-x divide-slate-200 text-center">
-            {[
-              { icon: Users, label: "Corredores Activos", value: "50,000+" },
-              { icon: Trophy, label: "Carreras Exitosas", value: "320+" },
-              { icon: Timer, label: "Tiempo de Registro", value: "< 1 min" },
-              { icon: TrendingUp, label: "Satisfacción", value: "99.9%" },
-            ].map((stat, idx) => (
-              <div key={idx} className="flex flex-col items-center justify-center p-4">
-                <stat.icon className="w-8 h-8 text-blue-600 mb-3 opacity-80" />
-                <h3 className="text-4xl font-black text-slate-900 mb-2">{stat.value}</h3>
-                <p className="text-sm font-bold text-slate-500 uppercase tracking-widest">{stat.label}</p>
-              </div>
+      {/* ===== Marquee de ciudades ===== */}
+      <section className="relative z-10 border-y border-violet-100/80 bg-white/50 py-6 backdrop-blur-xl">
+        <div className="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_12%,#000_88%,transparent)]">
+          <div className="animate-marquee flex shrink-0 gap-14 pr-14">
+            {[...CITIES, ...CITIES].map((c, i) => (
+              <span key={i} className="flex items-center gap-3 whitespace-nowrap font-display text-2xl font-bold text-slate-300">
+                <Zap className="h-5 w-5 text-fuchsia-300" /> {c}
+              </span>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CARRERAS DESTACADAS */}
-      <section className="relative z-20 container mx-auto px-4 py-28">
-        <div className="flex flex-col md:flex-row items-end justify-between mb-12 gap-6">
-          <div className="max-w-2xl">
-            <Badge className="mb-4 bg-blue-100 text-blue-700 hover:bg-blue-200 border-none px-3 py-1 rounded-full font-bold">
-              Eventos Top
-            </Badge>
-            <h2 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 mb-4">
-              Próximas Carreras
-            </h2>
-            <p className="text-slate-600 text-lg md:text-xl font-medium">Asegura tu lugar en los eventos deportivos más esperados de México. No te quedes fuera.</p>
-          </div>
-          <Button variant="ghost" className="hidden md:flex text-slate-600 hover:text-blue-700 hover:bg-blue-50 rounded-xl px-6 h-12 font-bold">
-            Explorar calendario <ArrowRight className="ml-2 w-4 h-4" />
-          </Button>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {MOCK_RACES.map((race) => (
-            <Card key={race.id} className="group overflow-hidden flex flex-col bg-white border-slate-200/60 shadow-lg shadow-slate-200/50 hover:shadow-xl hover:shadow-blue-500/10 hover:-translate-y-1 transition-all duration-300 rounded-2xl">
-              <div className="relative h-60 w-full overflow-hidden">
-                <div 
-                  className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                  style={{ backgroundImage: `url(${race.imageUrl})` }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent" />
-                
-                <div className="absolute top-4 right-4">
-                  <Badge variant="outline" className={`font-bold backdrop-blur-md px-3 py-1 shadow-sm ${race.statusColor}`}>
-                    {race.status}
-                  </Badge>
-                </div>
-                
-                <div className="absolute bottom-4 left-4 right-4">
-                  <div className="flex gap-2">
-                    <span className="flex items-center text-xs font-semibold bg-white/90 text-slate-900 px-3 py-1.5 rounded-full shadow-sm backdrop-blur-md">
-                      <Users className="w-3 h-3 mr-1.5 text-blue-600" /> {race.participants}
-                    </span>
-                  </div>
-                </div>
-              </div>
-              
-              <CardHeader className="pt-6 pb-2">
-                <CardTitle className="text-2xl font-black leading-tight text-slate-900 group-hover:text-blue-600 transition-colors duration-300 line-clamp-2">
-                  {race.title}
-                </CardTitle>
-              </CardHeader>
-              
-              <CardContent className="flex-1 space-y-4 text-sm font-medium text-slate-600 pb-6">
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-slate-50 rounded-lg">
-                      <CalendarDays className="h-5 w-5 text-blue-600" />
-                    </div>
-                    <span className="text-slate-700 font-semibold">{race.date}</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-slate-50 rounded-lg">
-                      <MapPin className="h-5 w-5 text-blue-600" />
-                    </div>
-                    <span className="text-slate-700 font-semibold">{race.location}</span>
-                  </div>
-                </div>
-              </CardContent>
-              
-              <CardFooter className="flex items-center justify-between p-6 border-t border-slate-100 bg-slate-50/50">
-                <div className="flex flex-col">
-                  <span className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-0.5">Precio</span>
-                  <span className="font-black text-2xl text-slate-900 tracking-tight">{race.price}</span>
-                </div>
-                <Button className="font-bold rounded-xl px-6 bg-slate-900 text-white hover:bg-blue-600 transition-colors shadow-md">
-                  Inscribirse
-                </Button>
-              </CardFooter>
-            </Card>
+      {/* ===== Bento de métricas ===== */}
+      <section className="relative z-10 mx-auto max-w-7xl px-4 pt-24">
+        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+          {[
+            { icon: Users, value: "50K+", label: "Corredores activos", g: "from-violet-500 to-indigo-500" },
+            { icon: Trophy, value: "320+", label: "Carreras exitosas", g: "from-fuchsia-500 to-pink-500" },
+            { icon: Timer, value: "<1 min", label: "Para inscribirte", g: "from-orange-400 to-rose-500" },
+            { icon: ShieldCheck, value: "99.9%", label: "Pagos seguros", g: "from-emerald-400 to-teal-500" },
+          ].map((s) => (
+            <div
+              key={s.label}
+              className="group relative overflow-hidden rounded-3xl border border-white bg-white/70 p-6 shadow-[0_8px_30px_-12px_rgba(76,29,149,0.15)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_-15px_rgba(76,29,149,0.25)]"
+            >
+              <div className={`absolute -right-8 -top-8 h-28 w-28 rounded-full bg-linear-to-br ${s.g} opacity-10 blur-2xl transition-opacity group-hover:opacity-25`} />
+              <span className={`mb-5 flex h-11 w-11 items-center justify-center rounded-2xl bg-linear-to-br ${s.g} text-white shadow-lg`}>
+                <s.icon className="h-5 w-5" />
+              </span>
+              <p className="font-display text-4xl font-extrabold tracking-tight text-slate-900 md:text-5xl">{s.value}</p>
+              <p className="mt-1 text-sm font-semibold text-slate-500">{s.label}</p>
+            </div>
           ))}
+        </div>
+      </section>
+
+      {/* ===== Carreras ===== */}
+      <RacesSection />
+
+      {/* ===== CTA organizadores ===== */}
+      <section id="organizadores" className="relative z-10 mx-auto max-w-7xl px-4 pb-28">
+        <div className="relative overflow-hidden rounded-[2.5rem] bg-linear-to-br from-violet-600 via-fuchsia-600 to-orange-500 p-10 text-white shadow-[0_40px_100px_-30px_rgba(192,38,211,0.6)] md:p-16">
+          <div className="absolute -right-24 -top-24 h-80 w-80 rounded-full bg-white/15 blur-3xl" />
+          <div className="absolute -bottom-32 left-10 h-80 w-80 rounded-full bg-orange-300/30 blur-3xl" />
+          <div className="relative grid items-center gap-10 md:grid-cols-[1.5fr_1fr]">
+            <div>
+              <p className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-white/75">Para organizadores</p>
+              <h2 className="font-display text-4xl font-extrabold leading-tight tracking-tight md:text-5xl">
+                Lanza tu carrera en minutos, no en semanas.
+              </h2>
+              <p className="mt-4 max-w-lg text-lg font-medium text-white/85">
+                Cobros, kits, números de corredor y resultados. Todo desde un panel diseñado para que tú solo te preocupes por la meta.
+              </p>
+            </div>
+            <div className="flex flex-col gap-3 md:items-end">
+              <Link
+                id="cta-create-event"
+                href="#"
+                className="btn-shine flex h-14 items-center justify-center gap-2 rounded-full bg-white px-8 font-bold text-violet-700 shadow-xl transition-transform hover:-translate-y-0.5"
+              >
+                Crear mi evento <ArrowRight className="h-5 w-5" />
+              </Link>
+              <span className="text-center text-sm font-medium text-white/75 md:text-right">Sin costo de alta · Comisión solo por inscripción</span>
+            </div>
+          </div>
         </div>
       </section>
     </div>
