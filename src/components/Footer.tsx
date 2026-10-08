@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { Flame, ArrowRight, Mail, MapPin, ShieldCheck, Smartphone } from "lucide-react";
 
