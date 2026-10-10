@@ -16,5 +16,21 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
   session: {
     strategy: "jwt",
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        // @ts-ignore - Prisma añade el rol pero NextAuth Types no lo sabe por defecto
+        token.role = user.role;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user && token.role) {
+        // @ts-ignore
+        session.user.role = token.role as string;
+      }
+      return session;
+    }
   }
 });
