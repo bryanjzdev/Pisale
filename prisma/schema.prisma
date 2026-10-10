@@ -1,0 +1,100 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  CORREDOR
+  ORGANIZADOR
+  ADMIN
+}
+
+enum RaceStatus {
+  DRAFT
+  PUBLISHED
+  COMPLETED
+}
+
+enum RaceCategory {
+  RUTA
+  TRAIL
+  NOCTURNA
+}
+
+enum RegistrationStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+model User {
+  id             String         @id @default(uuid())
+  email          String         @unique
+  passwordHash   String
+  name           String
+  role           Role           @default(CORREDOR)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  organizations  Organization[] @relation("UserOrganizations")
+  registrations  Registration[]
+}
+
+model Organization {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  logoUrl     String?
+  ownerId     String
+  createdAt   DateTime @default(now())
+
+  owner       User     @relation("UserOrganizations", fields: [ownerId], references: [id])
+  races       Race[]
+}
+
+model Race {
+  id             String       @id @default(uuid())
+  title          String
+  date           DateTime
+  location       String
+  status         RaceStatus   @default(DRAFT)
+  imageUrl       String?
+  category       RaceCategory
+  organizationId String
+  createdAt      DateTime     @default(now())
+
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  distances      RaceDistance[]
+}
+
+model RaceDistance {
+  id                  String   @id @default(uuid())
+  raceId              String
+  name                String   // e.g. "10K", "21K"
+  distanceMeters      Int
+  price               Float
+  maxParticipants     Int
+  currentParticipants Int      @default(0)
+
+  race                Race           @relation(fields: [raceId], references: [id], onDelete: Cascade)
+  registrations       Registration[]
+}
+
+model Registration {
+  id             String             @id @default(uuid())
+  userId         String
+  raceDistanceId String
+  status         RegistrationStatus @default(PENDING)
+  bibNumber      String?
+  amountPaid     Float
+  registeredAt   DateTime           @default(now())
+
+  user           User               @relation(fields: [userId], references: [id])
+  raceDistance   RaceDistance       @relation(fields: [raceDistanceId], references: [id])
+
+  @@unique([userId, raceDistanceId])
+}
