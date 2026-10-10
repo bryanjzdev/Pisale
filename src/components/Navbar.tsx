@@ -184,7 +184,7 @@ export function Navbar() {
 
           <Link
             id="nav-login"
-            href="#"
+            href="/login"
             className="btn-shine flex h-10 items-center rounded-full bg-linear-to-r from-violet-600 via-fuchsia-600 to-orange-500 bg-[length:200%_100%] px-5 text-sm font-bold text-white shadow-lg shadow-fuchsia-500/25 transition-all duration-500 hover:bg-[position:100%_0] hover:shadow-fuchsia-500/40"
           >
             Iniciar sesión
