@@ -43,7 +43,7 @@ const SOCIALS = [
 ];
 
 export function Footer() {
-  const year = new Date().getFullYear();
+  const year = 2026;
 
   return (
     <footer className="relative overflow-hidden border-t border-violet-100 bg-linear-to-b from-[#fbfaff] via-violet-50/60 to-fuchsia-50/70">
