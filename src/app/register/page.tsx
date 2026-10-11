@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowLeft, Flame, Sparkles } from "lucide-react";
-import { loginWithGoogle, loginWithApple } from "@/app/actions/auth";
+import { loginWithGoogle } from "@/app/actions/auth";
 
 export default function RegisterPage() {
   return (
