@@ -17,6 +17,7 @@ import {
   Building,
 } from "lucide-react";
 import type { Race, DistanceOption } from "@/lib/mock-races";
+import { createCheckoutSession } from "@/app/actions/checkout";
 
 export function RaceActionCard({
   race,
@@ -50,6 +51,7 @@ export function RaceActionCard({
   const [shirtSize, setShirtSize] = useState<"S" | "M" | "L" | "XL">("M");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [registeredSuccess, setRegisteredSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const spotsTotal = race.spotsTotal || 1000;
   const spotsTaken = race.spotsTaken || 0;
@@ -63,15 +65,34 @@ export function RaceActionCard({
       return;
     }
     // Usuario autenticado: abrir flujo de registro/pago
+    setErrorMessage(null);
     setModalOpen(true);
   };
 
   const handleConfirmRegistration = async () => {
     setIsSubmitting(true);
-    // Simular registro exitoso
-    await new Promise((res) => setTimeout(res, 900));
-    setIsSubmitting(false);
-    setRegisteredSuccess(true);
+    setErrorMessage(null);
+    try {
+      const res = await createCheckoutSession({
+        raceId: race.id,
+        distanceName: selectedDistance.name,
+        price: selectedDistance.price,
+        shirtSize: shirtSize,
+      });
+
+      if (res?.error) {
+        setErrorMessage(res.error);
+        setIsSubmitting(false);
+        return;
+      }
+
+      if (res?.url) {
+        window.location.href = res.url;
+      }
+    } catch (err: any) {
+      setErrorMessage(err?.message || "Error al procesar el pago");
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -281,6 +302,12 @@ export function RaceActionCard({
                     ))}
                   </div>
                 </div>
+
+                {errorMessage && (
+                  <div className="mt-4 rounded-xl bg-rose-50 border border-rose-200 p-3 text-xs font-semibold text-rose-700">
+                    {errorMessage}
+                  </div>
+                )}
 
                 <div className="mt-7">
                   <button

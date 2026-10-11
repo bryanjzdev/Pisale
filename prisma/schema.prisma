@@ -132,16 +132,20 @@ model RaceDistance {
 }
 
 model Registration {
-  id             String             @id @default(uuid())
-  userId         String
-  raceDistanceId String
-  status         RegistrationStatus @default(PENDING)
-  bibNumber      String?
-  amountPaid     Float
-  registeredAt   DateTime           @default(now())
+  id                    String             @id @default(uuid())
+  userId                String
+  raceId                String?
+  raceTitle             String?
+  distanceName          String?
+  raceDistanceId        String?
+  status                RegistrationStatus @default(PENDING)
+  bibNumber             String?
+  amountPaid            Float
+  shirtSize             String?
+  stripeSessionId       String?            @unique
+  stripePaymentIntentId String?
+  registeredAt          DateTime           @default(now())
 
-  user           User               @relation(fields: [userId], references: [id])
-  raceDistance   RaceDistance       @relation(fields: [raceDistanceId], references: [id])
-
-  @@unique([userId, raceDistanceId])
+  user                  User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  raceDistance          RaceDistance?      @relation(fields: [raceDistanceId], references: [id], onDelete: SetNull)
 }

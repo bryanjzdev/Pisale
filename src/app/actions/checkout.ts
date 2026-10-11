@@ -1,0 +1,100 @@
+"use server";
+
+import { auth } from "@/auth";
+import { prisma } from "@/lib/db";
+import { stripe } from "@/lib/stripe";
+import { getRaceById } from "@/lib/races";
+
+export type CheckoutInput = {
+  raceId: string;
+  distanceName: string;
+  price: number;
+  shirtSize: "S" | "M" | "L" | "XL";
+};
+
+export async function createCheckoutSession(input: CheckoutInput) {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return { error: "Debes iniciar sesión para inscribirte a esta carrera." };
+    }
+
+    const race = await getRaceById(input.raceId);
+    if (!race) {
+      return { error: "La carrera especificada no fue encontrada." };
+    }
+
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const isRealStripeKey =
+      process.env.STRIPE_SECRET_KEY &&
+      process.env.STRIPE_SECRET_KEY.startsWith("sk_") &&
+      !process.env.STRIPE_SECRET_KEY.includes("placeholder");
+
+    // 1. Crear registro preliminar en base de datos
+    const registration = await prisma.registration.create({
+      data: {
+        userId: session.user.id,
+        raceId: race.id,
+        raceTitle: race.title,
+        distanceName: input.distanceName,
+        amountPaid: input.price,
+        shirtSize: input.shirtSize,
+        status: isRealStripeKey ? "PENDING" : "CONFIRMED",
+        bibNumber: isRealStripeKey
+          ? null
+          : `PSL-${Math.floor(1000 + Math.random() * 9000)}`,
+      },
+    });
+
+    // 2. Si hay llaves reales de Stripe configuradas, crear sesión oficial
+    if (isRealStripeKey) {
+      const stripeSession = await stripe.checkout.sessions.create({
+        line_items: [
+          {
+            price_data: {
+              currency: "mxn",
+              product_data: {
+                name: `${race.title} (${input.distanceName})`,
+                description: `Talla: ${input.shirtSize} | Corredor: ${session.user.name || session.user.email}`,
+                images: race.imageUrl ? [race.imageUrl] : [],
+              },
+              unit_amount: Math.round(input.price * 100), // Stripe maneja centavos
+            },
+            quantity: 1,
+          },
+        ],
+        mode: "payment",
+        success_url: `${appUrl}/carrera/${race.id}/exito?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${appUrl}/carrera/${race.id}?canceled=true`,
+        customer_email: session.user.email || undefined,
+        metadata: {
+          registrationId: registration.id,
+          userId: session.user.id,
+          raceId: race.id,
+          distanceName: input.distanceName,
+          shirtSize: input.shirtSize,
+        },
+      });
+
+      // Guardar el id de sesión de Stripe
+      await prisma.registration.update({
+        where: { id: registration.id },
+        data: { stripeSessionId: stripeSession.id },
+      });
+
+      return { url: stripeSession.url };
+    }
+
+    // 3. Modo Simulación / Demo (sin llaves reales de Stripe configuradas aún)
+    return {
+      url: `${appUrl}/carrera/${race.id}/exito?session_id=demo_${registration.id}`,
+    };
+  } catch (error: any) {
+    console.error("Error creating checkout session:", error);
+    return {
+      error:
+        error?.message ||
+        "Ocurrió un error al procesar el pago. Por favor intenta de nuevo.",
+    };
+  }
+}
