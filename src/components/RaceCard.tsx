@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, type MouseEvent } from "react";
+import Link from "next/link";
 import { MapPin, Heart, ArrowUpRight, Mountain, Users } from "lucide-react";
 import type { Race } from "@/lib/mock-races";
 
@@ -104,7 +105,9 @@ export function RaceCard({ race, index = 0 }: { race: Race; index?: number }) {
             {CATEGORY_LABEL[race.category]} · {race.year}
           </span>
           <h3 className="font-display text-xl font-bold leading-tight text-slate-900 transition-colors group-hover:text-violet-700">
-            {race.title}
+            <Link href={`/carrera/${race.id}`} className="hover:underline">
+              {race.title}
+            </Link>
           </h3>
           <p className="mt-2 flex items-center gap-1.5 text-sm font-medium text-slate-500">
             <MapPin className="h-4 w-4 text-fuchsia-500" /> {race.location}
@@ -135,15 +138,16 @@ export function RaceCard({ race, index = 0 }: { race: Race; index?: number }) {
                 <span className="ml-1 text-xs font-semibold text-slate-400">MXN</span>
               </span>
             </div>
-            <button
+            <Link
               id={`race-cta-${race.id}`}
+              href={`/carrera/${race.id}`}
               className="btn-shine relative z-20 flex h-11 items-center gap-2 overflow-hidden rounded-full bg-linear-to-r from-violet-600 to-fuchsia-600 pl-5 pr-1.5 text-sm font-bold text-white shadow-lg shadow-fuchsia-500/25 transition-all duration-300 hover:shadow-fuchsia-500/45"
             >
               Inscribirme
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 transition-transform duration-300 group-hover:rotate-45">
                 <ArrowUpRight className="h-4 w-4" />
               </span>
-            </button>
+            </Link>
           </div>
         </div>
       </article>
