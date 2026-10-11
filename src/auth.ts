@@ -20,15 +20,21 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        // @ts-ignore - Prisma añade el rol pero NextAuth Types no lo sabe por defecto
+        token.id = user.id;
+        // @ts-ignore
         token.role = user.role;
       }
       return token;
     },
     async session({ session, token }) {
-      if (session.user && token.role) {
-        // @ts-ignore
-        session.user.role = token.role as string;
+      if (session.user) {
+        if (token.id || token.sub) {
+          session.user.id = (token.id as string) || (token.sub as string);
+        }
+        if (token.role) {
+          // @ts-ignore
+          session.user.role = token.role as string;
+        }
       }
       return session;
     }

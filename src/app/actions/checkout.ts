@@ -15,7 +15,22 @@ export type CheckoutInput = {
 export async function createCheckoutSession(input: CheckoutInput) {
   try {
     const session = await auth();
-    if (!session?.user?.id) {
+    if (!session?.user) {
+      return { error: "Debes iniciar sesión para inscribirte a esta carrera." };
+    }
+
+    // Resolver ID de usuario en base de datos
+    let userId = session.user.id;
+    if (!userId && session.user.email) {
+      const dbUser = await prisma.user.findUnique({
+        where: { email: session.user.email },
+      });
+      if (dbUser) {
+        userId = dbUser.id;
+      }
+    }
+
+    if (!userId) {
       return { error: "Debes iniciar sesión para inscribirte a esta carrera." };
     }
 
@@ -33,7 +48,7 @@ export async function createCheckoutSession(input: CheckoutInput) {
     // 1. Crear registro preliminar en base de datos
     const registration = await prisma.registration.create({
       data: {
-        userId: session.user.id,
+        userId: userId,
         raceId: race.id,
         raceTitle: race.title,
         distanceName: input.distanceName,
@@ -69,7 +84,7 @@ export async function createCheckoutSession(input: CheckoutInput) {
         customer_email: session.user.email || undefined,
         metadata: {
           registrationId: registration.id,
-          userId: session.user.id,
+          userId: userId,
           raceId: race.id,
           distanceName: input.distanceName,
           shirtSize: input.shirtSize,
