@@ -176,7 +176,7 @@ export function Navbar({ isLoggedIn }: { isLoggedIn?: boolean }) {
           </button>
 
           <Link
-            href="#"
+            href="/organizador/crear"
             className="hidden items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold text-slate-600 transition-colors hover:text-violet-700 sm:flex"
           >
             <Building2 className="h-4 w-4" /> Crear evento

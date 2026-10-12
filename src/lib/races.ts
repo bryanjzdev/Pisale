@@ -83,14 +83,57 @@ export async function getRaceById(id: string): Promise<Race | null> {
 export async function getAllRaces(): Promise<Race[]> {
   try {
     const dbRaces = await prisma.race.findMany({
-      include: { distances: true },
+      include: { distances: true, organization: true },
+      orderBy: { createdAt: "desc" },
     });
+
     if (dbRaces.length > 0) {
-      // Si hay carreras en BD, las combinamos con el catálogo
-      return MOCK_RACES;
+      const months = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+      
+      const mappedDbRaces: Race[] = dbRaces.map((dbRace) => {
+        const date = new Date(dbRace.date);
+        const day = date.getDate().toString().padStart(2, "0");
+        const month = months[date.getMonth()];
+        const year = date.getFullYear().toString();
+        const category = (dbRace.category.toLowerCase() as RaceCategory) || "ruta";
+        const distances = dbRace.distances.map((d) => d.name);
+        const minPrice = dbRace.distances.length > 0 ? Math.min(...dbRace.distances.map((d) => d.price)) : 500;
+        const spotsTaken = dbRace.distances.reduce((acc, d) => acc + d.currentParticipants, 0);
+        const spotsTotal = dbRace.distances.reduce((acc, d) => acc + d.maxParticipants, 0) || 1000;
+
+        return {
+          id: dbRace.id,
+          title: dbRace.title,
+          day,
+          month,
+          year,
+          location: dbRace.location,
+          imageUrl: dbRace.imageUrl || "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&q=80&w=1200",
+          price: minPrice,
+          category,
+          distances: distances.length > 0 ? distances : ["10K", "21K"],
+          status: {
+            label: spotsTaken / spotsTotal > 0.85 ? "Últimos lugares" : "Inscripciones abiertas",
+            tone: spotsTaken / spotsTotal > 0.85 ? "hot" : "open",
+          },
+          spotsTaken,
+          spotsTotal,
+          elevation: "+120 m",
+          distanceOptions: dbRace.distances.map((d) => ({
+            id: d.id,
+            name: d.name,
+            price: d.price,
+            spotsAvailable: Math.max(0, d.maxParticipants - d.currentParticipants),
+            maxSpots: d.maxParticipants,
+          })),
+        };
+      });
+
+      // Retornar las carreras creadas en la base de datos seguidas del catálogo
+      return [...mappedDbRaces, ...MOCK_RACES];
     }
-  } catch {
-    // Fallback
+  } catch (err) {
+    console.error("Error fetching db races in getAllRaces:", err);
   }
   return MOCK_RACES;
 }
