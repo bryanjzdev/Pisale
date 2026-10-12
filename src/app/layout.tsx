@@ -4,6 +4,7 @@ import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { auth } from "@/auth";
+import { Suspense } from "react";
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -22,17 +23,22 @@ export const metadata: Metadata = {
   description: "La plataforma más rápida para gestionar tus carreras y encontrar tu siguiente reto.",
 };
 
-export default async function RootLayout({
+async function DynamicNavbar() {
+  const session = await auth();
+  return <Navbar isLoggedIn={!!session} />;
+}
+
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth();
-  
   return (
     <html lang="es" className={`${jakarta.variable} ${bricolage.variable}`}>
       <body className="antialiased min-h-screen flex flex-col bg-[#fbfaff]">
-        <Navbar isLoggedIn={!!session} />
+        <Suspense fallback={<Navbar isLoggedIn={false} />}>
+          <DynamicNavbar />
+        </Suspense>
         {/* El main tomará el resto del espacio disponible */}
         <main className="flex-1">
           {children}
