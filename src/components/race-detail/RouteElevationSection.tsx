@@ -189,7 +189,7 @@ export function RouteElevationSection({ race }: { race: Race }) {
           </div>
 
           <a
-            href={`https://maps.google.com/?q=${encodeURIComponent(race.location)}`}
+            href={route?.gpxUrl || `https://maps.google.com/?q=${encodeURIComponent(race.location)}`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 self-start sm:self-auto rounded-full bg-white/20 px-4 py-2 text-xs font-bold backdrop-blur-md transition-colors hover:bg-white/30"

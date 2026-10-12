@@ -20,6 +20,9 @@ export type CreateRaceInput = {
   startTime?: string;
   deadline?: string;
   organizationName?: string;
+  startPoint?: string;
+  endPoint?: string;
+  surface?: string;
   distances: DistanceInput[];
 };
 
@@ -68,6 +71,7 @@ export async function createRace(input: CreateRaceInput) {
         data: {
           name: input.organizationName || session.user.name || "Club Organizador",
           ownerId: userId,
+          status: "VERIFIED",
         },
       });
     }
@@ -95,6 +99,9 @@ export async function createRace(input: CreateRaceInput) {
         imageUrl: finalImage,
         status: "PUBLISHED",
         organizationId: organization.id,
+        startPoint: input.startPoint?.trim() || null,
+        endPoint: input.endPoint?.trim() || null,
+        surface: input.surface?.trim() || null,
         distances: {
           create: input.distances.map((d) => ({
             name: d.name,

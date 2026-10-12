@@ -20,6 +20,10 @@ import {
   Image as ImageIcon,
   UploadCloud,
   Check,
+  Navigation,
+  Flag,
+  Droplets,
+  Route,
 } from "lucide-react";
 
 const IMAGE_PRESETS = [
@@ -55,6 +59,10 @@ export function CrearCarreraForm({
   const [location, setLocation] = useState("");
   const [organizationName, setOrganizationName] = useState(defaultOrganizerName);
   const [description, setDescription] = useState("");
+  const [startPoint, setStartPoint] = useState("");
+  const [isCircuit, setIsCircuit] = useState(true);
+  const [endPoint, setEndPoint] = useState("");
+  const [surface, setSurface] = useState<"Asfalto certificado" | "Senderos y Montaña" | "Mixto (Asfalto y Terracería)">("Asfalto certificado");
   const [imageUrl, setImageUrl] = useState(IMAGE_PRESETS[0].url);
   const [imageSourceMode, setImageSourceMode] = useState<"upload" | "presets" | "url">("upload");
   const [isUploadingImage, setIsUploadingImage] = useState(false);
@@ -156,6 +164,9 @@ export function CrearCarreraForm({
         startTime,
         deadline,
         organizationName,
+        startPoint: startPoint || location,
+        endPoint: isCircuit ? "Mismo punto de salida (Circuito cerrado)" : (endPoint || location),
+        surface,
         distances,
       });
 
@@ -350,11 +361,157 @@ export function CrearCarreraForm({
         </div>
       </div>
 
-      {/* 3. Imagen de Portada */}
+      {/* 3. Trazado del Recorrido (Salida, Meta y Terreno) */}
+      <div className="rounded-3xl border border-white/80 bg-white/90 p-6 sm:p-8 shadow-[0_15px_40px_-10px_rgba(91,33,182,0.1)] backdrop-blur-2xl space-y-6">
+        <div>
+          <div className="inline-flex items-center gap-1.5 rounded-full border border-violet-200 bg-violet-50 px-3 py-1 text-xs font-bold text-violet-700 mb-2">
+            <Navigation className="h-3.5 w-3.5" /> Ruta Inteligente Písale
+          </div>
+          <h2 className="text-sm font-extrabold uppercase tracking-wider text-slate-800">
+            3. Trazado del Recorrido (Salida y Meta)
+          </h2>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Solo indica el punto de inicio y fin. Písale calculará automáticamente los puestos oficiales de hidratación (cada 2.5 km), la altimetría y el mapa interactivo.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-xs font-bold text-slate-700 mb-1.5">
+              Punto de Salida / Arranque
+            </label>
+            <div className="relative">
+              <MapPin className="absolute left-3.5 top-3.5 h-4 w-4 text-violet-600" />
+              <input
+                type="text"
+                value={startPoint}
+                onChange={(e) => setStartPoint(e.target.value)}
+                placeholder="ej. Zócalo Municipal / Explanada de las Pirámides"
+                className="w-full h-12 pl-10 rounded-2xl border border-slate-200 bg-slate-50/50 px-4 text-sm font-semibold text-slate-900 focus:border-violet-600 focus:bg-white focus:outline-none transition-all"
+              />
+            </div>
+            <p className="text-[11px] text-slate-500 mt-1">Lugar exacto de reunión y arco de salida.</p>
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold text-slate-700 mb-1.5">
+              Modalidad del Circuito
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => setIsCircuit(true)}
+                className={`h-12 px-3 rounded-2xl text-xs font-bold border transition-all text-center ${
+                  isCircuit
+                    ? "bg-violet-600 text-white border-violet-600 shadow-sm"
+                    : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
+                }`}
+              >
+                🔄 Circuito Cerrado
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsCircuit(false)}
+                className={`h-12 px-3 rounded-2xl text-xs font-bold border transition-all text-center ${
+                  !isCircuit
+                    ? "bg-violet-600 text-white border-violet-600 shadow-sm"
+                    : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
+                }`}
+              >
+                🏁 Punto a Punto
+              </button>
+            </div>
+            <p className="text-[11px] text-slate-500 mt-1">
+              {isCircuit ? "Salida y meta en el mismo lugar" : "Salida y meta en lugares diferentes"}
+            </p>
+          </div>
+        </div>
+
+        {!isCircuit && (
+          <div>
+            <label className="block text-xs font-bold text-slate-700 mb-1.5">
+              Punto de Meta / Llegada
+            </label>
+            <div className="relative">
+              <Flag className="absolute left-3.5 top-3.5 h-4 w-4 text-emerald-600" />
+              <input
+                type="text"
+                value={endPoint}
+                onChange={(e) => setEndPoint(e.target.value)}
+                placeholder="ej. Estadio Olímpico / Plaza Juárez"
+                className="w-full h-12 pl-10 rounded-2xl border border-slate-200 bg-slate-50/50 px-4 text-sm font-semibold text-slate-900 focus:border-violet-600 focus:bg-white focus:outline-none transition-all"
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Tipo de Superficie */}
+        <div>
+          <label className="block text-xs font-bold text-slate-700 mb-2">
+            Tipo de Superficie / Terreno
+          </label>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {[
+              {
+                id: "Asfalto certificado",
+                label: "Asfalto / Calle",
+                desc: "Pavimento urbano rápido",
+                icon: Route,
+              },
+              {
+                id: "Senderos y Montaña",
+                label: "Trail & Montaña",
+                desc: "Terracería, piedra y desnivel",
+                icon: Mountain,
+              },
+              {
+                id: "Mixto (Asfalto y Terracería)",
+                label: "Mixto Urbano/Trail",
+                desc: "Calle y terracería combinadas",
+                icon: Navigation,
+              },
+            ].map((surf) => (
+              <button
+                key={surf.id}
+                type="button"
+                onClick={() => setSurface(surf.id as any)}
+                className={`flex items-center gap-3 p-3.5 rounded-2xl border text-left transition-all ${
+                  surface === surf.id
+                    ? "border-violet-600 bg-violet-50/60 ring-2 ring-violet-600/20"
+                    : "border-slate-200 bg-slate-50/50 hover:bg-white hover:border-slate-300"
+                }`}
+              >
+                <div className={`p-2 rounded-xl ${surface === surf.id ? "bg-violet-600 text-white" : "bg-slate-200 text-slate-600"}`}>
+                  <surf.icon className="h-4 w-4" />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-slate-900">{surf.label}</p>
+                  <p className="text-[10px] text-slate-500 font-medium">{surf.desc}</p>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Badge de Automatización Inteligente */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl bg-slate-900 p-4 text-white">
+          <div className="flex items-center gap-2.5">
+            <Droplets className="h-4 w-4 text-sky-400 shrink-0" />
+            <p className="text-xs font-medium text-slate-300">
+              <strong className="text-white">Puestos de Hidratación automáticos:</strong> 1 estación oficial cada 2.5 km calculada según la distancia configurada.
+            </p>
+          </div>
+          <span className="shrink-0 text-[10px] font-black uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">
+            Reglamento Oficial World Athletics
+          </span>
+        </div>
+      </div>
+
+      {/* 4. Imagen de Portada */}
       <div className="rounded-3xl border border-white/80 bg-white/90 p-6 sm:p-8 shadow-[0_15px_40px_-10px_rgba(91,33,182,0.1)] backdrop-blur-2xl space-y-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-700">
-            3. Imagen de Portada
+            4. Imagen de Portada
           </label>
 
           {/* Selector de modo */}
@@ -502,12 +659,12 @@ export function CrearCarreraForm({
         </div>
       </div>
 
-      {/* 4. Distancias, Precios y Cupos */}
+      {/* 5. Distancias, Precios y Cupos */}
       <div className="rounded-3xl border border-white/80 bg-white/90 p-6 sm:p-8 shadow-[0_15px_40px_-10px_rgba(91,33,182,0.1)] backdrop-blur-2xl space-y-6">
         <div className="flex items-center justify-between">
           <div>
             <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-700">
-              4. Distancias, Precios y Cupos
+              5. Distancias, Precios y Cupos
             </label>
             <p className="text-xs text-slate-500 mt-0.5">
               Los corredores podrán elegir su distancia en la pasarela de pago.

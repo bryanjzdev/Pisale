@@ -60,6 +60,7 @@ export type Race = {
     medicalStations: number;
     pacers: string[];
     routeMapUrl?: string;
+    gpxUrl?: string;
   };
   kitItems?: KitItem[];
   organizer?: {

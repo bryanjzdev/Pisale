@@ -32,6 +32,36 @@ export async function getRaceById(id: string): Promise<Race | null> {
       // Buscar si tenemos datos mockeados adicionales para enriquecer la experiencia visual
       const mockMatch = MOCK_RACES.find((m) => m.id === id || m.title.toLowerCase() === dbRace.title.toLowerCase());
 
+      // Cálculo inteligente de ruta y puestos de abasto según distancias y categoría
+      const maxDistanceKm = distances.reduce((max, d) => {
+        const parsed = parseInt(d.replace(/\D/g, ""));
+        return parsed > max ? parsed : max;
+      }, 10);
+
+      const calculatedHydrationPoints = Math.max(2, Math.round(maxDistanceKm / 2.5));
+      const calculatedGain = category === "trail" ? "+420 m" : category === "nocturna" ? "+60 m" : "+95 m";
+      const calculatedMaxAlt = category === "trail" ? "2,740 m" : "2,240 m";
+      const calculatedSurface = dbRace.surface || (category === "trail" ? "Senderos y Montaña" : "Asfalto certificado");
+      const startPointName = dbRace.startPoint || dbRace.location;
+
+      const dynamicElevationProfile = {
+        gain: calculatedGain,
+        minAlt: "2,200 m",
+        maxAlt: calculatedMaxAlt,
+        difficulty: (category === "trail" ? "Alta" : "Fácil") as "Fácil" | "Moderada" | "Alta" | "Técnica",
+        points: category === "trail"
+          ? [2200, 2380, 2560, 2740, 2520, 2340, 2410, 2200]
+          : [2200, 2215, 2235, 2240, 2230, 2220, 2210, 2200],
+      };
+
+      const dynamicRouteDetails = {
+        surface: calculatedSurface,
+        hydrationPoints: calculatedHydrationPoints,
+        medicalStations: Math.max(1, Math.round(calculatedHydrationPoints / 2)),
+        pacers: ["Pacers oficiales de ritmo"],
+        gpxUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(startPointName + " " + dbRace.location)}`,
+      };
+
       return {
         id: dbRace.id,
         title: dbRace.title,
@@ -49,7 +79,7 @@ export async function getRaceById(id: string): Promise<Race | null> {
         },
         spotsTaken,
         spotsTotal,
-        elevation: mockMatch?.elevation || "+150 m",
+        elevation: mockMatch?.elevation || calculatedGain,
         description: mockMatch?.description || "Vive una experiencia atlética inolvidable con cronometraje oficial y medalla conmemorativa.",
         startTime: mockMatch?.startTime || "07:00 hrs",
         deadline: mockMatch?.deadline || "3 días antes del evento - 23:59",
@@ -61,8 +91,8 @@ export async function getRaceById(id: string): Promise<Race | null> {
           spotsAvailable: Math.max(0, d.maxParticipants - d.currentParticipants),
           maxSpots: d.maxParticipants,
         })),
-        elevationProfile: mockMatch?.elevationProfile,
-        routeDetails: mockMatch?.routeDetails,
+        elevationProfile: mockMatch?.elevationProfile || dynamicElevationProfile,
+        routeDetails: mockMatch?.routeDetails || dynamicRouteDetails,
         kitItems: mockMatch?.kitItems,
         organizer: {
           name: dbRace.organization?.name || "Organización Pisale",
