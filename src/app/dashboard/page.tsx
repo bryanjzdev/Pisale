@@ -1,21 +1,58 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
-import { Calendar, Medal, Timer, TrendingUp, Trophy, QrCode, ArrowRight, Sparkles } from "lucide-react";
+import { stripe } from "@/lib/stripe";
+import { Calendar, Medal, Timer, TrendingUp, Trophy, QrCode, ArrowRight, Sparkles, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 
 export default async function DashboardPage() {
   const session = await auth();
 
-  if (!session?.user?.id) {
+  if (!session?.user) {
     redirect("/login");
   }
 
+  // Resolver ID de usuario
+  let userId = session.user.id;
+  if (!userId && session.user.email) {
+    const dbUser = await prisma.user.findUnique({ where: { email: session.user.email } });
+    if (dbUser) userId = dbUser.id;
+  }
+
   // Cargar inscripciones reales del usuario
-  const registrations = await prisma.registration.findMany({
-    where: { userId: session.user.id },
-    orderBy: { registeredAt: "desc" },
-  });
+  let registrations = userId
+    ? await prisma.registration.findMany({
+        where: { userId },
+        orderBy: { registeredAt: "desc" },
+      })
+    : [];
+
+  // Auto-verificar sesiones de Stripe pendientes
+  for (const reg of registrations) {
+    if (reg.status === "PENDING" && reg.stripeSessionId) {
+      try {
+        const stripeSession = await stripe.checkout.sessions.retrieve(reg.stripeSessionId);
+        if (stripeSession.payment_status === "paid") {
+          const bibNumber = reg.bibNumber || `PSL-${Math.floor(1000 + Math.random() * 9000)}`;
+          await prisma.registration.update({
+            where: { id: reg.id },
+            data: {
+              status: "CONFIRMED",
+              bibNumber,
+              stripePaymentIntentId:
+                typeof stripeSession.payment_intent === "string"
+                  ? stripeSession.payment_intent
+                  : undefined,
+            },
+          });
+          reg.status = "CONFIRMED";
+          reg.bibNumber = bibNumber;
+        }
+      } catch (err) {
+        console.error("Error auto-verifying pending session:", err);
+      }
+    }
+  }
 
   const firstName = session.user?.name?.split(" ")[0] || "Corredor";
   const confirmedCount = registrations.filter((r) => r.status === "CONFIRMED").length;
@@ -135,12 +172,30 @@ export default async function DashboardPage() {
                         </p>
                       </div>
 
-                      <div className="text-right">
-                        <span className="block font-mono text-sm font-black text-violet-600">
-                          {reg.bibNumber || "Pendiente"}
-                        </span>
-                        <span className="text-[10px] uppercase font-bold text-emerald-600">
-                          {reg.status === "CONFIRMED" ? "Pagado / Confirmado" : "Pendiente"}
+                      <div className="text-right flex flex-col items-end gap-1">
+                        {reg.bibNumber ? (
+                          <span className="font-mono text-sm font-black text-violet-600 bg-violet-50 px-2.5 py-0.5 rounded-lg border border-violet-100">
+                            {reg.bibNumber}
+                          </span>
+                        ) : (
+                          <span className="text-xs text-slate-400 font-medium">Asignando folio...</span>
+                        )}
+                        <span className={`inline-flex items-center gap-1 text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full ${
+                          reg.status === "CONFIRMED"
+                            ? "bg-emerald-100 text-emerald-700"
+                            : "bg-amber-100 text-amber-700"
+                        }`}>
+                          {reg.status === "CONFIRMED" ? (
+                            <>
+                              <CheckCircle2 className="h-3 w-3" />
+                              Pagado
+                            </>
+                          ) : (
+                            <>
+                              <Timer className="h-3 w-3" />
+                              Pendiente
+                            </>
+                          )}
                         </span>
                       </div>
                     </div>

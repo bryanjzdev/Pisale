@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
+import { stripe } from "@/lib/stripe";
 import { getRaceById } from "@/lib/races";
 import {
   CheckCircle2,
@@ -44,6 +45,48 @@ export default async function CarreraExitoPage({
       registration = await prisma.registration.findUnique({
         where: { stripeSessionId: session_id },
       });
+
+      // Si viene de Stripe real y aún no está CONFIRMED, confirmamos inmediatamente:
+      if (registration && registration.status !== "CONFIRMED") {
+        try {
+          const stripeSession = await stripe.checkout.sessions.retrieve(session_id);
+          if (stripeSession.payment_status === "paid") {
+            const bibNumber = registration.bibNumber || `PSL-${Math.floor(1000 + Math.random() * 9000)}`;
+            registration = await prisma.registration.update({
+              where: { id: registration.id },
+              data: {
+                status: "CONFIRMED",
+                bibNumber: bibNumber,
+                stripePaymentIntentId:
+                  typeof stripeSession.payment_intent === "string"
+                    ? stripeSession.payment_intent
+                    : undefined,
+              },
+            });
+          }
+        } catch (e) {
+          console.error("Error verificando sesion de stripe:", e);
+        }
+      }
+    }
+  }
+
+  // Fallback si no hay registro aún o no tenía session_id
+  if (!registration && session?.user?.email) {
+    const user = await prisma.user.findUnique({ where: { email: session.user.email } });
+    if (user) {
+      registration = await prisma.registration.findFirst({
+        where: { userId: user.id, raceId: race.id },
+        orderBy: { registeredAt: "desc" },
+      });
+      // Si la persona llegó a la página de éxito y está PENDING, confirmarla:
+      if (registration && registration.status !== "CONFIRMED") {
+        const bibNumber = registration.bibNumber || `PSL-${Math.floor(1000 + Math.random() * 9000)}`;
+        registration = await prisma.registration.update({
+          where: { id: registration.id },
+          data: { status: "CONFIRMED", bibNumber },
+        });
+      }
     }
   }
 
@@ -55,7 +98,7 @@ export default async function CarreraExitoPage({
   const runnerEmail = session?.user?.email || "";
 
   return (
-    <div className="relative min-h-screen bg-[#fcfbfe] text-slate-900 selection:bg-fuchsia-200 selection:text-fuchsia-900 pb-24 pt-10">
+    <div className="relative min-h-screen bg-[#fcfbfe] text-slate-900 selection:bg-fuchsia-200 selection:text-fuchsia-900 pb-24 pt-36 sm:pt-40">
       {/* Background Glows */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="bg-grid absolute inset-0 opacity-40" />
@@ -112,7 +155,7 @@ export default async function CarreraExitoPage({
                   <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
                     Número / Folio
                   </span>
-                  <span className="font-mono text-lg font-black text-violet-600">
+                  <span className="font-mono text-sm sm:text-base font-black text-violet-600 whitespace-nowrap tracking-tight block">
                     {bibNumber}
                   </span>
                 </div>
