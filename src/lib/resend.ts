@@ -142,15 +142,20 @@ export async function enviarCorreoConfirmacionBoleto(params: EnviarConfirmacionP
   `;
 
   try {
-    const data = await resend.emails.send({
+    const result = await resend.emails.send({
       from: fromEmail,
       to: params.runnerEmail,
       subject: `🎟️ Tu Boleto Oficial (${params.bibNumber}) - ${params.raceTitle}`,
       html: htmlContent,
     });
 
-    console.log("Correo enviado con Resend:", data);
-    return { success: true, data };
+    if (result.error) {
+      console.error("Resend API error:", result.error);
+      return { success: false, error: result.error.message || "Error al enviar correo con Resend" };
+    }
+
+    console.log("Correo enviado con Resend exitosamente:", result.data);
+    return { success: true, data: result.data };
   } catch (error: any) {
     console.error("Error enviando correo con Resend:", error);
     return { success: false, error: error?.message || "Error al enviar correo" };
