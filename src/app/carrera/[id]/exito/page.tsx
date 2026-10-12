@@ -15,6 +15,7 @@ import {
   Download,
   Share2,
 } from "lucide-react";
+import { RealQRCode } from "@/components/common/RealQRCode";
 
 export const instant = false;
 
@@ -203,17 +204,16 @@ export default async function CarreraExitoPage({
               </div>
             </div>
 
-            {/* Código QR y Acciones */}
+            {/* Código QR Real y Acciones */}
             <div className="flex flex-col items-center justify-center p-6 rounded-2xl bg-slate-900 text-white w-full lg:w-64 text-center shadow-xl">
-              <div className="bg-white p-3 rounded-xl mb-3 shadow-md">
-                {/* QR Code Icon / Visual Mockup */}
-                <QrCode className="h-32 w-32 text-slate-900" />
+              <div className="bg-white p-2.5 rounded-xl mb-3 shadow-md">
+                <RealQRCode value={bibNumber} size={130} />
               </div>
-              <span className="font-mono text-xs font-semibold tracking-wider text-slate-300">
+              <span className="font-mono text-xs font-black tracking-wider text-slate-200">
                 {bibNumber}
               </span>
               <span className="text-[10px] text-slate-400 mt-1">
-                Muestra este QR en la entrega de kits
+                Muestra este QR oficial en la entrega de kits
               </span>
             </div>
           </div>

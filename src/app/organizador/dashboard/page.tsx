@@ -139,6 +139,14 @@ export default async function OrganizadorDashboardPage() {
             </Link>
 
             <Link
+              href="/organizador/checkin"
+              className="inline-flex h-12 items-center justify-center gap-1.5 rounded-2xl border border-violet-300 bg-violet-50/90 px-4 text-xs font-extrabold text-violet-800 hover:bg-violet-100 transition-colors shadow-sm"
+            >
+              <QrCode className="h-4 w-4 text-violet-600" />
+              Escáner Check-In QR
+            </Link>
+
+            <Link
               href="/organizador/crear"
               className="btn-shine inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-violet-600 via-fuchsia-600 to-orange-500 px-6 text-xs font-extrabold text-white shadow-lg shadow-fuchsia-500/25 hover:opacity-95 transition-all"
             >
