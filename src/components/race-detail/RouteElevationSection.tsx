@@ -164,37 +164,96 @@ export function RouteElevationSection({ race }: { race: Race }) {
         </div>
       </div>
 
-      {/* Mapa Visual o Imagen de Satélite del Recorrido */}
-      <div className="relative overflow-hidden rounded-2xl border border-slate-200">
-        <div
-          className="h-64 sm:h-80 w-full bg-cover bg-center transition-transform duration-700 hover:scale-105"
-          style={{
-            backgroundImage: `url(${
-              route?.routeMapUrl ||
-              "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=1200"
-            })`,
-          }}
-        />
-        <div className="absolute inset-0 bg-linear-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
+      {/* Ficha de Trazado de Ruta Oficial: Salida -> Abasto -> Meta */}
+      <div className="mb-6 rounded-2xl border border-slate-200/90 bg-slate-50/80 p-5">
+        <div className="flex items-center gap-2 mb-4">
+          <Navigation className="h-4 w-4 text-violet-600" />
+          <h3 className="text-xs font-black uppercase tracking-wider text-slate-800">
+            Recorrido Oficial y Puntos de Control
+          </h3>
+        </div>
 
-        <div className="absolute bottom-4 left-4 right-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-white">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          {/* Salida */}
+          <div className="flex items-start gap-3 rounded-xl bg-white p-3.5 border border-slate-200/80 shadow-xs">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700 font-black text-xs">
+              KM 0
+            </span>
+            <div className="min-w-0">
+              <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md mb-1">
+                🟢 Punto de Salida
+              </span>
+              <p className="text-xs font-bold text-slate-900 truncate">
+                {race.startPoint || race.location}
+              </p>
+              <p className="text-[11px] text-slate-500">Arco de arranque oficial</p>
+            </div>
+          </div>
+
+          {/* Abastos */}
+          <div className="flex items-start gap-3 rounded-xl bg-white p-3.5 border border-slate-200/80 shadow-xs">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-sky-100 text-sky-700">
+              <Droplets className="h-4 w-4" />
+            </span>
+            <div className="min-w-0">
+              <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-sky-700 bg-sky-50 px-2 py-0.5 rounded-md mb-1">
+                💧 Hidratación Oficial
+              </span>
+              <p className="text-xs font-bold text-slate-900">
+                {route?.hydrationPoints || 4} Estaciones de Abasto
+              </p>
+              <p className="text-[11px] text-slate-500">Agua e isotónico cada 2.5 km</p>
+            </div>
+          </div>
+
+          {/* Meta */}
+          <div className="flex items-start gap-3 rounded-xl bg-white p-3.5 border border-slate-200/80 shadow-xs">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-fuchsia-100 text-fuchsia-700 font-black text-xs">
+              🏁
+            </span>
+            <div className="min-w-0">
+              <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-fuchsia-700 bg-fuchsia-50 px-2 py-0.5 rounded-md mb-1">
+                Meta Oficial
+              </span>
+              <p className="text-xs font-bold text-slate-900 truncate">
+                {race.endPoint || "Mismo punto de salida (Circuito cerrado)"}
+              </p>
+              <p className="text-[11px] text-slate-500">Entrega de medalla finisher</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Mapa Interactivo Real del Trazado */}
+      <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-slate-100">
+        <iframe
+          title="Mapa oficial de la ruta"
+          className="w-full h-72 sm:h-96 border-0 filter contrast-105"
+          loading="lazy"
+          src={`https://maps.google.com/maps?q=${encodeURIComponent(
+            (race.startPoint || race.location) + ", " + race.location
+          )}&t=m&z=14&output=embed`}
+        />
+
+        {/* Floating Bar */}
+        <div className="absolute bottom-3 left-3 right-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 rounded-xl bg-slate-950/85 p-3 text-white backdrop-blur-md">
           <div className="flex items-center gap-2">
-            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-violet-600/90 backdrop-blur-md">
-              <MapPin className="h-4 w-4" />
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-violet-600/90">
+              <MapPin className="h-3.5 w-3.5 text-white" />
             </span>
             <div>
-              <p className="font-bold text-sm leading-tight">Mapa oficial del trazado</p>
-              <p className="text-xs text-white/70">Avalado y cerrado al tránsito vehicular</p>
+              <p className="font-bold text-xs leading-tight">Circuito Oficial: {race.location}</p>
+              <p className="text-[11px] text-slate-400">Salida: {race.startPoint || race.location}</p>
             </div>
           </div>
 
           <a
-            href={route?.gpxUrl || `https://maps.google.com/?q=${encodeURIComponent(race.location)}`}
+            href={route?.gpxUrl || `https://maps.google.com/?q=${encodeURIComponent((race.startPoint || race.location) + " " + race.location)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 self-start sm:self-auto rounded-full bg-white/20 px-4 py-2 text-xs font-bold backdrop-blur-md transition-colors hover:bg-white/30"
+            className="inline-flex items-center gap-1.5 self-start sm:self-auto rounded-lg bg-violet-600 hover:bg-violet-500 px-3.5 py-1.5 text-xs font-bold transition-all shadow-sm"
           >
-            Ver en Google Maps
+            Abrir en Google Maps / GPS
             <ArrowUpRight className="h-3.5 w-3.5" />
           </a>
         </div>

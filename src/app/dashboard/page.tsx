@@ -2,7 +2,7 @@ import { auth, signOut } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { stripe } from "@/lib/stripe";
-import { Calendar, Medal, Timer, TrendingUp, Trophy, QrCode, ArrowRight, Sparkles, CheckCircle2, Building2, LogOut } from "lucide-react";
+import { Calendar, Medal, Timer, TrendingUp, Trophy, QrCode, ArrowRight, Sparkles, CheckCircle2, Building2, LogOut, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 
 export const instant = false;
@@ -58,6 +58,9 @@ export default async function DashboardPage() {
 
   const firstName = session.user?.name?.split(" ")[0] || "Corredor";
   const confirmedCount = registrations.filter((r) => r.status === "CONFIRMED").length;
+  const isOwnerOrAdmin =
+    session.user.email?.toLowerCase() === "bjm.dev.soft@gmail.com" ||
+    (session.user as any).role === "ADMIN";
 
   return (
     <div className="min-h-screen bg-[#fbfaff] selection:bg-violet-200">
@@ -82,6 +85,15 @@ export default async function DashboardPage() {
             </p>
           </div>
           <div className="flex items-center gap-2.5">
+            {isOwnerOrAdmin && (
+              <Link
+                href="/admin"
+                className="inline-flex h-12 items-center justify-center gap-1.5 rounded-xl border border-amber-300 bg-amber-50/90 px-4 text-xs font-extrabold text-amber-900 hover:bg-amber-100 transition-colors shadow-sm"
+              >
+                <ShieldCheck className="h-4 w-4 text-amber-600" />
+                Panel SuperAdmin
+              </Link>
+            )}
             <Link
               href="/organizador/dashboard"
               className="inline-flex h-12 items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white/80 px-5 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm"

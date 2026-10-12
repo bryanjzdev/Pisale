@@ -93,6 +93,9 @@ export async function getRaceById(id: string): Promise<Race | null> {
         })),
         elevationProfile: mockMatch?.elevationProfile || dynamicElevationProfile,
         routeDetails: mockMatch?.routeDetails || dynamicRouteDetails,
+        startPoint: dbRace.startPoint || startPointName,
+        endPoint: dbRace.endPoint || "Mismo punto de salida (Circuito cerrado)",
+        surface: calculatedSurface,
         kitItems: mockMatch?.kitItems,
         organizer: {
           name: dbRace.organization?.name || "Organización Pisale",

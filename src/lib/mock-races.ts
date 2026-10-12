@@ -36,6 +36,9 @@ export type Race = {
   spotsTaken: number;
   spotsTotal: number;
   elevation?: string;
+  startPoint?: string;
+  endPoint?: string;
+  surface?: string;
 
   // Campos extendidos para la vista de detalle
   description?: string;

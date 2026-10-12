@@ -18,6 +18,7 @@ import {
   Sparkles,
   ExternalLink,
   LogOut,
+  ShieldCheck,
 } from "lucide-react";
 import { ExportCsvButton } from "@/components/organizador/ExportCsvButton";
 
@@ -92,6 +93,9 @@ export default async function OrganizadorDashboardPage() {
   });
 
   const orgName = organization?.name || session.user.name || "Club Organizador";
+  const isOwnerOrAdmin =
+    session.user.email?.toLowerCase() === "bjm.dev.soft@gmail.com" ||
+    (session.user as any).role === "ADMIN";
 
   return (
     <div className="relative min-h-screen bg-[#fcfbfe] text-slate-900 selection:bg-fuchsia-200 selection:text-fuchsia-900 pb-28 pt-32 sm:pt-36">
@@ -118,6 +122,15 @@ export default async function OrganizadorDashboardPage() {
           </div>
 
           <div className="flex items-center gap-3">
+            {isOwnerOrAdmin && (
+              <Link
+                href="/admin"
+                className="inline-flex h-12 items-center justify-center gap-1.5 rounded-2xl border border-amber-300 bg-amber-50/90 px-4 text-xs font-extrabold text-amber-900 hover:bg-amber-100 transition-colors shadow-sm"
+              >
+                <ShieldCheck className="h-4 w-4 text-amber-600" />
+                Panel SuperAdmin
+              </Link>
+            )}
             <Link
               href="/dashboard"
               className="inline-flex h-12 items-center justify-center rounded-2xl border border-slate-200 bg-white/80 px-5 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm"

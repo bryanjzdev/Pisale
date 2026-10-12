@@ -40,13 +40,19 @@ export async function registrarOrganizador(input: RegistroOrganizadorInput) {
       return { error: "Proporciona un número de teléfono o WhatsApp de atención válido." };
     }
 
-    // 1. Actualizar el rol del usuario a ORGANIZADOR
-    await prisma.user.update({
-      where: { id: userId },
-      data: {
-        role: "ORGANIZADOR",
-      },
-    });
+    const isOwnerOrAdmin =
+      session.user.email?.toLowerCase() === "bjm.dev.soft@gmail.com" ||
+      (session.user as any).role === "ADMIN";
+
+    const initialStatus = isOwnerOrAdmin ? "VERIFIED" : "PENDING";
+
+    // 1. Si es el dueño, aseguramos rol ADMIN, si es organizador validado se asigna ORGANIZADOR
+    if (isOwnerOrAdmin) {
+      await prisma.user.update({
+        where: { id: userId },
+        data: { role: "ADMIN" },
+      });
+    }
 
     // 2. Crear o actualizar la Organización
     let existingOrg = await prisma.organization.findFirst({
@@ -62,7 +68,7 @@ export async function registrarOrganizador(input: RegistroOrganizadorInput) {
           phone: input.phone.trim(),
           description: input.description?.trim() || null,
           rfc: input.rfc?.trim() || null,
-          status: "VERIFIED",
+          status: initialStatus,
         },
       });
     } else {
@@ -74,7 +80,7 @@ export async function registrarOrganizador(input: RegistroOrganizadorInput) {
           phone: input.phone.trim(),
           description: input.description?.trim() || null,
           rfc: input.rfc?.trim() || null,
-          status: "VERIFIED",
+          status: initialStatus,
         },
       });
     }
