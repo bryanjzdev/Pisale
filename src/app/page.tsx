@@ -24,6 +24,9 @@ const LIVE_RESULTS = [
   { pos: 3, name: "Sofía G.", time: "1:13:41", color: "from-orange-200 to-amber-300" },
 ];
 
+export const dynamic = "force-dynamic";
+export const instant = false;
+
 export default async function Home() {
   const races = await getAllRaces();
   return (

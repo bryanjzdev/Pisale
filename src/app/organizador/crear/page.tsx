@@ -4,6 +4,9 @@ import { CrearCarreraForm } from "@/components/organizador/CrearCarreraForm";
 import { Sparkles, ArrowLeft, ShieldCheck, Zap } from "lucide-react";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+export const instant = false;
+
 export const metadata = {
   title: "Publicar Carrera | Písale para Organizadores",
   description: "Crea y publica tu carrera atlética en cuestión de minutos. Gestiona inscripciones, boletos y cronometraje sin fricción.",

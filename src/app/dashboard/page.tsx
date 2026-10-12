@@ -5,6 +5,9 @@ import { stripe } from "@/lib/stripe";
 import { Calendar, Medal, Timer, TrendingUp, Trophy, QrCode, ArrowRight, Sparkles, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+export const instant = false;
+
 export default async function DashboardPage() {
   const session = await auth();
 

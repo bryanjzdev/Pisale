@@ -2,6 +2,9 @@ import { getAllRaces } from "@/lib/races";
 import { CarrerasExplorer } from "@/components/carreras/CarrerasExplorer";
 import { Sparkles, Trophy, Calendar } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+export const instant = false;
+
 export const metadata = {
   title: "Explorador de Carreras y Maratones 2026 | Písale",
   description: "Encuentra tu próximo maratón, medio maratón o carrera de montaña en México. Inscríbete en segundos con pago seguro.",
