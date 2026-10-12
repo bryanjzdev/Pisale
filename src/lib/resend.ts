@@ -12,6 +12,7 @@ export type EnviarConfirmacionParams = {
   raceDate: string;
   raceLocation: string;
   ticketUrl: string;
+  pdfUrl?: string;
 };
 
 export async function enviarCorreoConfirmacionBoleto(params: EnviarConfirmacionParams) {
@@ -104,13 +105,22 @@ export async function enviarCorreoConfirmacionBoleto(params: EnviarConfirmacionP
                 </tr>
               </table>
 
-              <!-- Botón Ver Boleto con QR -->
+              <!-- Botón Ver Boleto con QR y Descarga PDF -->
               <table role="presentation" width="100%" style="margin-top: 28px;">
                 <tr>
                   <td align="center">
-                    <a href="${params.ticketUrl}" style="display: inline-block; padding: 16px 36px; border-radius: 14px; background: linear-gradient(135deg, #7c3aed 0%, #d946ef 50%, #f97316 100%); color: #ffffff; font-size: 14px; font-weight: 900; text-decoration: none; box-shadow: 0 10px 25px -5px rgba(217, 70, 239, 0.4); letter-spacing: 0.3px;">
+                    <a href="${params.ticketUrl}" style="display: inline-block; padding: 15px 34px; border-radius: 14px; background: linear-gradient(135deg, #7c3aed 0%, #d946ef 50%, #f97316 100%); color: #ffffff; font-size: 14px; font-weight: 900; text-decoration: none; box-shadow: 0 10px 25px -5px rgba(217, 70, 239, 0.4); letter-spacing: 0.3px; margin-bottom: 12px;">
                       Ver mi Boleto con Código QR →
                     </a>
+                    ${
+                      params.pdfUrl
+                        ? `<div style="margin-top: 10px;">
+                            <a href="${params.pdfUrl}" style="color: #c084fc; font-size: 12px; font-weight: 700; text-decoration: underline;">
+                              📄 O descarga e imprime tu Boleto PDF Oficial aquí
+                            </a>
+                          </div>`
+                        : ""
+                    }
                   </td>
                 </tr>
               </table>

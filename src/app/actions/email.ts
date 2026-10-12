@@ -30,6 +30,7 @@ export async function enviarBoletoPorCorreo(registrationId: string) {
     const raceDate = race ? `${race.day} ${race.month} ${race.year}` : "Fecha por confirmar";
     const raceLocation = race?.location || "Sede oficial del evento";
     const ticketUrl = `${appUrl}/carrera/${reg.raceId || "evento"}/exito?session_id=${reg.stripeSessionId || `demo_${reg.id}`}`;
+    const pdfUrl = `${appUrl}/carrera/${reg.raceId || "evento"}/boleto?registration_id=${reg.id}`;
 
     const res = await enviarCorreoConfirmacionBoleto({
       runnerEmail: recipientEmail,
@@ -41,6 +42,7 @@ export async function enviarBoletoPorCorreo(registrationId: string) {
       raceDate,
       raceLocation,
       ticketUrl,
+      pdfUrl,
     });
 
     return res;

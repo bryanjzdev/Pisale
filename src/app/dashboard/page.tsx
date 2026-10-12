@@ -2,7 +2,7 @@ import { auth, signOut } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { stripe } from "@/lib/stripe";
-import { Calendar, Medal, Timer, TrendingUp, Trophy, QrCode, ArrowRight, Sparkles, CheckCircle2, Building2, LogOut, ShieldCheck } from "lucide-react";
+import { Calendar, Medal, Timer, TrendingUp, Trophy, QrCode, ArrowRight, Sparkles, CheckCircle2, Building2, LogOut, ShieldCheck, Printer, Download } from "lucide-react";
 import Link from "next/link";
 import { BotonEnviarCorreoTicket } from "@/components/common/BotonEnviarCorreoTicket";
 
@@ -243,7 +243,7 @@ export default async function DashboardPage() {
                       <span className="text-slate-500 font-medium">
                         Total pagado: <strong>${reg.amountPaid} MXN</strong>
                       </span>
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-wrap items-center gap-2">
                         {reg.status === "CONFIRMED" && (
                           <BotonEnviarCorreoTicket
                             registrationId={reg.id}
@@ -252,13 +252,23 @@ export default async function DashboardPage() {
                           />
                         )}
                         {reg.raceId && (
-                          <Link
-                            href={`/carrera/${reg.raceId}/exito?session_id=${reg.stripeSessionId || `demo_${reg.id}`}`}
-                            className="inline-flex items-center gap-1 font-bold text-violet-600 hover:text-violet-800 transition-colors"
-                          >
-                            <QrCode className="h-3.5 w-3.5" />
-                            Ver Boleto Digital
-                          </Link>
+                          <>
+                            <Link
+                              href={`/carrera/${reg.raceId}/boleto?registration_id=${reg.id}`}
+                              target="_blank"
+                              className="inline-flex items-center gap-1 font-bold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-full transition-colors"
+                            >
+                              <Printer className="h-3 w-3 text-violet-600" />
+                              Boleto PDF
+                            </Link>
+                            <Link
+                              href={`/carrera/${reg.raceId}/exito?session_id=${reg.stripeSessionId || `demo_${reg.id}`}`}
+                              className="inline-flex items-center gap-1 font-bold text-violet-600 hover:text-violet-800 transition-colors"
+                            >
+                              <QrCode className="h-3.5 w-3.5" />
+                              Ver Boleto
+                            </Link>
+                          </>
                         )}
                       </div>
                     </div>

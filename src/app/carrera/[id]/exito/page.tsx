@@ -230,6 +230,15 @@ export default async function CarreraExitoPage({
                 <ArrowRight className="h-4 w-4" />
               </Link>
 
+              <Link
+                href={`/carrera/${race.id}/boleto?${session_id ? `session_id=${session_id}` : registration ? `registration_id=${registration.id}` : ""}`}
+                target="_blank"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-slate-900 px-6 py-3.5 text-xs font-bold text-white hover:bg-slate-800 transition-all shadow-sm"
+              >
+                <Download className="h-4 w-4 text-violet-400" />
+                Descargar Boleto PDF
+              </Link>
+
               {registration && (
                 <BotonEnviarCorreoTicket
                   registrationId={registration.id}
