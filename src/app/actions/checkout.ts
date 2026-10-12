@@ -63,6 +63,19 @@ export async function createCheckoutSession(input: CheckoutInput) {
 
     // 2. Si hay llaves reales de Stripe configuradas, crear sesión oficial
     if (isRealStripeKey) {
+      // Validar si race.imageUrl es una URL HTTP(S) pública válida, ya que Stripe rechaza cadenas base64 ("Not a valid URL")
+      const isValidHttpUrl = (str?: string | null) => {
+        if (!str) return false;
+        try {
+          const url = new URL(str);
+          return url.protocol === "http:" || url.protocol === "https:";
+        } catch {
+          return false;
+        }
+      };
+
+      const stripeImages = isValidHttpUrl(race.imageUrl) ? [race.imageUrl!] : [];
+
       const stripeSession = await stripe.checkout.sessions.create({
         line_items: [
           {
@@ -71,7 +84,7 @@ export async function createCheckoutSession(input: CheckoutInput) {
               product_data: {
                 name: `${race.title} (${input.distanceName})`,
                 description: `Talla: ${input.shirtSize} | Corredor: ${session.user.name || session.user.email}`,
-                images: race.imageUrl ? [race.imageUrl] : [],
+                images: stripeImages,
               },
               unit_amount: Math.round(input.price * 100), // Stripe maneja centavos
             },
