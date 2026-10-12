@@ -18,6 +18,8 @@ import {
   Moon,
   ArrowRight,
   Image as ImageIcon,
+  UploadCloud,
+  Check,
 } from "lucide-react";
 
 const IMAGE_PRESETS = [
@@ -54,6 +56,9 @@ export function CrearCarreraForm({
   const [organizationName, setOrganizationName] = useState(defaultOrganizerName);
   const [description, setDescription] = useState("");
   const [imageUrl, setImageUrl] = useState(IMAGE_PRESETS[0].url);
+  const [imageSourceMode, setImageSourceMode] = useState<"upload" | "presets" | "url">("upload");
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
 
   // Distancias dinámicas
   const [distances, setDistances] = useState<DistanceInput[]>([
@@ -63,6 +68,53 @@ export function CrearCarreraForm({
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploadingImage(true);
+    setUploadedFileName(file.name);
+
+    // Previsualización instantánea local
+    const localPreview = URL.createObjectURL(file);
+    setImageUrl(localPreview);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (data.url) {
+        setImageUrl(data.url);
+      } else {
+        // Fallback a Base64 si el backend devolvió error
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          if (typeof reader.result === "string") {
+            setImageUrl(reader.result);
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    } catch {
+      // Fallback a Base64
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (typeof reader.result === "string") {
+          setImageUrl(reader.result);
+        }
+      };
+      reader.readAsDataURL(file);
+    } finally {
+      setIsUploadingImage(false);
+    }
+  };
 
   // Manejar cambio en distancias
   const handleDistanceChange = (
@@ -299,54 +351,153 @@ export function CrearCarreraForm({
       </div>
 
       {/* 3. Imagen de Portada */}
-      <div className="rounded-3xl border border-white/80 bg-white/90 p-6 sm:p-8 shadow-[0_15px_40px_-10px_rgba(91,33,182,0.1)] backdrop-blur-2xl space-y-4">
-        <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-700">
-          3. Imagen de Portada
-        </label>
+      <div className="rounded-3xl border border-white/80 bg-white/90 p-6 sm:p-8 shadow-[0_15px_40px_-10px_rgba(91,33,182,0.1)] backdrop-blur-2xl space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-700">
+            3. Imagen de Portada
+          </label>
 
-        {/* Previsualización */}
-        <div className="relative h-44 w-full rounded-2xl overflow-hidden bg-slate-100 border border-slate-200">
-          <div
-            className="absolute inset-0 bg-cover bg-center transition-transform duration-500"
-            style={{ backgroundImage: `url(${imageUrl})` }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
-            <span className="text-white text-xs font-bold drop-shadow-md">
-              Vista previa del banner oficial
-            </span>
+          {/* Selector de modo */}
+          <div className="inline-flex rounded-xl bg-slate-100 p-1 border border-slate-200 text-xs font-bold">
+            <button
+              type="button"
+              onClick={() => setImageSourceMode("upload")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
+                imageSourceMode === "upload"
+                  ? "bg-white text-violet-700 shadow-sm"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              <UploadCloud className="h-3.5 w-3.5" />
+              Subir de mi PC
+            </button>
+            <button
+              type="button"
+              onClick={() => setImageSourceMode("presets")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
+                imageSourceMode === "presets"
+                  ? "bg-white text-violet-700 shadow-sm"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              <Sparkles className="h-3.5 w-3.5" />
+              Presets
+            </button>
+            <button
+              type="button"
+              onClick={() => setImageSourceMode("url")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
+                imageSourceMode === "url"
+                  ? "bg-white text-violet-700 shadow-sm"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              <ImageIcon className="h-3.5 w-3.5" />
+              URL Externa
+            </button>
           </div>
         </div>
 
-        <div className="space-y-2">
-          <label className="block text-xs font-bold text-slate-600">
-            Presets sugeridos o pega tu propia URL:
-          </label>
-          <div className="flex flex-wrap gap-2">
-            {IMAGE_PRESETS.map((preset) => (
-              <button
-                key={preset.label}
-                type="button"
-                onClick={() => setImageUrl(preset.url)}
-                className={`text-xs font-bold px-3 py-1.5 rounded-full border transition-all ${
-                  imageUrl === preset.url
-                    ? "bg-violet-600 text-white border-violet-600 shadow-sm"
-                    : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
-                }`}
-              >
-                {preset.label}
-              </button>
-            ))}
-          </div>
+        {/* Modo 1: Carga desde el ordenador */}
+        {imageSourceMode === "upload" && (
+          <div className="relative">
+            <label
+              htmlFor="cover-file-upload"
+              className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-violet-200 rounded-2xl bg-violet-50/40 hover:bg-violet-50 hover:border-violet-400 transition-all cursor-pointer group text-center"
+            >
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-100 text-violet-600 mb-3 group-hover:scale-105 transition-transform">
+                <UploadCloud className="h-6 w-6" />
+              </div>
+              <span className="text-sm font-extrabold text-slate-800 block">
+                {isUploadingImage ? "Cargando imagen..." : "Haz clic o arrastra una foto desde tu ordenador"}
+              </span>
+              <span className="text-xs text-slate-500 mt-1">
+                Soporta archivos JPG, PNG, WEBP de alta resolución
+              </span>
 
-          <div className="relative mt-2">
-            <ImageIcon className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-400" />
+              {uploadedFileName && (
+                <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800">
+                  <Check className="h-3.5 w-3.5 text-emerald-600" /> Archivo cargado: {uploadedFileName}
+                </div>
+              )}
+            </label>
             <input
-              type="url"
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-              placeholder="https://images.unsplash.com/..."
-              className="w-full h-11 pl-10 rounded-xl border border-slate-200 bg-slate-50/50 px-3 text-xs font-mono text-slate-700 focus:border-violet-600 focus:bg-white focus:outline-none transition-all"
+              id="cover-file-upload"
+              type="file"
+              accept="image/png, image/jpeg, image/webp"
+              onChange={handleFileUpload}
+              className="hidden"
             />
+          </div>
+        )}
+
+        {/* Modo 2: Presets sugeridos */}
+        {imageSourceMode === "presets" && (
+          <div className="space-y-2">
+            <label className="block text-xs font-bold text-slate-600">
+              Selecciona una fotografía profesional precargada:
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {IMAGE_PRESETS.map((preset) => (
+                <button
+                  key={preset.label}
+                  type="button"
+                  onClick={() => setImageUrl(preset.url)}
+                  className={`text-xs font-bold px-3.5 py-2 rounded-xl border transition-all ${
+                    imageUrl === preset.url
+                      ? "bg-violet-600 text-white border-violet-600 shadow-sm"
+                      : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
+                  }`}
+                >
+                  {preset.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Modo 3: Enlace URL */}
+        {imageSourceMode === "url" && (
+          <div>
+            <label className="block text-xs font-bold text-slate-600 mb-1.5">
+              Pega el enlace público de la imagen:
+            </label>
+            <div className="relative">
+              <ImageIcon className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-400" />
+              <input
+                type="url"
+                value={imageUrl}
+                onChange={(e) => setImageUrl(e.target.value)}
+                placeholder="https://images.unsplash.com/..."
+                className="w-full h-11 pl-10 rounded-xl border border-slate-200 bg-slate-50/50 px-3 text-xs font-mono text-slate-700 focus:border-violet-600 focus:bg-white focus:outline-none transition-all"
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Previsualización en vivo */}
+        <div>
+          <span className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+            Vista previa del banner de carrera
+          </span>
+          <div className="relative h-48 w-full rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 shadow-inner">
+            <div
+              className="absolute inset-0 bg-cover bg-center transition-all duration-500"
+              style={{ backgroundImage: `url(${imageUrl})` }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent flex items-end p-4 sm:p-5">
+              <div>
+                <span className="inline-block rounded-full bg-white/20 backdrop-blur-md px-2.5 py-0.5 text-[10px] font-bold text-white uppercase tracking-wider mb-1">
+                  {category}
+                </span>
+                <h4 className="text-white text-base sm:text-lg font-black drop-shadow-md">
+                  {title || "Título de tu Carrera"}
+                </h4>
+                <p className="text-white/80 text-xs font-medium drop-shadow-sm">
+                  {location || "Ciudad / Sede del evento"}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
