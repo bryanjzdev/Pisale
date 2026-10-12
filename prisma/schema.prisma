@@ -105,6 +105,9 @@ model Organization {
 
   owner       User     @relation("UserOrganizations", fields: [ownerId], references: [id])
   races       Race[]
+
+  @@index([ownerId])
+  @@index([status])
 }
 
 model Race {
@@ -123,6 +126,9 @@ model Race {
 
   organization   Organization @relation(fields: [organizationId], references: [id])
   distances      RaceDistance[]
+
+  @@index([organizationId])
+  @@index([status, date])
 }
 
 model RaceDistance {
@@ -136,6 +142,8 @@ model RaceDistance {
 
   race                Race           @relation(fields: [raceId], references: [id], onDelete: Cascade)
   registrations       Registration[]
+
+  @@index([raceId])
 }
 
 model Registration {
@@ -151,8 +159,15 @@ model Registration {
   shirtSize             String?
   stripeSessionId       String?            @unique
   stripePaymentIntentId String?
+  kitDelivered          Boolean            @default(false)
+  kitDeliveredAt        DateTime?
   registeredAt          DateTime           @default(now())
 
   user                  User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   raceDistance          RaceDistance?      @relation(fields: [raceDistanceId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([raceId])
+  @@index([status])
+  @@index([registeredAt])
 }
