@@ -29,8 +29,8 @@ const RACE_CATEGORIES = [
 ];
 
 const NAV_LINKS = [
+  { label: "Carreras", href: "/carreras" },
   { label: "Resultados", href: "#", badge: "Live" },
-  { label: "Organizadores", href: "#" },
   { label: "Comunidad", href: "#" },
 ];
 
@@ -166,14 +166,15 @@ export function Navbar({ isLoggedIn }: { isLoggedIn?: boolean }) {
 
         {/* Acciones */}
         <div className="flex items-center gap-1.5">
-          <button
+          <Link
             id="nav-search"
+            href="/carreras"
             className="hidden items-center gap-2 rounded-full border border-slate-200/80 bg-white/70 py-2 pl-3 pr-2 text-sm text-slate-400 transition-all hover:border-violet-200 hover:text-slate-600 hover:shadow-sm md:flex"
           >
             <Search className="h-4 w-4" />
             <span className="hidden xl:inline">Buscar carrera…</span>
             <kbd className="rounded-md border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-sans text-[10px] font-bold text-slate-500">⌘K</kbd>
-          </button>
+          </Link>
 
           <Link
             href="/organizador/crear"

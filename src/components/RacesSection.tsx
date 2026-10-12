@@ -12,9 +12,11 @@ const FILTERS: { id: "todas" | RaceCategory; label: string; icon: typeof Route }
   { id: "nocturna", label: "Nocturnas", icon: Moon },
 ];
 
-export function RacesSection() {
+import Link from "next/link";
+
+export function RacesSection({ initialRaces = MOCK_RACES }: { initialRaces?: typeof MOCK_RACES }) {
   const [active, setActive] = useState<(typeof FILTERS)[number]["id"]>("todas");
-  const races = active === "todas" ? MOCK_RACES : MOCK_RACES.filter((r) => r.category === active);
+  const races = active === "todas" ? initialRaces : initialRaces.filter((r) => r.category === active);
 
   return (
     <section id="carreras" className="relative z-10 mx-auto max-w-7xl scroll-mt-28 px-4 py-28">
@@ -57,13 +59,14 @@ export function RacesSection() {
       </div>
 
       <div className="mt-14 flex justify-center">
-        <button
+        <Link
           id="races-view-all"
+          href="/carreras"
           className="group flex items-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-bold text-slate-700 shadow-sm transition-all hover:border-violet-300 hover:text-violet-700 hover:shadow-md"
         >
           Ver calendario completo
           <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-        </button>
+        </Link>
       </div>
     </section>
   );

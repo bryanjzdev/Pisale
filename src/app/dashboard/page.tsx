@@ -80,7 +80,7 @@ export default async function DashboardPage() {
             </p>
           </div>
           <Link 
-            href="/"
+            href="/carreras"
             className="btn-shine group inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-linear-to-r from-slate-900 to-slate-800 px-8 text-sm font-bold text-white shadow-xl shadow-slate-900/20 transition-all hover:-translate-y-0.5 hover:shadow-2xl"
           >
             Explorar más carreras
@@ -145,7 +145,7 @@ export default async function DashboardPage() {
                   Aún no te has inscrito a ningún maratón. ¡Es momento de empezar el reto!
                 </p>
                 <Link
-                  href="/"
+                  href="/carreras"
                   className="mt-5 rounded-full bg-slate-900 px-6 py-2.5 text-xs font-bold text-white hover:bg-slate-800 transition-colors"
                 >
                   Ver carreras disponibles

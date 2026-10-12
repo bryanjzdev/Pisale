@@ -14,6 +14,7 @@ import {
   Building2,
 } from "lucide-react";
 import { RacesSection } from "@/components/RacesSection";
+import { getAllRaces } from "@/lib/races";
 
 const CITIES = ["CDMX", "Monterrey", "Guadalajara", "Puebla", "Querétaro", "Mérida", "Oaxaca", "Tijuana", "León", "Cancún"];
 
@@ -23,7 +24,8 @@ const LIVE_RESULTS = [
   { pos: 3, name: "Sofía G.", time: "1:13:41", color: "from-orange-200 to-amber-300" },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const races = await getAllRaces();
   return (
     <div className="relative overflow-hidden text-slate-900 selection:bg-fuchsia-200 selection:text-fuchsia-900">
       {/* ===== Fondo: aurora + grid ===== */}
@@ -70,7 +72,7 @@ export default function Home() {
           >
             <Link
               id="hero-explore"
-              href="#carreras"
+              href="/carreras"
               className="btn-shine group flex h-14 w-full items-center justify-center gap-2 rounded-full bg-linear-to-r from-violet-600 via-fuchsia-600 to-orange-500 px-8 text-base font-bold text-white shadow-[0_14px_40px_-10px_rgba(192,38,211,0.6)] transition-all hover:-translate-y-0.5 hover:shadow-[0_20px_50px_-10px_rgba(192,38,211,0.7)] sm:w-auto"
             >
               Explorar carreras
@@ -78,7 +80,7 @@ export default function Home() {
             </Link>
             <Link
               id="hero-organizer"
-              href="#organizadores"
+              href="/organizador/crear"
               className="flex h-14 w-full items-center justify-center gap-2 rounded-full border border-slate-200 bg-white/80 px-8 text-base font-bold text-slate-700 backdrop-blur-xl transition-all hover:-translate-y-0.5 hover:border-violet-200 hover:text-violet-700 hover:shadow-lg sm:w-auto"
             >
               <Building2 className="h-5 w-5" /> Soy organizador
@@ -216,7 +218,7 @@ export default function Home() {
       </section>
 
       {/* ===== Carreras ===== */}
-      <RacesSection />
+      <RacesSection initialRaces={races} />
 
       {/* ===== CTA organizadores ===== */}
       <section id="organizadores" className="relative z-10 mx-auto max-w-7xl px-4 pb-28">
@@ -236,7 +238,7 @@ export default function Home() {
             <div className="flex flex-col gap-3 md:items-end">
               <Link
                 id="cta-create-event"
-                href="#"
+                href="/organizador/crear"
                 className="btn-shine flex h-14 items-center justify-center gap-2 rounded-full bg-white px-8 font-bold text-violet-700 shadow-xl transition-transform hover:-translate-y-0.5"
               >
                 Crear mi evento <ArrowRight className="h-5 w-5" />
