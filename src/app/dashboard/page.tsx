@@ -1,8 +1,8 @@
-import { auth } from "@/auth";
+import { auth, signOut } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { stripe } from "@/lib/stripe";
-import { Calendar, Medal, Timer, TrendingUp, Trophy, QrCode, ArrowRight, Sparkles, CheckCircle2, Building2 } from "lucide-react";
+import { Calendar, Medal, Timer, TrendingUp, Trophy, QrCode, ArrowRight, Sparkles, CheckCircle2, Building2, LogOut } from "lucide-react";
 import Link from "next/link";
 
 export const instant = false;
@@ -91,10 +91,25 @@ export default async function DashboardPage() {
             </Link>
             <Link 
               href="/carreras"
-              className="btn-shine group inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-linear-to-r from-slate-900 to-slate-800 px-7 text-sm font-bold text-white shadow-xl shadow-slate-900/20 transition-all hover:-translate-y-0.5 hover:shadow-2xl"
+              className="btn-shine group inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-linear-to-r from-slate-900 to-slate-800 px-6 text-sm font-bold text-white shadow-xl shadow-slate-900/20 transition-all hover:-translate-y-0.5 hover:shadow-2xl"
             >
               Explorar carreras
             </Link>
+            <form
+              action={async () => {
+                "use server";
+                await signOut({ redirectTo: "/" });
+              }}
+            >
+              <button
+                type="submit"
+                className="inline-flex h-12 items-center justify-center gap-1.5 rounded-xl border border-rose-200 bg-rose-50/70 px-4 text-sm font-bold text-rose-700 hover:bg-rose-100/80 transition-colors shadow-sm cursor-pointer"
+                title="Cerrar sesión para cambiar de cuenta"
+              >
+                <LogOut className="h-4 w-4" />
+                <span className="hidden sm:inline">Salir</span>
+              </button>
+            </form>
           </div>
         </div>
 

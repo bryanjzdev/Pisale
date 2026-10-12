@@ -1,4 +1,4 @@
-import { auth } from "@/auth";
+import { auth, signOut } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import Link from "next/link";
@@ -17,6 +17,7 @@ import {
   QrCode,
   Sparkles,
   ExternalLink,
+  LogOut,
 } from "lucide-react";
 import { ExportCsvButton } from "@/components/organizador/ExportCsvButton";
 
@@ -131,6 +132,22 @@ export default async function OrganizadorDashboardPage() {
               <Plus className="h-4 w-4" />
               Publicar Nueva Carrera
             </Link>
+
+            <form
+              action={async () => {
+                "use server";
+                await signOut({ redirectTo: "/" });
+              }}
+            >
+              <button
+                type="submit"
+                className="inline-flex h-12 items-center justify-center gap-1.5 rounded-2xl border border-rose-200 bg-rose-50/70 px-4 text-xs font-bold text-rose-700 hover:bg-rose-100/80 transition-colors shadow-sm cursor-pointer"
+                title="Cerrar sesión para cambiar de cuenta"
+              >
+                <LogOut className="h-4 w-4" />
+                <span className="hidden sm:inline">Salir</span>
+              </button>
+            </form>
           </div>
         </div>
 
