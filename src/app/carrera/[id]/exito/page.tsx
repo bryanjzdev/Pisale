@@ -16,6 +16,7 @@ import {
   Share2,
 } from "lucide-react";
 import { RealQRCode } from "@/components/common/RealQRCode";
+import { BotonEnviarCorreoTicket } from "@/components/common/BotonEnviarCorreoTicket";
 
 export const instant = false;
 
@@ -218,15 +219,24 @@ export default async function CarreraExitoPage({
             </div>
           </div>
 
-          {/* Botones de Navegación */}
+          {/* Botones de Navegación y Correo */}
           <div className="mt-8 pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <Link
-              href="/dashboard"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-linear-to-r from-violet-600 to-fuchsia-600 px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-fuchsia-500/25 hover:shadow-fuchsia-500/40 transition-all"
-            >
-              Ver en mi Dashboard
-              <ArrowRight className="h-4 w-4" />
-            </Link>
+            <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+              <Link
+                href="/dashboard"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-linear-to-r from-violet-600 to-fuchsia-600 px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-fuchsia-500/25 hover:shadow-fuchsia-500/40 transition-all"
+              >
+                Ver en mi Dashboard
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+
+              {registration && (
+                <BotonEnviarCorreoTicket
+                  registrationId={registration.id}
+                  runnerEmail={runnerEmail}
+                />
+              )}
+            </div>
 
             <Link
               href="/"

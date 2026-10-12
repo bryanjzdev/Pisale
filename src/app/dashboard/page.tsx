@@ -4,6 +4,7 @@ import { prisma } from "@/lib/db";
 import { stripe } from "@/lib/stripe";
 import { Calendar, Medal, Timer, TrendingUp, Trophy, QrCode, ArrowRight, Sparkles, CheckCircle2, Building2, LogOut, ShieldCheck } from "lucide-react";
 import Link from "next/link";
+import { BotonEnviarCorreoTicket } from "@/components/common/BotonEnviarCorreoTicket";
 
 export const instant = false;
 
@@ -238,19 +239,28 @@ export default async function DashboardPage() {
                       </div>
                     </div>
 
-                    <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                    <div className="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-xs">
                       <span className="text-slate-500 font-medium">
                         Total pagado: <strong>${reg.amountPaid} MXN</strong>
                       </span>
-                      {reg.raceId && (
-                        <Link
-                          href={`/carrera/${reg.raceId}/exito?session_id=${reg.stripeSessionId || `demo_${reg.id}`}`}
-                          className="inline-flex items-center gap-1 font-bold text-violet-600 hover:text-violet-800 transition-colors"
-                        >
-                          <QrCode className="h-3.5 w-3.5" />
-                          Ver Boleto Digital
-                        </Link>
-                      )}
+                      <div className="flex items-center gap-2">
+                        {reg.status === "CONFIRMED" && (
+                          <BotonEnviarCorreoTicket
+                            registrationId={reg.id}
+                            runnerEmail={session?.user?.email || undefined}
+                            compact={true}
+                          />
+                        )}
+                        {reg.raceId && (
+                          <Link
+                            href={`/carrera/${reg.raceId}/exito?session_id=${reg.stripeSessionId || `demo_${reg.id}`}`}
+                            className="inline-flex items-center gap-1 font-bold text-violet-600 hover:text-violet-800 transition-colors"
+                          >
+                            <QrCode className="h-3.5 w-3.5" />
+                            Ver Boleto Digital
+                          </Link>
+                        )}
+                      </div>
                     </div>
                   </div>
                 ))}
