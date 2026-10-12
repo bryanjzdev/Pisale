@@ -2,7 +2,7 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { stripe } from "@/lib/stripe";
-import { Calendar, Medal, Timer, TrendingUp, Trophy, QrCode, ArrowRight, Sparkles, CheckCircle2 } from "lucide-react";
+import { Calendar, Medal, Timer, TrendingUp, Trophy, QrCode, ArrowRight, Sparkles, CheckCircle2, Building2 } from "lucide-react";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -82,12 +82,21 @@ export default async function DashboardPage() {
               Aquí está el resumen de tus boletos, inscripciones y rendimiento.
             </p>
           </div>
-          <Link 
-            href="/carreras"
-            className="btn-shine group inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-linear-to-r from-slate-900 to-slate-800 px-8 text-sm font-bold text-white shadow-xl shadow-slate-900/20 transition-all hover:-translate-y-0.5 hover:shadow-2xl"
-          >
-            Explorar más carreras
-          </Link>
+          <div className="flex items-center gap-2.5">
+            <Link
+              href="/organizador/dashboard"
+              className="inline-flex h-12 items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white/80 px-5 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm"
+            >
+              <Building2 className="h-4 w-4 text-violet-600" />
+              Panel Organizador
+            </Link>
+            <Link 
+              href="/carreras"
+              className="btn-shine group inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-linear-to-r from-slate-900 to-slate-800 px-7 text-sm font-bold text-white shadow-xl shadow-slate-900/20 transition-all hover:-translate-y-0.5 hover:shadow-2xl"
+            >
+              Explorar carreras
+            </Link>
+          </div>
         </div>
 
         {/* Stats Grid */}
