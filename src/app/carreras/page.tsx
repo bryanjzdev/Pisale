@@ -2,7 +2,6 @@ import { getAllRaces } from "@/lib/races";
 import { CarrerasExplorer } from "@/components/carreras/CarrerasExplorer";
 import { Sparkles, Trophy, Calendar } from "lucide-react";
 
-export const dynamic = "force-dynamic";
 export const instant = false;
 
 export const metadata = {

@@ -9,8 +9,8 @@ import { RaceActionCard } from "@/components/race-detail/RaceActionCard";
 import { MobileFloatingCta } from "@/components/race-detail/MobileFloatingCta";
 import { Building2, Info, MapPin, PackageCheck, ShieldCheck } from "lucide-react";
 
-export const dynamic = "force-dynamic";
 export const instant = false;
+
 
 type Props = {
   params: Promise<{ id: string }>;

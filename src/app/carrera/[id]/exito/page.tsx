@@ -16,7 +16,6 @@ import {
   Share2,
 } from "lucide-react";
 
-export const dynamic = "force-dynamic";
 export const instant = false;
 
 export default async function CarreraExitoPage({

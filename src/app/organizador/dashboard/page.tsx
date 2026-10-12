@@ -20,7 +20,6 @@ import {
 } from "lucide-react";
 import { ExportCsvButton } from "@/components/organizador/ExportCsvButton";
 
-export const dynamic = "force-dynamic";
 export const instant = false;
 
 export const metadata = {
