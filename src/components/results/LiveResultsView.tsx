@@ -2,20 +2,17 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Trophy,
-  Medal,
-  Timer,
   Search,
-  Filter,
-  Flame,
   CheckCircle2,
   Share2,
   Printer,
   X,
   Sparkles,
   ArrowRight,
-  TrendingUp,
+  User,
 } from "lucide-react";
 import type { AthleteResult } from "@/app/actions/results";
 
@@ -23,11 +20,14 @@ export function LiveResultsView({
   races,
   initialRaceId,
   initialResults,
+  allGlobalResults = [],
 }: {
   races: { id: string; title: string; date?: string; distances: string[] }[];
   initialRaceId: string;
   initialResults: AthleteResult[];
+  allGlobalResults?: AthleteResult[];
 }) {
+  const router = useRouter();
   const [selectedRaceId, setSelectedRaceId] = useState(initialRaceId);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDistance, setSelectedDistance] = useState("TODAS");
@@ -35,12 +35,17 @@ export function LiveResultsView({
 
   const currentRace = races.find((r) => r.id === selectedRaceId) || races[0];
 
-  // Filtrado reactivo en tiempo real
-  const filteredResults = initialResults.filter((item) => {
+  // Si hay búsqueda activa por texto o dorsal, buscamos en todas las inscripciones del sistema;
+  // de lo contrario, mostramos los resultados de la carrera seleccionada.
+  const activeDataset =
+    searchQuery.trim().length > 0 ? allGlobalResults : initialResults;
+
+  const filteredResults = activeDataset.filter((item) => {
     const matchesSearch =
       searchQuery.trim() === "" ||
       item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.bibNumber.toLowerCase().includes(searchQuery.toLowerCase());
+      item.bibNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.raceTitle.toLowerCase().includes(searchQuery.toLowerCase());
 
     const matchesDistance =
       selectedDistance === "TODAS" ||
@@ -54,24 +59,28 @@ export function LiveResultsView({
   return (
     <div className="space-y-10">
       
-      {/* Selector de Carreras (Chips / Tabs) */}
+      {/* Selector de Carreras (Chips / Tabs con enlaces reales) */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white/80 p-4 rounded-3xl border border-slate-200/80 shadow-xs backdrop-blur-md">
         <div className="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 scrollbar-none">
           <span className="text-xs font-bold uppercase tracking-wider text-slate-400 mr-2 shrink-0">
             Evento:
           </span>
           {races.map((race) => (
-            <button
+            <Link
               key={race.id}
-              onClick={() => setSelectedRaceId(race.id)}
-              className={`px-4 py-2 rounded-2xl text-xs font-black transition-all shrink-0 cursor-pointer ${
+              href={`/resultados?carrera=${race.id}`}
+              onClick={() => {
+                setSelectedRaceId(race.id);
+                setSearchQuery("");
+              }}
+              className={`px-4 py-2 rounded-2xl text-xs font-black transition-all shrink-0 ${
                 selectedRaceId === race.id
                   ? "bg-slate-900 text-white shadow-md shadow-slate-950/20"
                   : "bg-slate-100 text-slate-600 hover:bg-slate-200"
               }`}
             >
               {race.title}
-            </button>
+            </Link>
           ))}
         </div>
 
@@ -85,7 +94,7 @@ export function LiveResultsView({
 
       {/* Buscador & Filtros de Distancia */}
       <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-        {/* Barra de Búsqueda */}
+        {/* Barra de Búsqueda Global */}
         <div className="relative w-full md:w-96">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
           <input
@@ -123,102 +132,112 @@ export function LiveResultsView({
         </div>
       </div>
 
-      {/* PODIO DE HONOR (TOP 3) */}
-      {!searchQuery && selectedDistance === "TODAS" && podium.length >= 3 && (
+      {/* PODIO DE HONOR (TOP 1 a 3 REALES) */}
+      {!searchQuery && podium.length > 0 && (
         <div className="relative pt-6">
           <div className="text-center mb-6">
             <span className="inline-block rounded-full bg-amber-100 px-3 py-1 text-[11px] font-black uppercase text-amber-800 tracking-wider mb-2">
-              🏆 Líderes de Carrera
+              🏆 Líderes Oficiales
             </span>
             <h2 className="font-display text-2xl font-black text-slate-900">
-              Podio Oficial de Competidores
+              Podio de la Carrera
             </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end max-w-4xl mx-auto">
             {/* 2do Lugar (Plata) */}
-            <div
-              onClick={() => setSelectedAthlete(podium[1])}
-              className="order-2 md:order-1 relative rounded-3xl bg-linear-to-b from-slate-100 to-white p-6 border-2 border-slate-200 shadow-md text-center transform transition-all hover:scale-105 cursor-pointer"
-            >
-              <div className="mx-auto w-12 h-12 rounded-2xl bg-slate-200 flex items-center justify-center text-slate-700 font-display font-black text-lg mb-3 shadow-inner">
-                🥈 2º
+            {podium[1] ? (
+              <div
+                onClick={() => setSelectedAthlete(podium[1])}
+                className="order-2 md:order-1 relative rounded-3xl bg-linear-to-b from-slate-100 to-white p-6 border-2 border-slate-200 shadow-md text-center transform transition-all hover:scale-105 cursor-pointer"
+              >
+                <div className="mx-auto w-12 h-12 rounded-2xl bg-slate-200 flex items-center justify-center text-slate-700 font-display font-black text-lg mb-3 shadow-inner">
+                  🥈 2º
+                </div>
+                <span className="font-mono text-xs font-bold text-slate-500 block">
+                  {podium[1].bibNumber}
+                </span>
+                <h3 className="font-display font-black text-slate-900 text-base mt-0.5 truncate">
+                  {podium[1].name}
+                </h3>
+                <p className="font-display text-2xl font-black text-slate-800 mt-2">
+                  {podium[1].chipTime}
+                </p>
+                <span className="text-[11px] text-slate-500 font-bold block mt-1">
+                  Ritmo: {podium[1].pace}
+                </span>
               </div>
-              <span className="font-mono text-xs font-bold text-slate-500 block">
-                {podium[1].bibNumber}
-              </span>
-              <h3 className="font-display font-black text-slate-900 text-base mt-0.5 truncate">
-                {podium[1].name}
-              </h3>
-              <p className="font-display text-2xl font-black text-slate-800 mt-2">
-                {podium[1].chipTime}
-              </p>
-              <span className="text-[11px] text-slate-500 font-bold block mt-1">
-                Ritmo: {podium[1].pace}
-              </span>
-            </div>
+            ) : (
+              <div className="order-2 md:order-1" />
+            )}
 
             {/* 1er Lugar (Oro - Destacado) */}
-            <div
-              onClick={() => setSelectedAthlete(podium[0])}
-              className="order-1 md:order-2 relative rounded-3xl bg-linear-to-b from-amber-500/10 via-white to-white p-7 border-2 border-amber-400 shadow-xl shadow-amber-500/10 text-center transform md:-translate-y-4 transition-all hover:scale-105 cursor-pointer"
-            >
-              <div className="mx-auto w-14 h-14 rounded-2xl bg-linear-to-tr from-amber-400 to-yellow-500 flex items-center justify-center text-white font-display font-black text-2xl mb-3 shadow-lg shadow-amber-500/30">
-                🥇 1º
+            {podium[0] && (
+              <div
+                onClick={() => setSelectedAthlete(podium[0])}
+                className="order-1 md:order-2 relative rounded-3xl bg-linear-to-b from-amber-500/10 via-white to-white p-7 border-2 border-amber-400 shadow-xl shadow-amber-500/10 text-center transform md:-translate-y-4 transition-all hover:scale-105 cursor-pointer"
+              >
+                <div className="mx-auto w-14 h-14 rounded-2xl bg-linear-to-tr from-amber-400 to-yellow-500 flex items-center justify-center text-white font-display font-black text-2xl mb-3 shadow-lg shadow-amber-500/30">
+                  🥇 1º
+                </div>
+                <span className="font-mono text-xs font-black text-amber-700 block">
+                  {podium[0].bibNumber}
+                </span>
+                <h3 className="font-display font-black text-slate-900 text-lg mt-0.5 truncate">
+                  {podium[0].name}
+                </h3>
+                <p className="font-display text-3xl font-black text-amber-600 mt-2">
+                  {podium[0].chipTime}
+                </p>
+                <span className="text-xs text-slate-600 font-bold block mt-1">
+                  Ritmo: {podium[0].pace} · Split 5K: {podium[0].split5k}
+                </span>
               </div>
-              <span className="font-mono text-xs font-black text-amber-700 block">
-                {podium[0].bibNumber}
-              </span>
-              <h3 className="font-display font-black text-slate-900 text-lg mt-0.5 truncate">
-                {podium[0].name}
-              </h3>
-              <p className="font-display text-3xl font-black text-amber-600 mt-2">
-                {podium[0].chipTime}
-              </p>
-              <span className="text-xs text-slate-600 font-bold block mt-1">
-                Ritmo: {podium[0].pace} · Split 5K: {podium[0].split5k}
-              </span>
-            </div>
+            )}
 
             {/* 3er Lugar (Bronce) */}
-            <div
-              onClick={() => setSelectedAthlete(podium[2])}
-              className="order-3 relative rounded-3xl bg-linear-to-b from-orange-50 to-white p-6 border-2 border-orange-200 shadow-md text-center transform transition-all hover:scale-105 cursor-pointer"
-            >
-              <div className="mx-auto w-12 h-12 rounded-2xl bg-orange-100 flex items-center justify-center text-orange-700 font-display font-black text-lg mb-3 shadow-inner">
-                🥉 3º
+            {podium[2] ? (
+              <div
+                onClick={() => setSelectedAthlete(podium[2])}
+                className="order-3 relative rounded-3xl bg-linear-to-b from-orange-50 to-white p-6 border-2 border-orange-200 shadow-md text-center transform transition-all hover:scale-105 cursor-pointer"
+              >
+                <div className="mx-auto w-12 h-12 rounded-2xl bg-orange-100 flex items-center justify-center text-orange-700 font-display font-black text-lg mb-3 shadow-inner">
+                  🥉 3º
+                </div>
+                <span className="font-mono text-xs font-bold text-slate-500 block">
+                  {podium[2].bibNumber}
+                </span>
+                <h3 className="font-display font-black text-slate-900 text-base mt-0.5 truncate">
+                  {podium[2].name}
+                </h3>
+                <p className="font-display text-2xl font-black text-slate-800 mt-2">
+                  {podium[2].chipTime}
+                </p>
+                <span className="text-[11px] text-slate-500 font-bold block mt-1">
+                  Ritmo: {podium[2].pace}
+                </span>
               </div>
-              <span className="font-mono text-xs font-bold text-slate-500 block">
-                {podium[2].bibNumber}
-              </span>
-              <h3 className="font-display font-black text-slate-900 text-base mt-0.5 truncate">
-                {podium[2].name}
-              </h3>
-              <p className="font-display text-2xl font-black text-slate-800 mt-2">
-                {podium[2].chipTime}
-              </p>
-              <span className="text-[11px] text-slate-500 font-bold block mt-1">
-                Ritmo: {podium[2].pace}
-              </span>
-            </div>
+            ) : (
+              <div className="order-3" />
+            )}
           </div>
         </div>
       )}
 
-      {/* TABLA COMPLETA DE CLASIFICACIÓN */}
+      {/* TABLA COMPLETA DE CLASIFICACIÓN CON DATOS REALES */}
       <div className="overflow-hidden rounded-3xl bg-white border border-slate-200/80 shadow-xs">
         <div className="p-5 sm:p-6 border-b border-slate-100 flex items-center justify-between">
           <div>
             <h3 className="font-display text-lg font-black text-slate-900">
-              Tabla General de Tiempos
+              {searchQuery ? "Resultados de la Búsqueda" : "Tabla General de Tiempos"}
             </h3>
             <p className="text-xs text-slate-500 mt-0.5">
-              Mostrando {filteredResults.length} corredores oficiales
+              {filteredResults.length} corredor{filteredResults.length === 1 ? "" : "es"} registrado{filteredResults.length === 1 ? "" : "s"}
             </p>
           </div>
 
           <span className="text-xs font-bold text-slate-400">
-            {currentRace.title}
+            {searchQuery ? "Búsqueda en todo el sistema" : currentRace.title}
           </span>
         </div>
 
@@ -239,80 +258,80 @@ export function LiveResultsView({
             <tbody className="divide-y divide-slate-100">
               {filteredResults.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="py-12 text-center text-slate-400">
-                    No se encontraron resultados para la búsqueda especificada.
+                  <td colSpan={8} className="py-16 text-center text-slate-400">
+                    <p className="font-bold text-sm text-slate-600">
+                      No hay corredores registrados para esta selección todavía.
+                    </p>
+                    <p className="text-xs text-slate-400 mt-1">
+                      {searchQuery
+                        ? "Verifica el dorsal o nombre ingresado."
+                        : "Sé el primero en inscribirte a esta carrera para aparecer en el podio oficial."}
+                    </p>
                   </td>
                 </tr>
               ) : (
-                filteredResults.map((r) => {
-                  const isTop3 = r.overallRank <= 3;
-                  return (
-                    <tr
-                      key={r.id}
-                      onClick={() => setSelectedAthlete(r)}
-                      className={`group hover:bg-violet-50/50 transition-colors cursor-pointer ${
-                        r.isUserRegistration ? "bg-violet-50/80 font-bold" : ""
-                      }`}
-                    >
-                      <td className="py-4 px-4 sm:px-6">
-                        <span
-                          className={`inline-flex items-center justify-center h-7 w-7 rounded-lg font-mono font-black text-xs ${
-                            r.overallRank === 1
-                              ? "bg-amber-400 text-slate-950 font-black shadow-xs"
-                              : r.overallRank === 2
-                              ? "bg-slate-300 text-slate-900"
-                              : r.overallRank === 3
-                              ? "bg-orange-200 text-orange-950"
-                              : "bg-slate-100 text-slate-600"
-                          }`}
-                        >
-                          #{r.overallRank}
+                filteredResults.map((r) => (
+                  <tr
+                    key={r.id}
+                    onClick={() => setSelectedAthlete(r)}
+                    className="group hover:bg-violet-50/50 transition-colors cursor-pointer bg-violet-50/40"
+                  >
+                    <td className="py-4 px-4 sm:px-6">
+                      <span
+                        className={`inline-flex items-center justify-center h-7 w-7 rounded-lg font-mono font-black text-xs ${
+                          r.overallRank === 1
+                            ? "bg-amber-400 text-slate-950 font-black shadow-xs"
+                            : r.overallRank === 2
+                            ? "bg-slate-300 text-slate-900"
+                            : r.overallRank === 3
+                            ? "bg-orange-200 text-orange-950"
+                            : "bg-slate-100 text-slate-600"
+                        }`}
+                      >
+                        #{r.overallRank}
+                      </span>
+                    </td>
+
+                    <td className="py-4 px-4 font-mono font-bold text-violet-700">
+                      {r.bibNumber}
+                    </td>
+
+                    <td className="py-4 px-4">
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-slate-900 group-hover:text-violet-700 transition-colors">
+                          {r.name}
                         </span>
-                      </td>
-
-                      <td className="py-4 px-4 font-mono font-bold text-violet-700">
-                        {r.bibNumber}
-                      </td>
-
-                      <td className="py-4 px-4">
-                        <div className="flex items-center gap-2">
-                          <span className="font-bold text-slate-900 group-hover:text-violet-700 transition-colors">
-                            {r.name}
-                          </span>
-                          {r.isUserRegistration && (
-                            <span className="rounded-full bg-violet-600 px-2 py-0.5 text-[9px] font-black text-white uppercase">
-                              Tú
-                            </span>
-                          )}
-                        </div>
-                      </td>
-
-                      <td className="py-4 px-4">
-                        <span className="inline-block rounded-md bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-700">
-                          {r.distanceName}
+                        <span className="rounded-full bg-violet-600 px-2 py-0.5 text-[9px] font-black text-white uppercase">
+                          Oficial
                         </span>
-                      </td>
+                      </div>
+                    </td>
 
-                      <td className="py-4 px-4 font-mono text-sm font-black text-slate-950">
-                        {r.chipTime}
-                      </td>
+                    <td className="py-4 px-4">
+                      <span className="inline-block rounded-md bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-700">
+                        {r.distanceName}
+                      </span>
+                    </td>
 
-                      <td className="py-4 px-4 text-slate-600 font-medium">
-                        {r.pace}
-                      </td>
+                    <td className="py-4 px-4 font-mono text-sm font-black text-slate-950">
+                      {r.chipTime}
+                    </td>
 
-                      <td className="py-4 px-4 font-mono text-slate-500 hidden sm:table-cell">
-                        {r.split5k || "—"}
-                      </td>
+                    <td className="py-4 px-4 text-slate-600 font-medium">
+                      {r.pace}
+                    </td>
 
-                      <td className="py-4 px-4 text-right">
-                        <button className="text-violet-600 font-black hover:text-violet-800 text-[11px] inline-flex items-center gap-1">
-                          Ver Detalle →
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })
+                    <td className="py-4 px-4 font-mono text-slate-500 hidden sm:table-cell">
+                      {r.split5k || "—"}
+                    </td>
+
+                    <td className="py-4 px-4 text-right">
+                      <button className="text-violet-600 font-black hover:text-violet-800 text-[11px] inline-flex items-center gap-1 cursor-pointer">
+                        Ver Detalle →
+                      </button>
+                    </td>
+                  </tr>
+                ))
               )}
             </tbody>
           </table>
@@ -398,7 +417,7 @@ export function LiveResultsView({
               </Link>
               <button
                 onClick={() => window.print()}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3.5 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3.5 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
               >
                 <Printer className="h-4 w-4" />
                 Imprimir

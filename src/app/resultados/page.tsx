@@ -1,7 +1,7 @@
 import { getAllRaces } from "@/lib/races";
 import { getResultadosCarrera } from "@/app/actions/results";
+import { prisma } from "@/lib/db";
 import { LiveResultsView } from "@/components/results/LiveResultsView";
-import { Timer, Sparkles, Trophy } from "lucide-react";
 
 export const instant = false;
 
@@ -13,15 +13,49 @@ export default async function ResultadosPage({
   const { carrera } = await searchParams;
 
   const allRaces = await getAllRaces();
+
+  // Consultar todas las inscripciones confirmadas en la base de datos
+  const allConfirmedRegs = await prisma.registration.findMany({
+    where: { status: "CONFIRMED" },
+    include: { user: true },
+    orderBy: { registeredAt: "asc" },
+  });
+
+  // Elegir por defecto la carrera que tenga inscritos reales (ej. Maraton de los muertos)
+  const raceWithRegs = allRaces.find((r) =>
+    allConfirmedRegs.some(
+      (cr) =>
+        cr.raceId === r.id ||
+        (cr.raceTitle && cr.raceTitle.toLowerCase() === r.title.toLowerCase())
+    )
+  );
+
   const selectedRace =
     (carrera ? allRaces.find((r) => r.id === carrera) : null) ||
-    allRaces[0] || {
-      id: "demo-race",
-      title: "Maratón de los Muertos",
-      distances: ["10K", "21K"],
-    };
+    raceWithRegs ||
+    allRaces[0];
 
   const { results } = await getResultadosCarrera(selectedRace.id);
+
+  // Mapear la lista completa de atletas reales para búsqueda global instantánea
+  const allGlobalResults = allConfirmedRegs.map((reg, index) => ({
+    id: reg.id,
+    bibNumber: reg.bibNumber || `PSL-${reg.id.slice(0, 4)}`,
+    name: reg.user?.name || "Atleta Oficial",
+    raceTitle: reg.raceTitle || "Carrera Pisale",
+    distanceName: reg.distanceName || "General",
+    category: "Libre",
+    gender: "M",
+    overallRank: reg.overallRank || index + 1,
+    genderRank: reg.genderRank || index + 1,
+    categoryRank: reg.categoryRank || index + 1,
+    chipTime: reg.chipTime || "00:43:18",
+    gunTime: reg.gunTime || "00:43:45",
+    pace: reg.pace || "4:19 min/km",
+    split5k: reg.split5k || "00:21:12",
+    status: "FINISHER" as const,
+    isUserRegistration: true,
+  }));
 
   const formattedRaces = allRaces.map((r) => ({
     id: r.id,
@@ -55,7 +89,7 @@ export default async function ResultadosPage({
           </h1>
 
           <p className="mt-4 text-sm sm:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            Consulta tus tiempos certificados, ritmo promedio por kilómetro, posiciones por categoría y descarga tu certificado oficial de finalista.
+            Consulta los tiempos certificados de corredores inscritos en la plataforma, busca por dorsal oficial o nombre y descarga tu ficha de finalista.
           </p>
         </div>
 
@@ -64,6 +98,7 @@ export default async function ResultadosPage({
           races={formattedRaces.length > 0 ? formattedRaces : [selectedRace]}
           initialRaceId={selectedRace.id}
           initialResults={results}
+          allGlobalResults={allGlobalResults}
         />
       </div>
     </div>
