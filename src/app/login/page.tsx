@@ -21,16 +21,15 @@ export default function LoginPage() {
         </Link>
         
         <div className="flex justify-center">
-          <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-violet-600/10 via-fuchsia-500/15 to-orange-400/20 p-2 ring-1 ring-violet-500/20 shadow-xl shadow-fuchsia-500/20 backdrop-blur-md">
+          <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-white/90 p-2 ring-1 ring-slate-200/90 shadow-md backdrop-blur-md">
             <Image
-              src="/Logo_Pisale.png"
+              src="/assets/Logo_Pisale.png"
               alt="Logo Písale"
-              width={52}
-              height={52}
-              className="h-full w-full object-contain drop-shadow-sm"
+              width={56}
+              height={56}
+              className="h-full w-full object-contain"
               priority
             />
-            <span className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/50" />
           </div>
         </div>
         

@@ -70,16 +70,15 @@ export function Navbar({ isLoggedIn }: { isLoggedIn?: boolean }) {
       >
         {/* Logo */}
         <Link href="/" className="group flex items-center gap-2.5 pl-1 pr-3" aria-label="Inicio Písale">
-          <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-linear-to-br from-violet-600/10 via-fuchsia-500/15 to-orange-400/20 p-1.5 ring-1 ring-violet-500/20 shadow-md shadow-fuchsia-500/15 backdrop-blur-md transition-all duration-500 group-hover:scale-105 group-hover:shadow-fuchsia-500/30">
+          <div className="relative flex h-11 w-11 items-center justify-center rounded-2xl bg-white/90 p-1 ring-1 ring-slate-200/90 shadow-sm backdrop-blur-md transition-all duration-300 group-hover:scale-105 group-hover:shadow-md">
             <Image
-              src="/Logo_Pisale.png"
+              src="/assets/Logo_Pisale.png"
               alt="Logo Písale"
-              width={36}
-              height={36}
-              className="h-full w-full object-contain transition-transform duration-500 group-hover:rotate-[-8deg] drop-shadow-sm"
+              width={44}
+              height={44}
+              className="h-full w-full object-contain"
               priority
             />
-            <span className="absolute inset-0 rounded-full ring-1 ring-inset ring-white/50" />
           </div>
           <span className="font-display text-[1.35rem] font-extrabold tracking-tight text-slate-900">
             písale<span className="text-fuchsia-500">.</span>
