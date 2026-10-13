@@ -21,12 +21,12 @@ export default function RegisterPage() {
         </Link>
         
         <div className="flex justify-center">
-          <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-white/90 p-2 ring-1 ring-slate-200/90 shadow-md backdrop-blur-md">
+          <div className="relative flex h-20 w-20 items-center justify-center rounded-3xl bg-white/95 p-2 ring-1 ring-slate-200/90 shadow-lg shadow-violet-500/10 backdrop-blur-md">
             <Image
               src="/assets/Logo_Pisale.png"
               alt="Logo Písale"
-              width={56}
-              height={56}
+              width={72}
+              height={72}
               className="h-full w-full object-contain"
               priority
             />

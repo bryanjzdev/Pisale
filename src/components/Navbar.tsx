@@ -70,12 +70,12 @@ export function Navbar({ isLoggedIn }: { isLoggedIn?: boolean }) {
       >
         {/* Logo */}
         <Link href="/" className="group flex items-center gap-2.5 pl-1 pr-3" aria-label="Inicio Písale">
-          <div className="relative flex h-11 w-11 items-center justify-center rounded-2xl bg-white/90 p-1 ring-1 ring-slate-200/90 shadow-sm backdrop-blur-md transition-all duration-300 group-hover:scale-105 group-hover:shadow-md">
+          <div className="relative flex h-12 w-12 sm:h-13 sm:w-13 items-center justify-center rounded-2xl bg-white/95 p-0.5 ring-1 ring-slate-200/90 shadow-sm backdrop-blur-md transition-all duration-300 group-hover:scale-105 group-hover:shadow-md">
             <Image
               src="/assets/Logo_Pisale.png"
               alt="Logo Písale"
-              width={44}
-              height={44}
+              width={54}
+              height={54}
               className="h-full w-full object-contain"
               priority
             />

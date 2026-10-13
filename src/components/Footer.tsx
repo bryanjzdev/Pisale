@@ -89,13 +89,13 @@ export function Footer() {
         {/* Columnas */}
         <div className="grid gap-12 pb-16 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div>
-            <Link href="/" className="group inline-flex items-center gap-2.5">
-              <div className="relative flex h-11 w-11 items-center justify-center rounded-2xl bg-white/90 p-1 ring-1 ring-slate-200/90 shadow-sm backdrop-blur-md transition-all duration-300 group-hover:scale-105 group-hover:shadow-md">
+            <Link href="/" className="group inline-flex items-center gap-3">
+              <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-white/95 p-1 ring-1 ring-slate-200/90 shadow-sm backdrop-blur-md transition-all duration-300 group-hover:scale-105 group-hover:shadow-md">
                 <Image
                   src="/assets/Logo_Pisale.png"
                   alt="Logo Písale"
-                  width={44}
-                  height={44}
+                  width={56}
+                  height={56}
                   className="h-full w-full object-contain"
                 />
               </div>
