@@ -163,6 +163,18 @@ model Registration {
   kitDeliveredAt        DateTime?
   registeredAt          DateTime           @default(now())
 
+  // Tiempos Oficiales y Cronometraje (Live Timing)
+  chipTime              String?
+  gunTime               String?
+  pace                  String?
+  overallRank           Int?
+  genderRank            Int?
+  categoryRank          Int?
+  split5k               String?
+  split10k              String?
+  split21k              String?
+  finishedAt            DateTime?
+
   user                  User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   raceDistance          RaceDistance?      @relation(fields: [raceDistanceId], references: [id], onDelete: SetNull)
 
@@ -170,4 +182,5 @@ model Registration {
   @@index([raceId])
   @@index([status])
   @@index([registeredAt])
+  @@index([chipTime])
 }

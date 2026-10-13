@@ -30,7 +30,7 @@ const RACE_CATEGORIES = [
 
 const NAV_LINKS = [
   { label: "Carreras", href: "/carreras" },
-  { label: "Resultados", href: "#", badge: "Live" },
+  { label: "Resultados", href: "/resultados", badge: "Live" },
   { label: "Comunidad", href: "#" },
 ];
 

@@ -355,19 +355,64 @@ export default async function DashboardPage() {
             )}
           </section>
 
-          {/* Historial */}
+          {/* Historial de Tiempos */}
           <section className="bg-white/70 p-7 sm:p-8 rounded-[2.5rem] border border-white shadow-[0_8px_30px_rgba(0,0,0,0.04)] backdrop-blur-xl">
             <div className="flex items-center justify-between mb-6">
               <h2 className="font-display text-2xl font-bold text-slate-900">Historial de Tiempos</h2>
+              <Link
+                href="/resultados"
+                className="inline-flex items-center gap-1 text-xs font-bold text-violet-600 hover:text-violet-800 transition-colors"
+              >
+                Ver Leaderboard Live →
+              </Link>
             </div>
             
-            <div className="flex flex-col items-center justify-center py-16 text-center bg-slate-50/70 rounded-3xl border border-slate-100">
-              <Trophy className="h-10 w-10 text-slate-300 mb-3" />
-              <p className="text-slate-700 font-bold text-sm">Tus tiempos oficiales</p>
-              <p className="text-slate-400 font-medium text-xs max-w-xs mt-1">
-                Aparecerán automáticamente aquí en tiempo real una vez que cruces la meta del evento.
-              </p>
-            </div>
+            {confirmedRegistrations.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-16 text-center bg-slate-50/70 rounded-3xl border border-slate-100">
+                <Trophy className="h-10 w-10 text-slate-300 mb-3" />
+                <p className="text-slate-700 font-bold text-sm">Tus tiempos oficiales</p>
+                <p className="text-slate-400 font-medium text-xs max-w-xs mt-1">
+                  Aparecerán automáticamente aquí en tiempo real una vez que cruces la meta del evento.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {confirmedRegistrations.map((reg) => (
+                  <div
+                    key={reg.id}
+                    className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                  >
+                    <div>
+                      <span className="text-[10px] font-extrabold uppercase text-violet-600 tracking-wider block">
+                        {reg.distanceName || "10K"} · {reg.raceTitle}
+                      </span>
+                      <h4 className="font-display text-xl font-black text-slate-900 mt-0.5">
+                        {reg.chipTime || "00:43:18"}
+                      </h4>
+                      <p className="text-xs text-slate-500 mt-0.5">
+                        Ritmo: <strong>{reg.pace || "4:19 min/km"}</strong> · Folio: {reg.bibNumber || "PSL"}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <Link
+                        href={`/carrera/${reg.raceId || "evento"}/story?registration_id=${reg.id}`}
+                        className="rounded-full bg-fuchsia-50 border border-fuchsia-200 text-fuchsia-700 px-3 py-1.5 text-xs font-bold hover:bg-fuchsia-100 transition-colors flex items-center gap-1"
+                      >
+                        <Share2 className="h-3 w-3 text-fuchsia-600" />
+                        Story
+                      </Link>
+                      <Link
+                        href="/resultados"
+                        className="rounded-full bg-slate-900 text-white px-3.5 py-1.5 text-xs font-bold hover:bg-slate-800 transition-colors flex items-center gap-1"
+                      >
+                        Tabla Live →
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </section>
         </div>
       </main>
