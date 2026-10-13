@@ -1,7 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import { Flame, ArrowRight, Mail, MapPin, ShieldCheck, Smartphone } from "lucide-react";
+import { ArrowRight, Mail, MapPin, ShieldCheck, Smartphone } from "lucide-react";
 
 const COLUMNS = [
   {
@@ -89,9 +90,15 @@ export function Footer() {
         <div className="grid gap-12 pb-16 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div>
             <Link href="/" className="group inline-flex items-center gap-2.5">
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-linear-to-br from-violet-600 via-fuchsia-500 to-orange-400 text-white shadow-lg shadow-fuchsia-500/30 transition-transform duration-500 group-hover:-rotate-12">
-                <Flame className="h-5 w-5" strokeWidth={2.5} />
-              </span>
+              <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-linear-to-br from-violet-600/10 via-fuchsia-500/15 to-orange-400/20 p-1.5 ring-1 ring-violet-500/20 shadow-md shadow-fuchsia-500/15 backdrop-blur-md transition-all duration-500 group-hover:scale-105 group-hover:shadow-fuchsia-500/30">
+                <Image
+                  src="/Logo_Pisale.png"
+                  alt="Logo Písale"
+                  width={36}
+                  height={36}
+                  className="h-full w-full object-contain transition-transform duration-500 group-hover:rotate-[-8deg] drop-shadow-sm"
+                />
+              </div>
               <span className="font-display text-2xl font-extrabold tracking-tight text-slate-900">
                 písale<span className="text-fuchsia-500">.</span>
               </span>

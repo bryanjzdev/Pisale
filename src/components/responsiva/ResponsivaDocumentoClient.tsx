@@ -112,15 +112,22 @@ export function ResponsivaDocumentoClient({
   });
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-fuchsia-500 selection:text-white print:bg-white print:text-slate-900 pb-20 pt-28 sm:pt-32">
+    <div className="relative min-h-screen bg-[#fcfbfe] text-slate-900 selection:bg-fuchsia-200 selection:text-fuchsia-900 print:bg-white print:text-slate-900 pb-20 pt-28 sm:pt-32">
+      {/* Background Glows & Grid (Ocultos en impresión) */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden print:hidden">
+        <div className="bg-grid absolute inset-0 opacity-40" />
+        <div className="absolute top-10 right-1/4 h-[500px] w-[500px] rounded-full bg-violet-400/20 blur-[140px]" />
+        <div className="absolute top-1/3 -left-20 h-[450px] w-[450px] rounded-full bg-fuchsia-400/20 blur-[130px]" />
+      </div>
+
       {/* ========================================================
           BARRA DE HERRAMIENTAS SUPERIOR (OCULTA EN IMPRESIÓN)
           ======================================================== */}
-      <div className="print-hidden mx-auto max-w-4xl px-4 sm:px-6 mb-8">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-3xl bg-slate-900/90 p-4 border border-slate-800 backdrop-blur-xl shadow-2xl">
+      <div className="print-hidden relative z-10 mx-auto max-w-4xl px-4 sm:px-6 mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-3xl bg-white/90 p-4 border border-slate-200 shadow-xl shadow-slate-900/5 backdrop-blur-xl">
           <Link
             href={`/carrera/${race.id}/boleto?registration_id=${runner.registrationId}`}
-            className="inline-flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-white transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-slate-900 transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
             Volver al Boleto
@@ -132,10 +139,10 @@ export function ResponsivaDocumentoClient({
               className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold transition-all cursor-pointer ${
                 mostrarEditor
                   ? "bg-violet-600 text-white shadow-md shadow-violet-500/25"
-                  : "bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white"
+                  : "bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-slate-900 border border-slate-200"
               }`}
             >
-              <Edit3 className="h-3.5 w-3.5 text-violet-400" />
+              <Edit3 className="h-3.5 w-3.5 text-violet-600" />
               <span>{mostrarEditor ? "Cerrar Editor" : "Llenar Datos Médicos"}</span>
             </button>
 
@@ -151,20 +158,20 @@ export function ResponsivaDocumentoClient({
 
         {/* Panel Desplegable para Llenar Datos Médicos en Pantalla */}
         {mostrarEditor && (
-          <div className="mt-4 rounded-3xl bg-slate-900/95 p-6 border border-violet-500/30 backdrop-blur-xl shadow-2xl animate-fade-up">
-            <div className="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
-              <div className="flex items-center gap-2 text-sm font-bold text-white">
-                <HeartPulse className="h-4 w-4 text-rose-400" />
+          <div className="mt-4 rounded-3xl bg-white/95 p-6 border border-violet-200 backdrop-blur-xl shadow-xl shadow-violet-500/5 animate-fade-up">
+            <div className="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
+              <div className="flex items-center gap-2 text-sm font-bold text-slate-900">
+                <HeartPulse className="h-4 w-4 text-rose-500" />
                 <span>Captura de Ficha Médica y Contacto de Emergencia</span>
               </div>
-              <span className="text-[11px] text-slate-400">
+              <span className="text-[11px] text-slate-500">
                 Se plasmará automáticamente en la carta lista para imprimir
               </span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
-                <label className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block mb-1">
+                <label className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 block mb-1">
                   Nombre Contacto de Emergencia *
                 </label>
                 <input
@@ -172,12 +179,12 @@ export function ResponsivaDocumentoClient({
                   placeholder="Ej. María González López"
                   value={contactoNombre}
                   onChange={(e) => setContactoNombre(e.target.value)}
-                  className="w-full rounded-xl bg-slate-800/80 border border-slate-700 px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-violet-500"
+                  className="w-full rounded-xl bg-slate-50 border border-slate-200 px-3.5 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-violet-500 focus:bg-white"
                 />
               </div>
 
               <div>
-                <label className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block mb-1">
+                <label className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 block mb-1">
                   Parentesco / Relación
                 </label>
                 <input
@@ -185,12 +192,12 @@ export function ResponsivaDocumentoClient({
                   placeholder="Ej. Esposa, Hermano, Entrenador"
                   value={contactoParentesco}
                   onChange={(e) => setContactoParentesco(e.target.value)}
-                  className="w-full rounded-xl bg-slate-800/80 border border-slate-700 px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-violet-500"
+                  className="w-full rounded-xl bg-slate-50 border border-slate-200 px-3.5 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-violet-500 focus:bg-white"
                 />
               </div>
 
               <div>
-                <label className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block mb-1">
+                <label className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 block mb-1">
                   Teléfono de Emergencia (10 dígitos) *
                 </label>
                 <input
@@ -198,18 +205,18 @@ export function ResponsivaDocumentoClient({
                   placeholder="Ej. 55 1234 5678"
                   value={contactoTelefono}
                   onChange={(e) => setContactoTelefono(e.target.value)}
-                  className="w-full rounded-xl bg-slate-800/80 border border-slate-700 px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-violet-500"
+                  className="w-full rounded-xl bg-slate-50 border border-slate-200 px-3.5 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-violet-500 focus:bg-white"
                 />
               </div>
 
               <div>
-                <label className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block mb-1">
+                <label className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 block mb-1">
                   Grupo Sanguíneo / RH
                 </label>
                 <select
                   value={tipoSangre}
                   onChange={(e) => setTipoSangre(e.target.value)}
-                  className="w-full rounded-xl bg-slate-800/80 border border-slate-700 px-3.5 py-2 text-xs text-white focus:outline-none focus:border-violet-500"
+                  className="w-full rounded-xl bg-slate-50 border border-slate-200 px-3.5 py-2 text-xs text-slate-900 focus:outline-none focus:border-violet-500 focus:bg-white"
                 >
                   <option value="O+">O Positivo (O+)</option>
                   <option value="O-">O Negativo (O-)</option>
@@ -224,7 +231,7 @@ export function ResponsivaDocumentoClient({
               </div>
 
               <div>
-                <label className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block mb-1">
+                <label className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 block mb-1">
                   Alergias a Medicamentos
                 </label>
                 <input
@@ -232,12 +239,12 @@ export function ResponsivaDocumentoClient({
                   placeholder="Ej. Penicilina, AINEs, Ninguna"
                   value={alergias}
                   onChange={(e) => setAlergias(e.target.value)}
-                  className="w-full rounded-xl bg-slate-800/80 border border-slate-700 px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-violet-500"
+                  className="w-full rounded-xl bg-slate-50 border border-slate-200 px-3.5 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-violet-500 focus:bg-white"
                 />
               </div>
 
               <div>
-                <label className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block mb-1">
+                <label className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 block mb-1">
                   Condición Médica Relevante
                 </label>
                 <input
@@ -245,7 +252,7 @@ export function ResponsivaDocumentoClient({
                   placeholder="Ej. Asma, Hipertensión, Ninguna"
                   value={padecimiento}
                   onChange={(e) => setPadecimiento(e.target.value)}
-                  className="w-full rounded-xl bg-slate-800/80 border border-slate-700 px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-violet-500"
+                  className="w-full rounded-xl bg-slate-50 border border-slate-200 px-3.5 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-violet-500 focus:bg-white"
                 />
               </div>
             </div>
@@ -253,7 +260,7 @@ export function ResponsivaDocumentoClient({
             <div className="mt-4 flex items-center justify-end gap-3">
               <button
                 onClick={handleGuardarDatos}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 px-4 py-2 text-xs font-bold text-white transition-all cursor-pointer"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 px-4 py-2 text-xs font-bold text-white transition-all cursor-pointer shadow-sm shadow-emerald-600/20"
               >
                 <Check className="h-3.5 w-3.5" />
                 <span>Aplicar a la Responsiva</span>
@@ -262,8 +269,8 @@ export function ResponsivaDocumentoClient({
           </div>
         )}
 
-        <div className="mt-3 flex items-center justify-center gap-2 text-xs text-slate-400">
-          <Info className="h-3.5 w-3.5 text-violet-400 shrink-0" />
+        <div className="mt-3 flex items-center justify-center gap-2 text-xs text-slate-500">
+          <Info className="h-3.5 w-3.5 text-violet-600 shrink-0" />
           <span>
             <strong>Requisito Indispensable:</strong> Lleva este formato impreso y debidamente firmado junto con tu <strong>identificación oficial (INE)</strong> para recoger tu kit de corredor.
           </span>
@@ -274,8 +281,8 @@ export function ResponsivaDocumentoClient({
           DOCUMENTO OFICIAL LISTO PARA IMPRIMIR (HOJA TAMAÑO CARTA)
           Optimizado con @media print para 1 sola página perfecta
           ======================================================== */}
-      <div className="mx-auto max-w-4xl px-4 sm:px-6">
-        <div className="print-break-inside-avoid relative overflow-hidden rounded-3xl bg-white text-slate-900 border-2 border-slate-800 p-6 sm:p-9 shadow-[0_25px_70px_rgba(0,0,0,0.5)] print:shadow-none print:border print:border-slate-800 print:rounded-none print:p-6 print:m-0">
+      <div className="relative z-10 mx-auto max-w-4xl px-4 sm:px-6">
+        <div className="print-break-inside-avoid relative overflow-hidden rounded-3xl bg-white text-slate-900 border border-slate-200/90 p-6 sm:p-9 shadow-xl shadow-slate-900/5 print:shadow-none print:border print:border-slate-800 print:rounded-none print:p-6 print:m-0">
           
           {/* ENCABEZADO INSTITUCIONAL */}
           <div className="border-b-2 border-slate-900 pb-3 mb-4">

@@ -1,5 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Flame, Sparkles } from "lucide-react";
+import { ArrowLeft, Sparkles } from "lucide-react";
 import { loginWithGoogle } from "@/app/actions/auth";
 
 export default function LoginPage() {
@@ -20,10 +21,17 @@ export default function LoginPage() {
         </Link>
         
         <div className="flex justify-center">
-          <span className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-violet-600 via-fuchsia-500 to-orange-400 text-white shadow-xl shadow-fuchsia-500/30">
-            <Flame className="h-7 w-7" strokeWidth={2.5} />
-            <span className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/40" />
-          </span>
+          <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-violet-600/10 via-fuchsia-500/15 to-orange-400/20 p-2 ring-1 ring-violet-500/20 shadow-xl shadow-fuchsia-500/20 backdrop-blur-md">
+            <Image
+              src="/Logo_Pisale.png"
+              alt="Logo Písale"
+              width={52}
+              height={52}
+              className="h-full w-full object-contain drop-shadow-sm"
+              priority
+            />
+            <span className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/50" />
+          </div>
         </div>
         
         <h2 className="mt-6 text-center font-display text-4xl font-extrabold text-slate-900 tracking-tight">

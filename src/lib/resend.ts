@@ -171,3 +171,159 @@ export async function enviarCorreoConfirmacionBoleto(params: EnviarConfirmacionP
     return { success: false, error: error?.message || "Error al enviar correo" };
   }
 }
+
+export type EnviarTransferenciaParams = {
+  originalOwnerName: string;
+  originalOwnerEmail: string;
+  recipientName: string;
+  recipientEmail: string;
+  raceTitle: string;
+  distanceName: string;
+  bibNumber: string;
+  shirtSize: string;
+  raceDate: string;
+  raceLocation: string;
+  ticketUrl: string;
+};
+
+export async function enviarCorreoTransferenciaBoleto(params: EnviarTransferenciaParams) {
+  if (!process.env.RESEND_API_KEY) {
+    console.warn("RESEND_API_KEY no configurado, saltando envío de correo de transferencia.");
+    return { success: false, error: "RESEND_API_KEY no configurado" };
+  }
+
+  const fromEmail = process.env.RESEND_FROM_EMAIL || "Písale <onboarding@resend.dev>";
+
+  const htmlContent = `
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transferencia de Boleto Oficial - Písale</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #0b0f19; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #ffffff;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #0b0f19; padding: 40px 10px;">
+    <tr>
+      <td align="center">
+        <!-- Container Principal -->
+        <table role="presentation" width="100%" style="max-width: 600px; background-color: #111827; border-radius: 24px; border: 1px solid #1f2937; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);" cellspacing="0" cellpadding="0">
+          
+          <!-- Header con Brand -->
+          <tr>
+            <td style="padding: 32px 32px 24px 32px; text-align: center; background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 70, 239, 0.2) 100%); border-bottom: 1px solid #1f2937;">
+              <div style="display: inline-block; padding: 8px 16px; border-radius: 9999px; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); margin-bottom: 16px;">
+                <span style="font-size: 11px; font-weight: 800; color: #fbbf24; text-transform: uppercase; letter-spacing: 1.5px;">🔁 Cesión Oficial de Derechos</span>
+              </div>
+              <h1 style="margin: 0; font-size: 26px; font-weight: 900; color: #ffffff; letter-spacing: -0.5px;">
+                ¡Te han transferido un boleto, ${params.recipientName.split(" ")[0]}!
+              </h1>
+              <p style="margin: 8px 0 0 0; font-size: 14px; color: #9ca3af;">
+                <strong style="color: #f3f4f6;">${params.originalOwnerName}</strong> te ha cedido oficialmente su inscripción para <strong style="color: #f3f4f6;">${params.raceTitle}</strong>.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Tarjeta de Transferencia -->
+          <tr>
+            <td style="padding: 32px;">
+              <table role="presentation" width="100%" style="background-color: #1f2937; border-radius: 18px; border: 1px solid #374151; overflow: hidden;" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td style="padding: 20px; border-bottom: 1px dashed #4b5563;">
+                    <table role="presentation" width="100%">
+                      <tr>
+                        <td>
+                          <span style="font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; display: block;">Evento Deportivo</span>
+                          <span style="font-size: 18px; font-weight: 900; color: #ffffff; display: block; margin-top: 2px;">${params.raceTitle}</span>
+                        </td>
+                        <td align="right">
+                          <span style="display: inline-block; padding: 6px 14px; border-radius: 9999px; background: linear-gradient(135deg, #f59e0b 0%, #ec4899 100%); font-size: 12px; font-weight: 900; color: #ffffff;">
+                            ${params.distanceName}
+                          </span>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="padding: 20px;">
+                    <table role="presentation" width="100%">
+                      <tr>
+                        <td width="50%" style="padding-bottom: 16px;">
+                          <span style="font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; display: block;">Número de Dorsal / Folio</span>
+                          <span style="font-size: 18px; font-weight: 900; color: #fbbf24; font-family: monospace; display: block; margin-top: 2px;">${params.bibNumber}</span>
+                        </td>
+                        <td width="50%" style="padding-bottom: 16px;">
+                          <span style="font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; display: block;">Talla Asignada</span>
+                          <span style="font-size: 18px; font-weight: 900; color: #ffffff; display: block; margin-top: 2px;">Talla ${params.shirtSize}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="50%">
+                          <span style="font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; display: block;">Fecha de la Carrera</span>
+                          <span style="font-size: 13px; font-weight: 700; color: #f3f4f6; display: block; margin-top: 2px;">${params.raceDate}</span>
+                        </td>
+                        <td width="50%">
+                          <span style="font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; display: block;">Sede Oficial</span>
+                          <span style="font-size: 13px; font-weight: 700; color: #f3f4f6; display: block; margin-top: 2px;">${params.raceLocation}</span>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Botón Ver Boleto -->
+              <table role="presentation" width="100%" style="margin-top: 28px;">
+                <tr>
+                  <td align="center">
+                    <a href="${params.ticketUrl}" style="display: inline-block; padding: 15px 34px; border-radius: 14px; background: linear-gradient(135deg, #f59e0b 0%, #ec4899 50%, #8b5cf6 100%); color: #ffffff; font-size: 14px; font-weight: 900; text-decoration: none; box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.4); letter-spacing: 0.3px;">
+                      Acceder a mi Boleto y Carta Responsiva →
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin: 24px 0 0 0; font-size: 12px; color: #9ca3af; text-align: center; line-height: 1.5;">
+                🛡️ Esta transferencia es definitiva e irrevocable en la base de datos oficial del evento. El titular anterior ya no podrá hacer uso de este boleto.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding: 24px 32px; background-color: #0f172a; border-top: 1px solid #1f2937; text-align: center;">
+              <p style="margin: 0; font-size: 11px; color: #64748b;">
+                Písale Marketplace Deportivo · Plataforma Oficial Anti-Fraudes y Cesión Segura
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+  `;
+
+  try {
+    const result = await resend.emails.send({
+      from: fromEmail,
+      to: params.recipientEmail,
+      subject: `🔁 Boleto Transferido Oficialmente (${params.bibNumber}) - ${params.raceTitle}`,
+      html: htmlContent,
+    });
+
+    if (result.error) {
+      console.error("Resend error enviando transferencia:", result.error);
+      return { success: false, error: result.error.message };
+    }
+
+    return { success: true, data: result.data };
+  } catch (error: any) {
+    console.error("Error general enviando transferencia con Resend:", error);
+    return { success: false, error: error?.message || "Error al enviar correo de transferencia" };
+  }
+}
+

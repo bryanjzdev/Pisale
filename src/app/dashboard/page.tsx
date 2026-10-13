@@ -6,6 +6,7 @@ import { Calendar, Medal, Timer, TrendingUp, Trophy, QrCode, ArrowRight, Sparkle
 import Link from "next/link";
 import { BotonEnviarCorreoTicket } from "@/components/common/BotonEnviarCorreoTicket";
 import { BotonDescartarPendiente } from "@/components/common/BotonDescartarPendiente";
+import { ModalTransferirBoleto } from "@/components/common/ModalTransferirBoleto";
 
 export const instant = false;
 
@@ -347,6 +348,14 @@ export default async function DashboardPage() {
                               <FileText className="h-3 w-3 text-violet-600" />
                               Responsiva
                             </Link>
+                            <ModalTransferirBoleto
+                              registrationId={reg.id}
+                              raceTitle={reg.raceTitle || "Carrera Pisale"}
+                              distanceName={reg.distanceName || undefined}
+                              bibNumber={reg.bibNumber || undefined}
+                              currentShirtSize={reg.shirtSize || undefined}
+                              runnerName={session?.user?.name || undefined}
+                            />
                             <Link
                               href={`/carrera/${reg.raceId}/exito?session_id=${reg.stripeSessionId || `demo_${reg.id}`}`}
                               className="inline-flex items-center gap-1 font-bold text-violet-600 hover:text-violet-800 transition-colors"
