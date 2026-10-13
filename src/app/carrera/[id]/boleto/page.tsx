@@ -15,6 +15,7 @@ import {
   Info,
   Share2,
   FileText,
+  BookOpen,
 } from "lucide-react";
 import { RealQRCode } from "@/components/common/RealQRCode";
 import { BotonImprimirBoleto } from "@/components/common/BotonImprimirBoleto";
@@ -105,6 +106,14 @@ export default async function BoletoPage({
       : ""
   }`;
 
+  const guiaUrl = `/carrera/${race.id}/guia?${
+    session_id
+      ? `session_id=${session_id}`
+      : registration
+      ? `registration_id=${registration.id}`
+      : ""
+  }`;
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-fuchsia-500 selection:text-white print:bg-white print:text-slate-900 pb-20 pt-28 sm:pt-32">
       {/* Barra de Herramientas Superior (Oculta en Impresión) */}
@@ -119,6 +128,15 @@ export default async function BoletoPage({
           </Link>
 
           <div className="flex flex-wrap items-center gap-3">
+            <Link
+              href={guiaUrl}
+              className="inline-flex items-center gap-1.5 rounded-full border border-sky-400/40 bg-sky-950/40 px-3.5 py-1.5 text-xs font-bold text-sky-300 hover:bg-sky-900/60 transition-all cursor-pointer shadow-sm"
+              title="Consultar la Guía Oficial del Atleta y Logística"
+            >
+              <BookOpen className="h-3.5 w-3.5 text-sky-400" />
+              <span>Guía del Atleta</span>
+            </Link>
+
             <Link
               href={responsivaUrl}
               className="inline-flex items-center gap-1.5 rounded-full border border-violet-400/40 bg-violet-950/40 px-3.5 py-1.5 text-xs font-bold text-violet-300 hover:bg-violet-900/60 transition-all cursor-pointer shadow-sm"

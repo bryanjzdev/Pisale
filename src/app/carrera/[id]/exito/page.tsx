@@ -15,6 +15,7 @@ import {
   Download,
   Share2,
   FileText,
+  BookOpen,
 } from "lucide-react";
 import { RealQRCode } from "@/components/common/RealQRCode";
 import { BotonEnviarCorreoTicket } from "@/components/common/BotonEnviarCorreoTicket";
@@ -247,6 +248,14 @@ export default async function CarreraExitoPage({
               >
                 <FileText className="h-4 w-4 text-violet-600" />
                 Carta Responsiva
+              </Link>
+
+              <Link
+                href={`/carrera/${race.id}/guia?${session_id ? `session_id=${session_id}` : registration ? `registration_id=${registration.id}` : ""}`}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full border border-sky-200 bg-sky-50 px-6 py-3.5 text-xs font-bold text-sky-800 hover:bg-sky-100 transition-all shadow-sm"
+              >
+                <BookOpen className="h-4 w-4 text-sky-600" />
+                Guía del Atleta
               </Link>
 
               <Link

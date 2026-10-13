@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { auth } from "@/auth";
@@ -7,7 +8,7 @@ import { RunnerKitGrid } from "@/components/race-detail/RunnerKitGrid";
 import { RouteElevationSection } from "@/components/race-detail/RouteElevationSection";
 import { RaceActionCard } from "@/components/race-detail/RaceActionCard";
 import { MobileFloatingCta } from "@/components/race-detail/MobileFloatingCta";
-import { Building2, Info, MapPin, PackageCheck, ShieldCheck } from "lucide-react";
+import { Building2, Info, MapPin, PackageCheck, ShieldCheck, BookOpen, ArrowRight } from "lucide-react";
 
 export const instant = false;
 
@@ -97,6 +98,36 @@ export default async function CarreraDetallePage({ params }: Props) {
                 </div>
               </div>
             )}
+
+            {/* Tarjeta de Acceso a la Guía Oficial del Atleta */}
+            <div className="rounded-3xl border border-sky-100 bg-linear-to-r from-sky-50/70 via-indigo-50/40 to-white p-6 sm:p-7 shadow-sm backdrop-blur-xl">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex items-start gap-4">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-sky-600 to-indigo-600 text-white shadow-md shadow-sky-500/20">
+                    <BookOpen className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <span className="text-xs font-extrabold uppercase tracking-wider text-sky-700 block mb-1">
+                      Logística & Operaciones
+                    </span>
+                    <h3 className="font-display text-lg font-bold text-slate-900">
+                      Guía Oficial del Atleta 2026
+                    </h3>
+                    <p className="mt-1 text-xs text-slate-600">
+                      Corrales de salida por ritmo, guardarropa, estaciones de abastecimiento y rutas de transporte.
+                    </p>
+                  </div>
+                </div>
+
+                <Link
+                  href={`/carrera/${race.id}/guia`}
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-slate-900 px-5 py-2.5 text-xs font-bold text-white hover:bg-slate-800 transition-all shrink-0 shadow-sm"
+                >
+                  <span>Ver Guía Oficial</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+            </div>
 
             {/* Ficha Técnica: Kit del Corredor */}
             <RunnerKitGrid items={race.kitItems} />
