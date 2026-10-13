@@ -2,7 +2,7 @@ import { auth, signOut } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { stripe } from "@/lib/stripe";
-import { Calendar, Medal, Timer, TrendingUp, Trophy, QrCode, ArrowRight, Sparkles, CheckCircle2, Building2, LogOut, ShieldCheck, Printer, Download, AlertCircle, Share2 } from "lucide-react";
+import { Calendar, Medal, Timer, TrendingUp, Trophy, QrCode, ArrowRight, Sparkles, CheckCircle2, Building2, LogOut, ShieldCheck, Printer, Download, AlertCircle, Share2, FileText } from "lucide-react";
 import Link from "next/link";
 import { BotonEnviarCorreoTicket } from "@/components/common/BotonEnviarCorreoTicket";
 import { BotonDescartarPendiente } from "@/components/common/BotonDescartarPendiente";
@@ -337,6 +337,15 @@ export default async function DashboardPage() {
                             >
                               <Printer className="h-3 w-3 text-violet-600" />
                               Boleto PDF
+                            </Link>
+                            <Link
+                              href={`/carrera/${reg.raceId}/responsiva?registration_id=${reg.id}`}
+                              target="_blank"
+                              className="inline-flex items-center gap-1 font-bold text-violet-700 hover:text-violet-900 bg-violet-50 hover:bg-violet-100 px-2.5 py-1 rounded-full transition-colors border border-violet-200/60"
+                              title="Descargar Carta Responsiva y Ficha Médica"
+                            >
+                              <FileText className="h-3 w-3 text-violet-600" />
+                              Responsiva
                             </Link>
                             <Link
                               href={`/carrera/${reg.raceId}/exito?session_id=${reg.stripeSessionId || `demo_${reg.id}`}`}

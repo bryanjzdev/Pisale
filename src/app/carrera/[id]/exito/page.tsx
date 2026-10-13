@@ -14,6 +14,7 @@ import {
   Sparkles,
   Download,
   Share2,
+  FileText,
 } from "lucide-react";
 import { RealQRCode } from "@/components/common/RealQRCode";
 import { BotonEnviarCorreoTicket } from "@/components/common/BotonEnviarCorreoTicket";
@@ -237,6 +238,15 @@ export default async function CarreraExitoPage({
               >
                 <Download className="h-4 w-4 text-violet-400" />
                 Descargar Boleto PDF
+              </Link>
+
+              <Link
+                href={`/carrera/${race.id}/responsiva?${session_id ? `session_id=${session_id}` : registration ? `registration_id=${registration.id}` : ""}`}
+                target="_blank"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-6 py-3.5 text-xs font-bold text-violet-700 hover:bg-violet-100 transition-all shadow-sm"
+              >
+                <FileText className="h-4 w-4 text-violet-600" />
+                Carta Responsiva
               </Link>
 
               <Link

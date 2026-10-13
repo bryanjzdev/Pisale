@@ -14,6 +14,7 @@ import {
   CheckCircle2,
   Info,
   Share2,
+  FileText,
 } from "lucide-react";
 import { RealQRCode } from "@/components/common/RealQRCode";
 import { BotonImprimirBoleto } from "@/components/common/BotonImprimirBoleto";
@@ -96,6 +97,14 @@ export default async function BoletoPage({
       })
     : `${race.day} ${race.month} ${race.year}`;
 
+  const responsivaUrl = `/carrera/${race.id}/responsiva?${
+    session_id
+      ? `session_id=${session_id}`
+      : registration
+      ? `registration_id=${registration.id}`
+      : ""
+  }`;
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-fuchsia-500 selection:text-white print:bg-white print:text-slate-900 pb-20 pt-28 sm:pt-32">
       {/* Barra de Herramientas Superior (Oculta en Impresión) */}
@@ -110,6 +119,15 @@ export default async function BoletoPage({
           </Link>
 
           <div className="flex flex-wrap items-center gap-3">
+            <Link
+              href={responsivaUrl}
+              className="inline-flex items-center gap-1.5 rounded-full border border-violet-400/40 bg-violet-950/40 px-3.5 py-1.5 text-xs font-bold text-violet-300 hover:bg-violet-900/60 transition-all cursor-pointer shadow-sm"
+              title="Descargar o imprimir Carta Responsiva oficial firmada"
+            >
+              <FileText className="h-3.5 w-3.5 text-violet-400" />
+              <span>Carta Responsiva</span>
+            </Link>
+
             <Link
               href={`/carrera/${race.id}/story?${session_id ? `session_id=${session_id}` : registration ? `registration_id=${registration.id}` : ""}`}
               className="inline-flex items-center gap-1.5 rounded-full border border-fuchsia-400/40 bg-fuchsia-950/40 px-3.5 py-1.5 text-xs font-bold text-fuchsia-300 hover:bg-fuchsia-900/60 transition-all cursor-pointer shadow-sm"
@@ -270,9 +288,18 @@ export default async function BoletoPage({
               {/* Información de Expo / Kits */}
               {race.expo && (
                 <div className="mt-4 rounded-2xl bg-violet-950/30 p-4 border border-violet-800/40 text-xs print:bg-slate-50 print:border-slate-300">
-                  <div className="flex items-center gap-2 font-bold text-violet-300 print:text-violet-900">
-                    <Trophy className="h-4 w-4" />
-                    <span>Entrega Oficial de Kits y Paquetes de Corredor:</span>
+                  <div className="flex items-center justify-between flex-wrap gap-2">
+                    <div className="flex items-center gap-2 font-bold text-violet-300 print:text-violet-900">
+                      <Trophy className="h-4 w-4" />
+                      <span>Entrega Oficial de Kits y Paquetes de Corredor:</span>
+                    </div>
+                    <Link
+                      href={responsivaUrl}
+                      className="print-hidden inline-flex items-center gap-1 text-[11px] font-bold text-violet-400 hover:text-white transition-colors"
+                    >
+                      <FileText className="h-3 w-3" />
+                      <span>Descargar Carta Responsiva →</span>
+                    </Link>
                   </div>
                   <p className="text-slate-300 print:text-slate-600 mt-1 pl-6">
                     <strong>Lugar:</strong> {race.expo.location} · <strong>Horarios:</strong> {race.expo.dates}
@@ -291,9 +318,18 @@ export default async function BoletoPage({
                 <h3 className="font-display text-lg font-black text-white print:text-slate-900 mb-1">
                   Check-In Oficial
                 </h3>
-                <p className="text-[11px] text-slate-400 print:text-slate-600 mb-5">
-                  Presenta este código en la mesa de entrega de kits junto con tu INE/identificación.
+                <p className="text-[11px] text-slate-400 print:text-slate-600 mb-2">
+                  Presenta este código en la mesa de entrega de kits junto con tu INE y tu Carta Responsiva firmada.
                 </p>
+                <div className="print-hidden mb-4">
+                  <Link
+                    href={responsivaUrl}
+                    className="inline-flex items-center gap-1.5 rounded-full bg-violet-500/10 border border-violet-500/30 px-3 py-1 text-[11px] font-bold text-violet-300 hover:bg-violet-500/20 transition-colors"
+                  >
+                    <FileText className="h-3 w-3" />
+                    <span>Descargar Responsiva</span>
+                  </Link>
+                </div>
 
                 {/* Código QR de Alta Definición */}
                 <div className="mx-auto w-fit rounded-2xl bg-white p-3.5 shadow-2xl border-4 border-slate-800 print:border-slate-300">
