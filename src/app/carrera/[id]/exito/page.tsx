@@ -239,6 +239,14 @@ export default async function CarreraExitoPage({
                 Descargar Boleto PDF
               </Link>
 
+              <Link
+                href={`/carrera/${race.id}/story?${session_id ? `session_id=${session_id}` : registration ? `registration_id=${registration.id}` : ""}`}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full border-2 border-fuchsia-500/40 bg-fuchsia-50 px-6 py-3.5 text-xs font-black text-fuchsia-700 hover:bg-fuchsia-100 transition-all shadow-sm"
+              >
+                <Share2 className="h-4 w-4 text-fuchsia-600" />
+                Crear Story Instagram
+              </Link>
+
               {registration && (
                 <BotonEnviarCorreoTicket
                   registrationId={registration.id}

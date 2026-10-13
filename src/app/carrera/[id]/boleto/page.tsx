@@ -13,6 +13,7 @@ import {
   Trophy,
   CheckCircle2,
   Info,
+  Share2,
 } from "lucide-react";
 import { RealQRCode } from "@/components/common/RealQRCode";
 import { BotonImprimirBoleto } from "@/components/common/BotonImprimirBoleto";
@@ -109,6 +110,14 @@ export default async function BoletoPage({
           </Link>
 
           <div className="flex flex-wrap items-center gap-3">
+            <Link
+              href={`/carrera/${race.id}/story?${session_id ? `session_id=${session_id}` : registration ? `registration_id=${registration.id}` : ""}`}
+              className="inline-flex items-center gap-1.5 rounded-full border border-fuchsia-400/40 bg-fuchsia-950/40 px-3.5 py-1.5 text-xs font-bold text-fuchsia-300 hover:bg-fuchsia-900/60 transition-all cursor-pointer shadow-sm"
+            >
+              <Share2 className="h-3.5 w-3.5 text-fuchsia-400" />
+              <span>Crear Story IG</span>
+            </Link>
+
             {registration && (
               <BotonEnviarCorreoTicket
                 registrationId={registration.id}

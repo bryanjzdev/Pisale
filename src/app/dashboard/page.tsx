@@ -2,7 +2,7 @@ import { auth, signOut } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { stripe } from "@/lib/stripe";
-import { Calendar, Medal, Timer, TrendingUp, Trophy, QrCode, ArrowRight, Sparkles, CheckCircle2, Building2, LogOut, ShieldCheck, Printer, Download, AlertCircle } from "lucide-react";
+import { Calendar, Medal, Timer, TrendingUp, Trophy, QrCode, ArrowRight, Sparkles, CheckCircle2, Building2, LogOut, ShieldCheck, Printer, Download, AlertCircle, Share2 } from "lucide-react";
 import Link from "next/link";
 import { BotonEnviarCorreoTicket } from "@/components/common/BotonEnviarCorreoTicket";
 import { BotonDescartarPendiente } from "@/components/common/BotonDescartarPendiente";
@@ -322,6 +322,14 @@ export default async function DashboardPage() {
                         />
                         {reg.raceId && (
                           <>
+                            <Link
+                              href={`/carrera/${reg.raceId}/story?registration_id=${reg.id}`}
+                              className="inline-flex items-center gap-1 font-bold text-fuchsia-700 hover:text-fuchsia-900 bg-fuchsia-50 hover:bg-fuchsia-100 px-2.5 py-1 rounded-full transition-colors border border-fuchsia-200/60"
+                              title="Crear Story para Instagram"
+                            >
+                              <Share2 className="h-3 w-3 text-fuchsia-600" />
+                              Story
+                            </Link>
                             <Link
                               href={`/carrera/${reg.raceId}/boleto?registration_id=${reg.id}`}
                               target="_blank"
