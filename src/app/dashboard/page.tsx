@@ -2,7 +2,7 @@ import { auth, signOut } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { stripe } from "@/lib/stripe";
-import { Calendar, Medal, Timer, TrendingUp, Trophy, QrCode, ArrowRight, Sparkles, CheckCircle2, Building2, LogOut, ShieldCheck, Printer, Download, AlertCircle, Share2, FileText } from "lucide-react";
+import { Calendar, Medal, Timer, TrendingUp, Trophy, QrCode, ArrowRight, Sparkles, CheckCircle2, Building2, LogOut, ShieldCheck, Printer, Download, AlertCircle, Share2, FileText, BookOpen } from "lucide-react";
 import Link from "next/link";
 import { BotonEnviarCorreoTicket } from "@/components/common/BotonEnviarCorreoTicket";
 import { BotonDescartarPendiente } from "@/components/common/BotonDescartarPendiente";
@@ -346,6 +346,14 @@ export default async function DashboardPage() {
                             >
                               <FileText className="h-3 w-3 text-violet-600" />
                               Responsiva
+                            </Link>
+                            <Link
+                              href={`/carrera/${reg.raceId}/guia?registration_id=${reg.id}`}
+                              className="inline-flex items-center gap-1 font-bold text-sky-800 hover:text-sky-950 bg-sky-50 hover:bg-sky-100 px-2.5 py-1 rounded-full transition-colors border border-sky-200/60"
+                              title="Consultar la Guía Oficial del Atleta"
+                            >
+                              <BookOpen className="h-3 w-3 text-sky-600" />
+                              Guía
                             </Link>
                             <Link
                               href={`/carrera/${reg.raceId}/exito?session_id=${reg.stripeSessionId || `demo_${reg.id}`}`}
