@@ -2,9 +2,10 @@ import { auth, signOut } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { stripe } from "@/lib/stripe";
-import { Calendar, Medal, Timer, TrendingUp, Trophy, QrCode, ArrowRight, Sparkles, CheckCircle2, Building2, LogOut, ShieldCheck, Printer, Download } from "lucide-react";
+import { Calendar, Medal, Timer, TrendingUp, Trophy, QrCode, ArrowRight, Sparkles, CheckCircle2, Building2, LogOut, ShieldCheck, Printer, Download, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { BotonEnviarCorreoTicket } from "@/components/common/BotonEnviarCorreoTicket";
+import { BotonDescartarPendiente } from "@/components/common/BotonDescartarPendiente";
 
 export const instant = false;
 
@@ -22,7 +23,22 @@ export default async function DashboardPage() {
     if (dbUser) userId = dbUser.id;
   }
 
-  // Cargar inscripciones reales del usuario
+  // Limpieza inicial de registros huérfanos sin stripeSessionId que quedaron PENDING por errores pasados
+  if (userId) {
+    try {
+      await prisma.registration.deleteMany({
+        where: {
+          userId,
+          status: "PENDING",
+          stripeSessionId: null,
+        },
+      });
+    } catch (e) {
+      console.error("Error limpiando registros huérfanos:", e);
+    }
+  }
+
+  // Cargar inscripciones del usuario
   let registrations = userId
     ? await prisma.registration.findMany({
         where: { userId },
@@ -57,8 +73,34 @@ export default async function DashboardPage() {
     }
   }
 
+  // Si el usuario ya tiene un boleto CONFIRMED para una carrera, eliminar cualquier intento PENDING obsoleto de esa misma carrera
+  const confirmedRaceIds = registrations
+    .filter((r) => r.status === "CONFIRMED" && r.raceId)
+    .map((r) => r.raceId as string);
+
+  if (confirmedRaceIds.length > 0 && userId) {
+    try {
+      await prisma.registration.deleteMany({
+        where: {
+          userId,
+          status: "PENDING",
+          raceId: { in: confirmedRaceIds },
+        },
+      });
+      // Filtrar de la lista local en memoria también
+      registrations = registrations.filter(
+        (r) => !(r.status === "PENDING" && r.raceId && confirmedRaceIds.includes(r.raceId))
+      );
+    } catch (e) {
+      console.error("Error limpiando intentos pendientes obsoletos:", e);
+    }
+  }
+
+  const confirmedRegistrations = registrations.filter((r) => r.status === "CONFIRMED");
+  const pendingRegistrations = registrations.filter((r) => r.status === "PENDING");
+
   const firstName = session.user?.name?.split(" ")[0] || "Corredor";
-  const confirmedCount = registrations.filter((r) => r.status === "CONFIRMED").length;
+  const confirmedCount = confirmedRegistrations.length;
   const isOwnerOrAdmin =
     session.user.email?.toLowerCase() === "bjm.dev.soft@gmail.com" ||
     (session.user as any).role === "ADMIN";
@@ -175,8 +217,50 @@ export default async function DashboardPage() {
               <h2 className="font-display text-2xl font-bold text-slate-900">Tus Boletos y Carreras</h2>
               <Calendar className="h-6 w-6 text-slate-400" />
             </div>
+
+            {/* Sección de Intentos Pendientes de Pago (si los hay) */}
+            {pendingRegistrations.length > 0 && (
+              <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50/70 p-4.5">
+                <div className="flex items-center gap-2 mb-2 text-amber-900 font-bold text-xs">
+                  <AlertCircle className="h-4 w-4 text-amber-600 shrink-0" />
+                  <span>Inscripciones Incompletas / Pendientes de Pago ({pendingRegistrations.length})</span>
+                </div>
+                <p className="text-[11px] text-amber-700/90 mb-3">
+                  Iniciaste el proceso de inscripción pero no se concluyó el pago. Puedes completar tu inscripción o descartar el intento.
+                </p>
+                <div className="space-y-2">
+                  {pendingRegistrations.map((pReg) => (
+                    <div
+                      key={pReg.id}
+                      className="flex flex-wrap items-center justify-between gap-3 bg-white p-3 rounded-xl border border-amber-200/80 shadow-xs"
+                    >
+                      <div>
+                        <span className="font-bold text-slate-900 text-xs block">
+                          {pReg.raceTitle || "Carrera Pisale"} · {pReg.distanceName || "General"}
+                        </span>
+                        <span className="text-[10px] text-slate-500">
+                          Total por pagar: <strong>${pReg.amountPaid} MXN</strong>
+                          {pReg.shirtSize && ` · Talla ${pReg.shirtSize}`}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <BotonDescartarPendiente registrationId={pReg.id} />
+                        {pReg.raceId && (
+                          <Link
+                            href={`/carrera/${pReg.raceId}`}
+                            className="rounded-full bg-slate-900 px-3 py-1.5 text-[11px] font-bold text-white hover:bg-slate-800 transition-all"
+                          >
+                            Completar Pago
+                          </Link>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
             
-            {registrations.length === 0 ? (
+            {confirmedRegistrations.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 text-center border-2 border-dashed border-slate-200 rounded-3xl">
                 <Timer className="h-12 w-12 text-slate-300 mb-4" />
                 <h3 className="text-lg font-bold text-slate-700">No tienes carreras próximas</h3>
@@ -192,7 +276,7 @@ export default async function DashboardPage() {
               </div>
             ) : (
               <div className="space-y-4">
-                {registrations.map((reg) => (
+                {confirmedRegistrations.map((reg) => (
                   <div
                     key={reg.id}
                     className="group relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition-all hover:shadow-md hover:border-violet-300"
@@ -219,22 +303,9 @@ export default async function DashboardPage() {
                         ) : (
                           <span className="text-xs text-slate-400 font-medium">Asignando folio...</span>
                         )}
-                        <span className={`inline-flex items-center gap-1 text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full ${
-                          reg.status === "CONFIRMED"
-                            ? "bg-emerald-100 text-emerald-700"
-                            : "bg-amber-100 text-amber-700"
-                        }`}>
-                          {reg.status === "CONFIRMED" ? (
-                            <>
-                              <CheckCircle2 className="h-3 w-3" />
-                              Pagado
-                            </>
-                          ) : (
-                            <>
-                              <Timer className="h-3 w-3" />
-                              Pendiente
-                            </>
-                          )}
+                        <span className="inline-flex items-center gap-1 text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
+                          <CheckCircle2 className="h-3 w-3" />
+                          Pagado
                         </span>
                       </div>
                     </div>
@@ -244,13 +315,11 @@ export default async function DashboardPage() {
                         Total pagado: <strong>${reg.amountPaid} MXN</strong>
                       </span>
                       <div className="flex flex-wrap items-center gap-2">
-                        {reg.status === "CONFIRMED" && (
-                          <BotonEnviarCorreoTicket
-                            registrationId={reg.id}
-                            runnerEmail={session?.user?.email || undefined}
-                            compact={true}
-                          />
-                        )}
+                        <BotonEnviarCorreoTicket
+                          registrationId={reg.id}
+                          runnerEmail={session?.user?.email || undefined}
+                          compact={true}
+                        />
                         {reg.raceId && (
                           <>
                             <Link

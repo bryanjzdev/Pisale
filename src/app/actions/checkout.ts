@@ -45,21 +45,41 @@ export async function createCheckoutSession(input: CheckoutInput) {
       process.env.STRIPE_SECRET_KEY.startsWith("sk_") &&
       !process.env.STRIPE_SECRET_KEY.includes("placeholder");
 
-    // 1. Crear registro preliminar en base de datos
-    const registration = await prisma.registration.create({
-      data: {
+    // 1. Reutilizar registro previo pendiente o crear uno nuevo para evitar registros duplicados
+    let registration = await prisma.registration.findFirst({
+      where: {
         userId: userId,
         raceId: race.id,
-        raceTitle: race.title,
-        distanceName: input.distanceName,
-        amountPaid: input.price,
-        shirtSize: input.shirtSize,
-        status: isRealStripeKey ? "PENDING" : "CONFIRMED",
-        bibNumber: isRealStripeKey
-          ? null
-          : `PSL-${Math.floor(1000 + Math.random() * 9000)}`,
+        status: "PENDING",
       },
     });
+
+    if (registration) {
+      registration = await prisma.registration.update({
+        where: { id: registration.id },
+        data: {
+          raceTitle: race.title,
+          distanceName: input.distanceName,
+          amountPaid: input.price,
+          shirtSize: input.shirtSize,
+        },
+      });
+    } else {
+      registration = await prisma.registration.create({
+        data: {
+          userId: userId,
+          raceId: race.id,
+          raceTitle: race.title,
+          distanceName: input.distanceName,
+          amountPaid: input.price,
+          shirtSize: input.shirtSize,
+          status: isRealStripeKey ? "PENDING" : "CONFIRMED",
+          bibNumber: isRealStripeKey
+            ? null
+            : `PSL-${Math.floor(1000 + Math.random() * 9000)}`,
+        },
+      });
+    }
 
     // 2. Si hay llaves reales de Stripe configuradas, crear sesión oficial
     if (isRealStripeKey) {
@@ -124,5 +144,38 @@ export async function createCheckoutSession(input: CheckoutInput) {
         error?.message ||
         "Ocurrió un error al procesar el pago. Por favor intenta de nuevo.",
     };
+  }
+}
+
+/**
+ * Permite al usuario descartar un intento de compra incompleto o cancelado
+ */
+export async function descartarInscripcionPendiente(registrationId: string) {
+  try {
+    const session = await auth();
+    if (!session?.user) {
+      return { success: false, error: "No autorizado" };
+    }
+
+    const reg = await prisma.registration.findUnique({
+      where: { id: registrationId },
+    });
+
+    if (!reg) {
+      return { success: true };
+    }
+
+    // Solo permitir eliminar si sigue PENDING
+    if (reg.status === "PENDING") {
+      await prisma.registration.delete({
+        where: { id: registrationId },
+      });
+      return { success: true };
+    }
+
+    return { success: false, error: "No se puede descartar una inscripción confirmada." };
+  } catch (error: any) {
+    console.error("Error descartando inscripcion pendiente:", error);
+    return { success: false, error: error?.message || "Error al descartar." };
   }
 }
