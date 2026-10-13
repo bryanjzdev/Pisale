@@ -8,7 +8,7 @@ import { RunnerKitGrid } from "@/components/race-detail/RunnerKitGrid";
 import { RouteElevationSection } from "@/components/race-detail/RouteElevationSection";
 import { RaceActionCard } from "@/components/race-detail/RaceActionCard";
 import { MobileFloatingCta } from "@/components/race-detail/MobileFloatingCta";
-import { Building2, Info, MapPin, PackageCheck, ShieldCheck, BookOpen, ArrowRight } from "lucide-react";
+import { Building2, Info, MapPin, PackageCheck, ShieldCheck, BookOpen, ArrowRight, Timer } from "lucide-react";
 
 export const instant = false;
 
@@ -124,6 +124,36 @@ export default async function CarreraDetallePage({ params }: Props) {
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-slate-900 px-5 py-2.5 text-xs font-bold text-white hover:bg-slate-800 transition-all shrink-0 shadow-sm"
                 >
                   <span>Ver Guía Oficial</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Tarjeta de Acceso a Estrategia y Pulsera de Ritmos */}
+            <div className="rounded-3xl border border-violet-100 bg-linear-to-r from-violet-50/70 via-fuchsia-50/40 to-white p-6 sm:p-7 shadow-sm backdrop-blur-xl">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex items-start gap-4">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-violet-600 via-fuchsia-600 to-orange-500 text-white shadow-md shadow-violet-500/20">
+                    <Timer className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <span className="text-xs font-extrabold uppercase tracking-wider text-violet-700 block mb-1">
+                      Pacer Virtual & Rendimiento
+                    </span>
+                    <h3 className="font-display text-lg font-bold text-slate-900">
+                      Calculadora de Ritmos & Pulsera de Muñeca
+                    </h3>
+                    <p className="mt-1 text-xs text-slate-600">
+                      Calcula tus splits km a km, estrategia de ritmo y genera tu pulsera recortable para la muñeca (Pace Band).
+                    </p>
+                  </div>
+                </div>
+
+                <Link
+                  href={`/carrera/${race.id}/estrategia`}
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-linear-to-r from-violet-600 to-fuchsia-600 px-5 py-2.5 text-xs font-black text-white hover:opacity-95 transition-all shrink-0 shadow-sm shadow-violet-500/20"
+                >
+                  <span>Planificar Ritmo</span>
                   <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
               </div>

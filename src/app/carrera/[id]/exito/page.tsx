@@ -16,6 +16,7 @@ import {
   Share2,
   FileText,
   BookOpen,
+  Timer,
 } from "lucide-react";
 import { RealQRCode } from "@/components/common/RealQRCode";
 import { BotonEnviarCorreoTicket } from "@/components/common/BotonEnviarCorreoTicket";
@@ -256,6 +257,14 @@ export default async function CarreraExitoPage({
               >
                 <BookOpen className="h-4 w-4 text-sky-600" />
                 Guía del Atleta
+              </Link>
+
+              <Link
+                href={`/carrera/${race.id}/estrategia?${session_id ? `session_id=${session_id}` : registration ? `registration_id=${registration.id}` : ""}`}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full border border-orange-200 bg-orange-50 px-6 py-3.5 text-xs font-bold text-orange-800 hover:bg-orange-100 transition-all shadow-sm"
+              >
+                <Timer className="h-4 w-4 text-orange-600" />
+                Pulsera de Ritmos
               </Link>
 
               <Link

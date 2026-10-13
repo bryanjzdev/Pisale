@@ -262,6 +262,15 @@ export function GuiaAtletaClient({ race, runner }: GuiaAtletaProps) {
                   <span>Ver mi Boleto</span>
                 </Link>
               )}
+
+              <Link
+                href={`/carrera/${race.id}/estrategia${runner?.registrationId ? `?registration_id=${runner.registrationId}` : ""}`}
+                className="hidden md:inline-flex items-center gap-1.5 text-xs font-bold text-orange-800 bg-orange-50 hover:bg-orange-100 border border-orange-200 px-3.5 py-2 rounded-full transition-colors"
+                title="Calculadora de Ritmos y Pulsera de Muñeca"
+              >
+                <Zap className="h-3.5 w-3.5 text-orange-600" />
+                <span>Planificar Ritmos</span>
+              </Link>
             </div>
 
             <div className="flex items-center gap-2.5">

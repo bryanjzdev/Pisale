@@ -365,6 +365,14 @@ export default async function DashboardPage() {
                               Guía
                             </Link>
                             <Link
+                              href={`/carrera/${reg.raceId}/estrategia?registration_id=${reg.id}`}
+                              className="inline-flex items-center gap-1 font-bold text-orange-800 hover:text-orange-950 bg-orange-50 hover:bg-orange-100 px-2.5 py-1 rounded-full transition-colors border border-orange-200/60"
+                              title="Planificar Ritmos y Pulsera de Muñeca (Pace Band)"
+                            >
+                              <Timer className="h-3 w-3 text-orange-600" />
+                              Ritmos
+                            </Link>
+                            <Link
                               href={`/carrera/${reg.raceId}/exito?session_id=${reg.stripeSessionId || `demo_${reg.id}`}`}
                               className="inline-flex items-center gap-1 font-bold text-violet-600 hover:text-violet-800 transition-colors"
                             >
