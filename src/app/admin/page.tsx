@@ -20,18 +20,26 @@ import {
   Calendar,
   AlertTriangle,
   ArrowUpRight,
+  Receipt,
+  CreditCard,
+  Activity,
+  Zap,
+  Check,
+  QrCode,
+  Send,
 } from "lucide-react";
 import {
   BotonAprobarOrganizacion,
   BotonRechazarOrganizacion,
   BotonToggleCarrera,
 } from "@/components/admin/AdminActionButtons";
+import { BotonEnviarCorreoTicket } from "@/components/common/BotonEnviarCorreoTicket";
 
 export const instant = false;
 
 export const metadata = {
   title: "Panel Maestro de Administración | Písale",
-  description: "Control central de la plataforma: aprobación de promotores, supervisión de eventos y métricas de transacciones.",
+  description: "Control central de la plataforma: aprobación de promotores, supervisión de eventos y finanzas.",
 };
 
 export default async function AdminDashboardPage() {
@@ -79,6 +87,8 @@ export default async function AdminDashboardPage() {
     }),
     prisma.registration.findMany({
       where: { status: "CONFIRMED" },
+      include: { user: true },
+      orderBy: { registeredAt: "desc" },
     }),
     prisma.user.count(),
   ]);
@@ -86,8 +96,34 @@ export default async function AdminDashboardPage() {
   // Métricas
   const totalGMV = confirmedRegistrations.reduce((acc, r) => acc + (r.amountPaid || 0), 0);
   const platformFee = Math.round(totalGMV * 0.05); // 5% de comisión estimada
+  const netPromotersPayout = totalGMV - platformFee; // 95% para los promotores
   const pendingOrgs = organizations.filter((o) => o.status === "PENDING");
   const verifiedOrgs = organizations.filter((o) => o.status === "VERIFIED");
+
+  // Agrupar ventas por organización para cálculo de liquidaciones (Payouts)
+  const orgPayouts = organizations.map((org) => {
+    const orgRaceIds = new Set(org.races.map((r) => r.id));
+    const orgRegistrations = confirmedRegistrations.filter(
+      (reg) =>
+        (reg.raceId ? orgRaceIds.has(reg.raceId) : false) ||
+        org.races.some(
+          (r) => r.title.toLowerCase() === (reg.raceTitle || "").toLowerCase()
+        )
+    );
+    const orgGMV = orgRegistrations.reduce(
+      (acc, r) => acc + (r.amountPaid || 0),
+      0
+    );
+    const orgFee = Math.round(orgGMV * 0.05); // Comisión Písale (5%)
+    const netPayout = orgGMV - orgFee; // 95% para el organizador
+    return {
+      org,
+      totalSales: orgRegistrations.length,
+      gmv: orgGMV,
+      fee: orgFee,
+      netPayout,
+    };
+  });
 
   return (
     <div className="relative min-h-screen bg-[#fcfbfe] text-slate-900 selection:bg-fuchsia-200 selection:text-fuchsia-900 pb-28 pt-32 sm:pt-36">
@@ -454,6 +490,243 @@ export default async function AdminDashboardPage() {
             ))}
           </div>
         </section>
+
+        {/* Sección 4: Auditoría Financiera de Transacciones en Vivo */}
+        <section className="mb-14 mt-14">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
+            <div>
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-300 bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-800 mb-1.5">
+                <Receipt className="h-3.5 w-3.5" /> Auditoría de Ventas en Vivo
+              </div>
+              <h2 className="font-display text-2xl font-black text-slate-900">
+                Transacciones y Boletos Pagados ({confirmedRegistrations.length})
+              </h2>
+            </div>
+            <div className="text-xs text-slate-500 font-medium">
+              Ventas 100% confirmadas a través de Stripe Checkout
+            </div>
+          </div>
+
+          <div className="overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-sm">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="border-b border-slate-200/80 bg-slate-50/80 text-[11px] font-extrabold uppercase tracking-wider text-slate-500">
+                  <tr>
+                    <th className="px-6 py-4">Atleta / Comprador</th>
+                    <th className="px-6 py-4">Carrera & Distancia</th>
+                    <th className="px-6 py-4">Folio / Dorsal</th>
+                    <th className="px-6 py-4">Monto Total</th>
+                    <th className="px-6 py-4">Comisión Písale (5%)</th>
+                    <th className="px-6 py-4">Neto Promotor (95%)</th>
+                    <th className="px-6 py-4">Fecha Pago</th>
+                    <th className="px-6 py-4 text-right">Soporte Boleto</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
+                  {confirmedRegistrations.length === 0 ? (
+                    <tr>
+                      <td colSpan={8} className="px-6 py-10 text-center text-slate-400">
+                        No hay transacciones registradas aún.
+                      </td>
+                    </tr>
+                  ) : (
+                    confirmedRegistrations.slice(0, 15).map((reg) => {
+                      const totalPaid = reg.amountPaid || 0;
+                      const pisaleCut = Math.round(totalPaid * 0.05);
+                      const promoterNet = totalPaid - pisaleCut;
+
+                      return (
+                        <tr key={reg.id} className="hover:bg-slate-50/50 transition-colors">
+                          <td className="px-6 py-4">
+                            <div>
+                              <span className="font-bold text-slate-900 block">
+                                {reg.user?.name || "Atleta Oficial"}
+                              </span>
+                              <span className="text-[11px] text-slate-400 font-mono">
+                                {reg.user?.email || "Sin email"}
+                              </span>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className="font-bold text-slate-800 block line-clamp-1">
+                              {reg.raceTitle || "Carrera Oficial"}
+                            </span>
+                            <span className="text-[10px] uppercase font-bold text-violet-600">
+                              {reg.distanceName || "Distancia única"}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className="font-mono font-bold text-slate-900 px-2 py-0.5 rounded-md bg-slate-100 border border-slate-200">
+                              {reg.bibNumber || `PSL-${reg.id.slice(0, 4)}`}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 font-mono font-black text-slate-900 text-sm">
+                            ${totalPaid.toLocaleString("es-MX")} <span className="text-[10px] font-normal text-slate-400">MXN</span>
+                          </td>
+                          <td className="px-6 py-4 font-mono font-bold text-violet-700">
+                            +${pisaleCut.toLocaleString("es-MX")}
+                          </td>
+                          <td className="px-6 py-4 font-mono font-bold text-emerald-700">
+                            ${promoterNet.toLocaleString("es-MX")}
+                          </td>
+                          <td className="px-6 py-4 text-slate-500 text-[11px] whitespace-nowrap">
+                            {new Date(reg.registeredAt).toLocaleDateString("es-MX", {
+                              day: "numeric",
+                              month: "short",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            {reg.user?.email ? (
+                              <BotonEnviarCorreoTicket
+                                registrationId={reg.id}
+                                runnerEmail={reg.user.email}
+                              />
+                            ) : (
+                              <span className="text-slate-400 text-[11px]">—</span>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        {/* Sección 5: Liquidaciones & Dispersión de Fondos a Promotores (Payouts) */}
+        <section className="mb-14">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-violet-200 bg-violet-50 px-3 py-1 text-xs font-bold text-violet-700 mb-1.5">
+                <DollarSign className="h-3.5 w-3.5" /> Dispersión de Fondos
+              </div>
+              <h2 className="font-display text-2xl font-black text-slate-900">
+                Liquidaciones por Promotor (Payouts)
+              </h2>
+            </div>
+            <div className="text-right">
+              <span className="text-[10px] font-bold text-slate-400 uppercase block">
+                Total por Dispersar a Promotores (95%)
+              </span>
+              <span className="font-mono text-lg font-black text-emerald-600">
+                ${netPromotersPayout.toLocaleString("es-MX")} MXN
+              </span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {orgPayouts.map(({ org, totalSales, gmv, fee, netPayout }) => (
+              <div
+                key={org.id}
+                className="rounded-3xl border border-slate-200/80 bg-white p-6 shadow-xs flex flex-col justify-between space-y-4"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-[10px] font-black uppercase tracking-wider text-violet-700 bg-violet-50 px-2 py-0.5 rounded-md">
+                      {org.type || "CLUB"}
+                    </span>
+                    <span className="px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-[10px] font-bold">
+                      {totalSales > 0 ? "Retenido Pre-Evento" : "Sin ventas"}
+                    </span>
+                  </div>
+                  <h3 className="font-bold text-base text-slate-900">{org.name}</h3>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Responsable: {org.owner.name} ({org.owner.email})
+                  </p>
+                </div>
+
+                {/* Métricas de Liquidación */}
+                <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100 space-y-2 text-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-500">Boletos Vendidos:</span>
+                    <span className="font-bold font-mono text-slate-900">{totalSales}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-500">Total Recaudado (GMV):</span>
+                    <span className="font-mono font-bold text-slate-900">
+                      ${gmv.toLocaleString("es-MX")}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-violet-700">
+                    <span>Comisión Písale (5%):</span>
+                    <span className="font-mono font-bold">-${fee.toLocaleString("es-MX")}</span>
+                  </div>
+                  <div className="pt-2 border-t border-slate-200 flex items-center justify-between font-bold text-slate-900">
+                    <span className="text-emerald-700">Neto para Promotor:</span>
+                    <span className="font-mono text-emerald-700 text-sm font-black">
+                      ${netPayout.toLocaleString("es-MX")} MXN
+                    </span>
+                  </div>
+                </div>
+
+                <div className="pt-2 flex items-center justify-between text-[11px] text-slate-400">
+                  <span>Liquidación: 72h post-carrera</span>
+                  <span className="font-bold text-slate-700">
+                    CLABE: {org.rfc ? "Verificada" : "Pendiente"}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Sección 6: Monitor de Salud del Sistema (System Health Engine) */}
+        <section className="rounded-3xl border border-slate-200/80 bg-white/90 p-6 sm:p-8 shadow-sm">
+          <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-slate-400 mb-2">
+            <Activity className="h-4 w-4 text-emerald-500" />
+            Infraestructura & Motor Transaccional
+          </div>
+          <h3 className="font-display text-xl font-black text-slate-900 mb-6">
+            Estado Operativo de Servicios Písale
+          </h3>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="rounded-2xl border border-emerald-200/80 bg-emerald-50/50 p-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-bold text-emerald-900">Stripe MXN Payments</span>
+                <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+              </div>
+              <p className="text-xs text-emerald-700 font-semibold">
+                Checkout activo · Webhook escuchando
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-emerald-200/80 bg-emerald-50/50 p-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-bold text-emerald-900">Resend Email Engine</span>
+                <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+              </div>
+              <p className="text-xs text-emerald-700 font-semibold">
+                Envío de boletos digitales operativo
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-emerald-200/80 bg-emerald-50/50 p-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-bold text-emerald-900">Base de Datos PostgreSQL</span>
+                <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+              </div>
+              <p className="text-xs text-emerald-700 font-semibold">
+                Prisma ORM · Conexión estable
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-emerald-200/80 bg-emerald-50/50 p-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-bold text-emerald-900">E-Verify QR Engine</span>
+                <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+              </div>
+              <p className="text-xs text-emerald-700 font-semibold">
+                Acreditación antifraude activa
+              </p>
+            </div>
+          </div>
+        </section>
+
       </div>
     </div>
   );

@@ -135,6 +135,7 @@ export default async function CarreraCertificadoPage({ params, searchParams }: P
     genderRank,
     totalParticipants: race.spotsTaken > 0 ? race.spotsTaken : 1250,
     bibNumber,
+    organizerName: race.organizer?.name || race.title,
     registrationId: registration?.id || undefined,
     raceId: race.id,
   };

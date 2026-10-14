@@ -381,23 +381,20 @@ export function CertificadoFinisherClient({
                 
                 {/* Logo & Marca Pisale Official Timing */}
                 <div className="flex items-center gap-3">
-                  <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-2xl bg-gradient-to-br from-slate-950 to-slate-800 p-0.5 shadow-md flex items-center justify-center">
-                    <div className="h-full w-full rounded-[14px] bg-slate-950 flex flex-col items-center justify-center text-white">
-                      <span className="font-display font-black text-lg sm:text-xl tracking-tighter text-amber-400">
-                        PÍ
-                      </span>
-                      <span className="text-[7px] font-black uppercase tracking-widest text-slate-400 -mt-1">
-                        TIMING
-                      </span>
-                    </div>
+                  <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-2xl bg-white border border-slate-200/90 p-1.5 shadow-sm flex items-center justify-center">
+                    <img
+                      src="/assets/Logo_Pisale.png"
+                      alt="Logo Písale"
+                      className="h-full w-full object-contain"
+                    />
                   </div>
 
                   <div>
                     <span className="font-display font-black text-sm sm:text-base tracking-wider text-slate-900 uppercase block">
-                      PÍSALE CHIP TIMING
+                      PÍSALE TIMING SYSTEMS
                     </span>
                     <span className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-widest text-slate-500 block">
-                      SISTEMA OFICIAL DE CRONOMETRAJE ELECTRÓNICO RFID
+                      CRONOMETRAJE ELECTRÓNICO HOMOLOGADO RFID
                     </span>
                   </div>
                 </div>
@@ -543,12 +540,12 @@ export function CertificadoFinisherClient({
                       <path d="M35,30 L130,28" strokeWidth="1" strokeDasharray="3 3" />
                     </svg>
                   </div>
-                  <div className="w-36 sm:w-44 border-t border-slate-400 mx-auto pt-1">
-                    <span className="text-[10px] font-black text-slate-900 uppercase block leading-tight">
-                      Lic. Marco A. Valenzuela
+                  <div className="w-40 sm:w-52 border-t border-slate-400 mx-auto pt-1">
+                    <span className="text-[10px] font-black text-slate-900 uppercase block leading-tight truncate px-1">
+                      {data.organizerName || "Comité Organizador Oficial"}
                     </span>
                     <span className="text-[8px] font-bold text-slate-500 uppercase tracking-wider block">
-                      Director del Comité Organizador
+                      Dirección General de Carrera
                     </span>
                   </div>
                 </div>
@@ -624,12 +621,12 @@ export function CertificadoFinisherClient({
                       <path d="M30,32 L135,28" strokeWidth="1" strokeDasharray="3 3" />
                     </svg>
                   </div>
-                  <div className="w-36 sm:w-44 border-t border-slate-400 mx-auto pt-1">
+                  <div className="w-40 sm:w-52 border-t border-slate-400 mx-auto pt-1">
                     <span className="text-[10px] font-black text-slate-900 uppercase block leading-tight">
-                      Ing. Fernando R. Méndez
+                      Dirección Técnica de Tiempos
                     </span>
                     <span className="text-[8px] font-bold text-slate-500 uppercase tracking-wider block">
-                      Juez Principal Cronometraje RFID
+                      Colegio Oficial de Jueces RFID
                     </span>
                   </div>
                 </div>
