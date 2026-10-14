@@ -8,7 +8,7 @@ import { RunnerKitGrid } from "@/components/race-detail/RunnerKitGrid";
 import { RouteElevationSection } from "@/components/race-detail/RouteElevationSection";
 import { RaceActionCard } from "@/components/race-detail/RaceActionCard";
 import { MobileFloatingCta } from "@/components/race-detail/MobileFloatingCta";
-import { Building2, Info, MapPin, PackageCheck, ShieldCheck, BookOpen, ArrowRight, Timer } from "lucide-react";
+import { Building2, Info, MapPin, PackageCheck, ShieldCheck, BookOpen, ArrowRight, Timer, Zap, Camera } from "lucide-react";
 
 export const instant = false;
 
@@ -154,6 +154,63 @@ export default async function CarreraDetallePage({ params }: Props) {
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-linear-to-r from-violet-600 to-fuchsia-600 px-5 py-2.5 text-xs font-black text-white hover:opacity-95 transition-all shrink-0 shadow-sm shadow-violet-500/20"
                 >
                   <span>Planificar Ritmo</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Grid: Live Tracking & Galería de Fotos Oficial */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Tarjeta Sigue a tu Corredor */}
+              <div className="rounded-3xl border border-emerald-200/80 bg-gradient-to-br from-emerald-50/70 via-teal-50/40 to-white p-6 shadow-sm">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="h-10 w-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-sm">
+                    <Zap className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 block">
+                      Familiares & Amigos
+                    </span>
+                    <h3 className="font-display font-black text-slate-900 text-base">
+                      Sigue a tu Corredor en Vivo
+                    </h3>
+                  </div>
+                </div>
+                <p className="text-xs text-slate-600 mb-4 leading-relaxed">
+                  Consulta el avance por dorsal o nombre sobre el circuito RFID y mira la hora calculada de llegada a la meta (ETA).
+                </p>
+                <Link
+                  href={`/carrera/${race.id}/tracking`}
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-emerald-600 hover:bg-emerald-700 px-4 py-2 text-xs font-bold text-white transition-all shadow-xs"
+                >
+                  <span>Abrir Radar en Vivo</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+
+              {/* Tarjeta Galería de Fotos Oficial */}
+              <div className="rounded-3xl border border-fuchsia-200/80 bg-gradient-to-br from-fuchsia-50/70 via-purple-50/40 to-white p-6 shadow-sm">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-fuchsia-600 to-purple-600 text-white flex items-center justify-center shadow-sm">
+                    <Camera className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-fuchsia-700 block">
+                      Foto Finisher HD
+                    </span>
+                    <h3 className="font-display font-black text-slate-900 text-base">
+                      Fotos Oficiales por Dorsal
+                    </h3>
+                  </div>
+                </div>
+                <p className="text-xs text-slate-600 mb-4 leading-relaxed">
+                  Encuentra tus fotografías en ruta, meta y podio. Descárgalas en alta resolución con el marco conmemorativo oficial.
+                </p>
+                <Link
+                  href={`/carrera/${race.id}/fotos`}
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-slate-900 hover:bg-slate-800 px-4 py-2 text-xs font-bold text-white transition-all shadow-xs"
+                >
+                  <span>Ver Fotos del Evento</span>
                   <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
               </div>

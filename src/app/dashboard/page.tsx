@@ -2,7 +2,7 @@ import { auth, signOut } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { stripe } from "@/lib/stripe";
-import { Calendar, Medal, Timer, TrendingUp, Trophy, QrCode, ArrowRight, Sparkles, CheckCircle2, Building2, LogOut, ShieldCheck, Printer, Download, AlertCircle, Share2, FileText, BookOpen, Award } from "lucide-react";
+import { Calendar, Medal, Timer, TrendingUp, Trophy, QrCode, ArrowRight, Sparkles, CheckCircle2, Building2, LogOut, ShieldCheck, Printer, Download, AlertCircle, Share2, FileText, BookOpen, Award, Zap, Camera } from "lucide-react";
 import Link from "next/link";
 import { BotonEnviarCorreoTicket } from "@/components/common/BotonEnviarCorreoTicket";
 import { BotonDescartarPendiente } from "@/components/common/BotonDescartarPendiente";
@@ -381,6 +381,14 @@ export default async function DashboardPage() {
                               Certificado
                             </Link>
                             <Link
+                              href={`/carrera/${reg.raceId}/tracking?registration_id=${reg.id}&bib=${reg.bibNumber || ""}`}
+                              className="inline-flex items-center gap-1 font-bold text-emerald-800 hover:text-emerald-950 bg-emerald-50 hover:bg-emerald-100 px-2.5 py-1 rounded-full transition-colors border border-emerald-200/60"
+                              title="Seguimiento en Vivo para Familiares (Live Tracking)"
+                            >
+                              <Zap className="h-3 w-3 text-emerald-600" />
+                              Tracking
+                            </Link>
+                            <Link
                               href={`/carrera/${reg.raceId}/exito?session_id=${reg.stripeSessionId || `demo_${reg.id}`}`}
                               className="inline-flex items-center gap-1 font-bold text-violet-600 hover:text-violet-800 transition-colors"
                             >
@@ -450,6 +458,14 @@ export default async function DashboardPage() {
                       >
                         <Share2 className="h-3 w-3 text-fuchsia-600" />
                         Story
+                      </Link>
+                      <Link
+                        href={`/carrera/${reg.raceId || "evento"}/fotos?bib=${reg.bibNumber || ""}`}
+                        className="rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 px-3.5 py-1.5 text-xs font-bold transition-colors flex items-center gap-1 border border-slate-200/80 shadow-2xs"
+                        title="Ver y descargar fotos oficiales del evento"
+                      >
+                        <Camera className="h-3.5 w-3.5 text-slate-600" />
+                        Fotos
                       </Link>
                       <Link
                         href="/resultados"

@@ -14,6 +14,8 @@ import {
   ArrowRight,
   User,
   Award,
+  Zap,
+  Camera,
 } from "lucide-react";
 import type { AthleteResult } from "@/app/actions/results";
 
@@ -443,6 +445,13 @@ export function LiveResultsView({
                   Imprimir
                 </button>
               </div>
+              <Link
+                href={`/carrera/${selectedRaceId}/fotos?bib=${selectedAthlete.bibNumber}`}
+                className="w-full inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white p-3 text-xs font-bold text-slate-800 shadow-2xs hover:bg-slate-50 transition-colors"
+              >
+                <Camera className="h-4 w-4 text-fuchsia-600" />
+                Ver Mis Fotos de Carrera
+              </Link>
             </div>
 
           </div>
