@@ -8,7 +8,7 @@ import { RunnerKitGrid } from "@/components/race-detail/RunnerKitGrid";
 import { RouteElevationSection } from "@/components/race-detail/RouteElevationSection";
 import { RaceActionCard } from "@/components/race-detail/RaceActionCard";
 import { MobileFloatingCta } from "@/components/race-detail/MobileFloatingCta";
-import { Building2, Info, MapPin, PackageCheck, ShieldCheck, BookOpen, ArrowRight, Timer, Zap, Camera } from "lucide-react";
+import { Building2, Info, MapPin, PackageCheck, ShieldCheck, BookOpen, ArrowRight, Timer, Zap, Camera, HeartHandshake } from "lucide-react";
 
 export const instant = false;
 
@@ -211,6 +211,41 @@ export default async function CarreraDetallePage({ params }: Props) {
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-slate-900 hover:bg-slate-800 px-4 py-2 text-xs font-bold text-white transition-all shadow-xs"
                 >
                   <span>Ver Fotos del Evento</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Tarjeta de Convocatoria a Voluntarios & Staff Oficial */}
+            <div className="rounded-3xl border border-amber-200/90 bg-linear-to-r from-amber-50/80 via-orange-50/40 to-white p-6 sm:p-7 shadow-sm backdrop-blur-xl">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+                <div className="flex items-start gap-4">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-amber-500 to-orange-600 text-white shadow-md shadow-orange-500/20">
+                    <HeartHandshake className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-xs font-extrabold uppercase tracking-wider text-amber-700">
+                        Comunidad & Convocatoria Oficial
+                      </span>
+                      <span className="rounded-full bg-amber-200/70 text-amber-900 px-2 py-0.5 text-[10px] font-black">
+                        Cupos Abiertos
+                      </span>
+                    </div>
+                    <h3 className="font-display text-lg font-bold text-slate-900">
+                      Sé parte del Staff / Voluntariado
+                    </h3>
+                    <p className="mt-1 text-xs text-slate-600 leading-relaxed max-w-xl">
+                      Únete al equipo operativo en hidratación, entrega de kits, guardarropa y entrega de medallas. Recibe playera Dry-Fit oficial, kit de alimentación, medalla de staff y tu gafete digital con QR.
+                    </p>
+                  </div>
+                </div>
+
+                <Link
+                  href={`/carrera/${race.id}/voluntarios`}
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-linear-to-r from-amber-500 to-orange-600 px-5 py-2.5 text-xs font-black text-white hover:opacity-95 transition-all shrink-0 shadow-sm shadow-orange-500/20"
+                >
+                  <span>Sé parte del Staff / Voluntariado</span>
                   <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
               </div>

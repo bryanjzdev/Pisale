@@ -288,9 +288,13 @@ export function ResponsivaDocumentoClient({
           <div className="border-b-2 border-slate-900 pb-3 mb-4">
             <div className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900 font-display font-black text-xl text-white">
-                  P
-                </span>
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900 p-1 shadow-sm overflow-hidden">
+                  <img
+                    src="/assets/Logo_Pisale.png"
+                    alt="Logo Písale"
+                    className="h-full w-full object-contain"
+                  />
+                </div>
                 <div>
                   <span className="font-display text-sm sm:text-base font-black tracking-wider uppercase block text-slate-900 leading-tight">
                     PÍSALE · PLATAFORMA DEPORTIVA OFICIAL

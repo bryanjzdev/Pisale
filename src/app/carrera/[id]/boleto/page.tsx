@@ -180,9 +180,13 @@ export default async function BoletoPage({
           {/* Banda Superior Estilo Federación */}
           <div className="bg-gradient-to-r from-violet-600 via-fuchsia-600 to-orange-500 px-6 sm:px-10 py-4 flex flex-wrap items-center justify-between gap-4 text-white">
             <div className="flex items-center gap-3">
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/20 backdrop-blur-md font-display font-black text-lg">
-                P
-              </span>
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 backdrop-blur-md p-1 shadow-sm overflow-hidden">
+                <img
+                  src="/assets/Logo_Pisale.png"
+                  alt="Logo Písale"
+                  className="h-full w-full object-contain"
+                />
+              </div>
               <div>
                 <span className="font-display text-sm sm:text-base font-black tracking-wider uppercase block">
                   PÍSALE · PASAPORTE OFICIAL DE COMPETIDOR
