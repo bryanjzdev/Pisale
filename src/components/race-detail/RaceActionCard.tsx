@@ -236,16 +236,18 @@ export function RaceActionCard({
           </div>
         </div>
 
-        {/* Enlace al Módulo de Voluntariado & Staff */}
-        <div className="mt-4 pt-3 border-t border-slate-100 text-center">
-          <Link
-            href={`/carrera/${race.id}/voluntarios`}
-            className="inline-flex items-center justify-center gap-1.5 text-xs font-bold text-amber-700 hover:text-amber-800 hover:underline transition-colors"
-          >
-            <span>¿Quieres colaborar?</span>
-            <span className="text-amber-600 font-extrabold">Sé parte del Staff / Voluntariado →</span>
-          </Link>
-        </div>
+        {/* Enlace al Módulo de Voluntariado & Staff (Condicional) */}
+        {race.features?.volunteers !== false && (
+          <div className="mt-4 pt-3 border-t border-slate-100 text-center">
+            <Link
+              href={`/carrera/${race.id}/voluntarios`}
+              className="inline-flex items-center justify-center gap-1.5 text-xs font-bold text-amber-700 hover:text-amber-800 hover:underline transition-colors"
+            >
+              <span>¿Quieres colaborar?</span>
+              <span className="text-amber-600 font-extrabold">Sé parte del Staff / Voluntariado →</span>
+            </Link>
+          </div>
+        )}
       </div>
 
       {/* Modal de Inscripción / Flujo de Pago */}

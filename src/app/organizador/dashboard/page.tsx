@@ -19,6 +19,7 @@ import {
   ExternalLink,
   LogOut,
   ShieldCheck,
+  HeartHandshake,
 } from "lucide-react";
 import { ExportCsvButton } from "@/components/organizador/ExportCsvButton";
 
@@ -328,13 +329,23 @@ export default async function OrganizadorDashboardPage() {
                         </span>
                       </div>
 
-                      <Link
-                        href={`/carrera/${race.id}`}
-                        className="inline-flex items-center gap-1 rounded-xl bg-violet-50 px-3 py-1.5 text-xs font-bold text-violet-700 hover:bg-violet-100 transition-colors"
-                      >
-                        Ver Convocatoria
-                        <ExternalLink className="h-3 w-3" />
-                      </Link>
+                      <div className="flex items-center gap-1.5">
+                        <Link
+                          href={`/carrera/${race.id}/voluntarios`}
+                          className="inline-flex items-center gap-1 rounded-xl bg-amber-50 px-2.5 py-1.5 text-xs font-bold text-amber-850 hover:bg-amber-100 transition-colors"
+                          title="Convocatoria y acreditaciones de voluntarios"
+                        >
+                          <HeartHandshake className="h-3.5 w-3.5 text-amber-600" />
+                          <span>Voluntarios</span>
+                        </Link>
+                        <Link
+                          href={`/carrera/${race.id}`}
+                          className="inline-flex items-center gap-1 rounded-xl bg-violet-50 px-3 py-1.5 text-xs font-bold text-violet-700 hover:bg-violet-100 transition-colors"
+                        >
+                          Ver
+                          <ExternalLink className="h-3 w-3" />
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 );

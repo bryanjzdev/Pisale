@@ -21,13 +21,13 @@ export default function RegisterPage() {
         </Link>
         
         <div className="flex justify-center">
-          <div className="relative flex h-20 w-20 items-center justify-center rounded-3xl bg-white/95 p-2 ring-1 ring-slate-200/90 shadow-lg shadow-violet-500/10 backdrop-blur-md">
+          <div className="relative flex items-center justify-center transition-transform duration-300 hover:scale-105">
             <Image
               src="/assets/Logo_Pisale.png"
               alt="Logo Písale"
-              width={72}
-              height={72}
-              className="h-full w-full object-contain"
+              width={1288}
+              height={1600}
+              className="h-16 sm:h-20 w-auto object-contain drop-shadow-[0_4px_24px_rgba(255,87,34,0.3)] transition-all duration-300"
               priority
             />
           </div>

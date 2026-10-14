@@ -31,7 +31,7 @@ const RACE_CATEGORIES = [
 const NAV_LINKS = [
   { label: "Carreras", href: "/carreras" },
   { label: "Resultados", href: "/resultados", badge: "Live" },
-  { label: "Comunidad", href: "#" },
+  { label: "Voluntariado", href: "/voluntarios", badge: "Staff" },
 ];
 
 export function Navbar({ isLoggedIn }: { isLoggedIn?: boolean }) {
@@ -68,20 +68,20 @@ export function Navbar({ isLoggedIn }: { isLoggedIn?: boolean }) {
             : "h-16 max-w-6xl shadow-[0_4px_24px_-8px_rgba(91,33,182,0.15)]"
         }`}
       >
-        {/* Logo */}
-        <Link href="/" className="group flex items-center gap-2.5 pl-1 pr-3" aria-label="Inicio Písale">
-          <div className="relative flex h-12 w-12 sm:h-13 sm:w-13 items-center justify-center rounded-2xl bg-white/95 p-0.5 ring-1 ring-slate-200/90 shadow-sm backdrop-blur-md transition-all duration-300 group-hover:scale-105 group-hover:shadow-md">
+        {/* Logo Libre y Sin Recuadro */}
+        <Link href="/" className="group flex items-center gap-2 pl-2 pr-3 focus:outline-none" aria-label="Inicio Písale">
+          <div className="relative flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
             <Image
               src="/assets/Logo_Pisale.png"
               alt="Logo Písale"
-              width={54}
-              height={54}
-              className="h-full w-full object-contain"
+              width={1288}
+              height={1600}
+              className="h-10 sm:h-11 w-auto object-contain drop-shadow-[0_2px_10px_rgba(255,87,34,0.25)] transition-all duration-300 group-hover:drop-shadow-[0_4px_18px_rgba(255,87,34,0.45)]"
               priority
             />
           </div>
-          <span className="font-display text-[1.35rem] font-extrabold tracking-tight text-slate-900">
-            písale<span className="text-fuchsia-500">.</span>
+          <span className="font-display text-[1.38rem] font-black tracking-tight text-slate-900 group-hover:text-slate-950 transition-colors">
+            písale<span className="text-transparent bg-clip-text bg-linear-to-r from-orange-500 via-rose-500 to-fuchsia-600">.</span>
           </span>
         </Link>
 

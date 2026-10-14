@@ -24,6 +24,12 @@ import {
   Flag,
   Droplets,
   Route,
+  HeartHandshake,
+  Camera,
+  Zap,
+  Award,
+  SlidersHorizontal,
+  CheckCircle2,
 } from "lucide-react";
 
 const IMAGE_PRESETS = [
@@ -73,6 +79,19 @@ export function CrearCarreraForm({
     { name: "10K", price: 450, maxParticipants: 500 },
     { name: "21K", price: 650, maxParticipants: 1000 },
   ]);
+
+  // Módulos y funcionalidades activables por carrera
+  const [features, setFeatures] = useState({
+    volunteers: true,
+    liveTracking: true,
+    photos: true,
+    strategy: true,
+    certificates: true,
+  });
+
+  const toggleFeature = (key: keyof typeof features) => {
+    setFeatures((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -768,6 +787,235 @@ export function CrearCarreraForm({
             <div>
               <span className="block font-bold text-emerald-400 text-base">Stripe & OXXO</span>
               <span>Cobros directos</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 5. Módulos y Funcionalidades del Evento (Modularidad Flexible) */}
+      <div className="rounded-3xl border border-white/80 bg-white/90 p-6 sm:p-8 shadow-[0_15px_40px_-10px_rgba(91,33,182,0.1)] backdrop-blur-2xl space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-violet-100 text-violet-700 text-xs font-black">
+                <SlidersHorizontal className="h-3.5 w-3.5" />
+              </span>
+              <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-800">
+                5. Módulos y Funcionalidades de tu Evento
+              </label>
+            </div>
+            <p className="text-xs text-slate-500 mt-1">
+              ¿Solo requieres venta de boletos o paquete completo? Activa o desactiva módulos según tu logística.
+            </p>
+          </div>
+          <span className="self-start sm:self-auto rounded-full bg-violet-50 px-3 py-1 text-[11px] font-black text-violet-700 border border-violet-200">
+            {Object.values(features).filter(Boolean).length} de 5 módulos activos
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Módulo 1: Voluntariado */}
+          <div
+            onClick={() => toggleFeature("volunteers")}
+            className={`cursor-pointer rounded-2xl border p-4 transition-all select-none ${
+              features.volunteers
+                ? "border-amber-300 bg-amber-50/60 shadow-xs"
+                : "border-slate-200 bg-slate-50/50 opacity-60 hover:opacity-80"
+            }`}
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div
+                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-colors ${
+                    features.volunteers
+                      ? "bg-linear-to-br from-amber-500 to-orange-500 text-white shadow-sm"
+                      : "bg-slate-200 text-slate-500"
+                  }`}
+                >
+                  <HeartHandshake className="h-5 w-5" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900">Convocatoria de Voluntarios & Staff</h4>
+                  <p className="text-[11px] text-slate-500 font-medium leading-snug mt-0.5">
+                    Bolsa de voluntarios con registro digital, roles y gafetes con código QR.
+                  </p>
+                </div>
+              </div>
+              <div
+                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${
+                  features.volunteers ? "bg-amber-500" : "bg-slate-300"
+                }`}
+              >
+                <span
+                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                    features.volunteers ? "translate-x-5" : "translate-x-0"
+                  }`}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Módulo 2: Live Tracking GPS */}
+          <div
+            onClick={() => toggleFeature("liveTracking")}
+            className={`cursor-pointer rounded-2xl border p-4 transition-all select-none ${
+              features.liveTracking
+                ? "border-emerald-300 bg-emerald-50/60 shadow-xs"
+                : "border-slate-200 bg-slate-50/50 opacity-60 hover:opacity-80"
+            }`}
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div
+                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-colors ${
+                    features.liveTracking
+                      ? "bg-linear-to-br from-emerald-500 to-teal-600 text-white shadow-sm"
+                      : "bg-slate-200 text-slate-500"
+                  }`}
+                >
+                  <Zap className="h-5 w-5" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900">Radar & Live Tracking RFID</h4>
+                  <p className="text-[11px] text-slate-500 font-medium leading-snug mt-0.5">
+                    Seguimiento en vivo en mapa para familiares y cálculo de llegada a meta.
+                  </p>
+                </div>
+              </div>
+              <div
+                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${
+                  features.liveTracking ? "bg-emerald-500" : "bg-slate-300"
+                }`}
+              >
+                <span
+                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                    features.liveTracking ? "translate-x-5" : "translate-x-0"
+                  }`}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Módulo 3: Galería de Fotos Finisher AI */}
+          <div
+            onClick={() => toggleFeature("photos")}
+            className={`cursor-pointer rounded-2xl border p-4 transition-all select-none ${
+              features.photos
+                ? "border-fuchsia-300 bg-fuchsia-50/60 shadow-xs"
+                : "border-slate-200 bg-slate-50/50 opacity-60 hover:opacity-80"
+            }`}
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div
+                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-colors ${
+                    features.photos
+                      ? "bg-linear-to-br from-fuchsia-500 to-pink-600 text-white shadow-sm"
+                      : "bg-slate-200 text-slate-500"
+                  }`}
+                >
+                  <Camera className="h-5 w-5" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900">Galería de Fotos AI por Dorsal</h4>
+                  <p className="text-[11px] text-slate-500 font-medium leading-snug mt-0.5">
+                    Reconocimiento automático de números de dorsal y descarga en alta definición.
+                  </p>
+                </div>
+              </div>
+              <div
+                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${
+                  features.photos ? "bg-fuchsia-500" : "bg-slate-300"
+                }`}
+              >
+                <span
+                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                    features.photos ? "translate-x-5" : "translate-x-0"
+                  }`}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Módulo 4: Calculadora de Ritmo */}
+          <div
+            onClick={() => toggleFeature("strategy")}
+            className={`cursor-pointer rounded-2xl border p-4 transition-all select-none ${
+              features.strategy
+                ? "border-violet-300 bg-violet-50/60 shadow-xs"
+                : "border-slate-200 bg-slate-50/50 opacity-60 hover:opacity-80"
+            }`}
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div
+                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-colors ${
+                    features.strategy
+                      ? "bg-linear-to-br from-violet-600 to-indigo-600 text-white shadow-sm"
+                      : "bg-slate-200 text-slate-500"
+                  }`}
+                >
+                  <Route className="h-5 w-5" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900">Estrategia & Pulseras de Paso</h4>
+                  <p className="text-[11px] text-slate-500 font-medium leading-snug mt-0.5">
+                    Planificador de splits por kilómetro e impresión de pulsera de carrera.
+                  </p>
+                </div>
+              </div>
+              <div
+                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${
+                  features.strategy ? "bg-violet-600" : "bg-slate-300"
+                }`}
+              >
+                <span
+                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                    features.strategy ? "translate-x-5" : "translate-x-0"
+                  }`}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Módulo 5: Certificados Finisher */}
+          <div
+            onClick={() => toggleFeature("certificates")}
+            className={`cursor-pointer rounded-2xl border p-4 transition-all select-none md:col-span-2 ${
+              features.certificates
+                ? "border-sky-300 bg-sky-50/60 shadow-xs"
+                : "border-slate-200 bg-slate-50/50 opacity-60 hover:opacity-80"
+            }`}
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div
+                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-colors ${
+                    features.certificates
+                      ? "bg-linear-to-br from-sky-500 to-blue-600 text-white shadow-sm"
+                      : "bg-slate-200 text-slate-500"
+                  }`}
+                >
+                  <Award className="h-5 w-5" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900">Certificados Finisher Homologados</h4>
+                  <p className="text-[11px] text-slate-500 font-medium leading-snug mt-0.5">
+                    Diplomas oficiales descargables en PDF con tiempo chip, posición y sello criptográfico QR.
+                  </p>
+                </div>
+              </div>
+              <div
+                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${
+                  features.certificates ? "bg-sky-500" : "bg-slate-300"
+                }`}
+              >
+                <span
+                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                    features.certificates ? "translate-x-5" : "translate-x-0"
+                  }`}
+                />
+              </div>
             </div>
           </div>
         </div>

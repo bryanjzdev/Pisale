@@ -288,11 +288,11 @@ export function ResponsivaDocumentoClient({
           <div className="border-b-2 border-slate-900 pb-3 mb-4">
             <div className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900 p-1 shadow-sm overflow-hidden">
+                <div className="relative flex items-center justify-center">
                   <img
                     src="/assets/Logo_Pisale.png"
                     alt="Logo Písale"
-                    className="h-full w-full object-contain"
+                    className="h-10 sm:h-11 w-auto object-contain drop-shadow-xs"
                   />
                 </div>
                 <div>

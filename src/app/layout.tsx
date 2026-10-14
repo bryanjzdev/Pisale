@@ -5,6 +5,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { auth } from "@/auth";
 import { Suspense } from "react";
+import { connection } from "next/server";
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -24,6 +25,7 @@ export const metadata: Metadata = {
 };
 
 async function DynamicNavbar() {
+  await connection();
   const session = await auth();
   return <Navbar isLoggedIn={!!session} />;
 }

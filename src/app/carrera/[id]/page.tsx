@@ -129,127 +129,137 @@ export default async function CarreraDetallePage({ params }: Props) {
               </div>
             </div>
 
-            {/* Tarjeta de Acceso a Estrategia y Pulsera de Ritmos */}
-            <div className="rounded-3xl border border-violet-100 bg-linear-to-r from-violet-50/70 via-fuchsia-50/40 to-white p-6 sm:p-7 shadow-sm backdrop-blur-xl">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div className="flex items-start gap-4">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-violet-600 via-fuchsia-600 to-orange-500 text-white shadow-md shadow-violet-500/20">
-                    <Timer className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <span className="text-xs font-extrabold uppercase tracking-wider text-violet-700 block mb-1">
-                      Pacer Virtual & Rendimiento
-                    </span>
-                    <h3 className="font-display text-lg font-bold text-slate-900">
-                      Calculadora de Ritmos & Pulsera de Muñeca
-                    </h3>
-                    <p className="mt-1 text-xs text-slate-600">
-                      Calcula tus splits km a km, estrategia de ritmo y genera tu pulsera recortable para la muñeca (Pace Band).
-                    </p>
-                  </div>
-                </div>
-
-                <Link
-                  href={`/carrera/${race.id}/estrategia`}
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-linear-to-r from-violet-600 to-fuchsia-600 px-5 py-2.5 text-xs font-black text-white hover:opacity-95 transition-all shrink-0 shadow-sm shadow-violet-500/20"
-                >
-                  <span>Planificar Ritmo</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-              </div>
-            </div>
-
-            {/* Grid: Live Tracking & Galería de Fotos Oficial */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* Tarjeta Sigue a tu Corredor */}
-              <div className="rounded-3xl border border-emerald-200/80 bg-gradient-to-br from-emerald-50/70 via-teal-50/40 to-white p-6 shadow-sm">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="h-10 w-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-sm">
-                    <Zap className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 block">
-                      Familiares & Amigos
-                    </span>
-                    <h3 className="font-display font-black text-slate-900 text-base">
-                      Sigue a tu Corredor en Vivo
-                    </h3>
-                  </div>
-                </div>
-                <p className="text-xs text-slate-600 mb-4 leading-relaxed">
-                  Consulta el avance por dorsal o nombre sobre el circuito RFID y mira la hora calculada de llegada a la meta (ETA).
-                </p>
-                <Link
-                  href={`/carrera/${race.id}/tracking`}
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-emerald-600 hover:bg-emerald-700 px-4 py-2 text-xs font-bold text-white transition-all shadow-xs"
-                >
-                  <span>Abrir Radar en Vivo</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-              </div>
-
-              {/* Tarjeta Galería de Fotos Oficial */}
-              <div className="rounded-3xl border border-fuchsia-200/80 bg-gradient-to-br from-fuchsia-50/70 via-purple-50/40 to-white p-6 shadow-sm">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-fuchsia-600 to-purple-600 text-white flex items-center justify-center shadow-sm">
-                    <Camera className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-fuchsia-700 block">
-                      Foto Finisher HD
-                    </span>
-                    <h3 className="font-display font-black text-slate-900 text-base">
-                      Fotos Oficiales por Dorsal
-                    </h3>
-                  </div>
-                </div>
-                <p className="text-xs text-slate-600 mb-4 leading-relaxed">
-                  Encuentra tus fotografías en ruta, meta y podio. Descárgalas en alta resolución con el marco conmemorativo oficial.
-                </p>
-                <Link
-                  href={`/carrera/${race.id}/fotos`}
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-slate-900 hover:bg-slate-800 px-4 py-2 text-xs font-bold text-white transition-all shadow-xs"
-                >
-                  <span>Ver Fotos del Evento</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-              </div>
-            </div>
-
-            {/* Tarjeta de Convocatoria a Voluntarios & Staff Oficial */}
-            <div className="rounded-3xl border border-amber-200/90 bg-linear-to-r from-amber-50/80 via-orange-50/40 to-white p-6 sm:p-7 shadow-sm backdrop-blur-xl">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5">
-                <div className="flex items-start gap-4">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-amber-500 to-orange-600 text-white shadow-md shadow-orange-500/20">
-                    <HeartHandshake className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xs font-extrabold uppercase tracking-wider text-amber-700">
-                        Comunidad & Convocatoria Oficial
-                      </span>
-                      <span className="rounded-full bg-amber-200/70 text-amber-900 px-2 py-0.5 text-[10px] font-black">
-                        Cupos Abiertos
-                      </span>
+            {/* Tarjeta de Acceso a Estrategia y Pulsera de Ritmos (Condicional) */}
+            {race.features?.strategy !== false && (
+              <div className="rounded-3xl border border-violet-100 bg-linear-to-r from-violet-50/70 via-fuchsia-50/40 to-white p-6 sm:p-7 shadow-sm backdrop-blur-xl">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex items-start gap-4">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-violet-600 via-fuchsia-600 to-orange-500 text-white shadow-md shadow-violet-500/20">
+                      <Timer className="h-6 w-6" />
                     </div>
-                    <h3 className="font-display text-lg font-bold text-slate-900">
-                      Sé parte del Staff / Voluntariado
-                    </h3>
-                    <p className="mt-1 text-xs text-slate-600 leading-relaxed max-w-xl">
-                      Únete al equipo operativo en hidratación, entrega de kits, guardarropa y entrega de medallas. Recibe playera Dry-Fit oficial, kit de alimentación, medalla de staff y tu gafete digital con QR.
-                    </p>
+                    <div>
+                      <span className="text-xs font-extrabold uppercase tracking-wider text-violet-700 block mb-1">
+                        Pacer Virtual & Rendimiento
+                      </span>
+                      <h3 className="font-display text-lg font-bold text-slate-900">
+                        Calculadora de Ritmos & Pulsera de Muñeca
+                      </h3>
+                      <p className="mt-1 text-xs text-slate-600">
+                        Calcula tus splits km a km, estrategia de ritmo y genera tu pulsera recortable para la muñeca (Pace Band).
+                      </p>
+                    </div>
                   </div>
-                </div>
 
-                <Link
-                  href={`/carrera/${race.id}/voluntarios`}
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-linear-to-r from-amber-500 to-orange-600 px-5 py-2.5 text-xs font-black text-white hover:opacity-95 transition-all shrink-0 shadow-sm shadow-orange-500/20"
-                >
-                  <span>Sé parte del Staff / Voluntariado</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
+                  <Link
+                    href={`/carrera/${race.id}/estrategia`}
+                    className="inline-flex items-center justify-center gap-2 rounded-full bg-linear-to-r from-violet-600 to-fuchsia-600 px-5 py-2.5 text-xs font-black text-white hover:opacity-95 transition-all shrink-0 shadow-sm shadow-violet-500/20"
+                  >
+                    <span>Planificar Ritmo</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                </div>
               </div>
-            </div>
+            )}
+
+            {/* Grid: Live Tracking & Galería de Fotos Oficial (Condicional) */}
+            {(race.features?.liveTracking !== false || race.features?.photos !== false) && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* Tarjeta Sigue a tu Corredor */}
+                {race.features?.liveTracking !== false && (
+                  <div className="rounded-3xl border border-emerald-200/80 bg-gradient-to-br from-emerald-50/70 via-teal-50/40 to-white p-6 shadow-sm">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="h-10 w-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-sm">
+                        <Zap className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 block">
+                          Familiares & Amigos
+                        </span>
+                        <h3 className="font-display font-black text-slate-900 text-base">
+                          Sigue a tu Corredor en Vivo
+                        </h3>
+                      </div>
+                    </div>
+                    <p className="text-xs text-slate-600 mb-4 leading-relaxed">
+                      Consulta el avance por dorsal o nombre sobre el circuito RFID y mira la hora calculada de llegada a la meta (ETA).
+                    </p>
+                    <Link
+                      href={`/carrera/${race.id}/tracking`}
+                      className="inline-flex items-center justify-center gap-2 rounded-full bg-emerald-600 hover:bg-emerald-700 px-4 py-2 text-xs font-bold text-white transition-all shadow-xs"
+                    >
+                      <span>Abrir Radar en Vivo</span>
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </Link>
+                  </div>
+                )}
+
+                {/* Tarjeta Galería de Fotos Oficial */}
+                {race.features?.photos !== false && (
+                  <div className="rounded-3xl border border-fuchsia-200/80 bg-gradient-to-br from-fuchsia-50/70 via-purple-50/40 to-white p-6 shadow-sm">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-fuchsia-600 to-purple-600 text-white flex items-center justify-center shadow-sm">
+                        <Camera className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <span className="text-[10px] font-extrabold uppercase tracking-wider text-fuchsia-700 block">
+                          Foto Finisher HD
+                        </span>
+                        <h3 className="font-display font-black text-slate-900 text-base">
+                          Fotos Oficiales por Dorsal
+                        </h3>
+                      </div>
+                    </div>
+                    <p className="text-xs text-slate-600 mb-4 leading-relaxed">
+                      Encuentra tus fotografías en ruta, meta y podio. Descárgalas en alta resolución con el marco conmemorativo oficial.
+                    </p>
+                    <Link
+                      href={`/carrera/${race.id}/fotos`}
+                      className="inline-flex items-center justify-center gap-2 rounded-full bg-slate-900 hover:bg-slate-800 px-4 py-2 text-xs font-bold text-white transition-all shadow-xs"
+                    >
+                      <span>Ver Fotos del Evento</span>
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </Link>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Tarjeta de Convocatoria a Voluntarios & Staff Oficial (Condicional) */}
+            {race.features?.volunteers !== false && (
+              <div className="rounded-3xl border border-amber-200/90 bg-linear-to-r from-amber-50/80 via-orange-50/40 to-white p-6 sm:p-7 shadow-sm backdrop-blur-xl">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+                  <div className="flex items-start gap-4">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-amber-500 to-orange-600 text-white shadow-md shadow-orange-500/20">
+                      <HeartHandshake className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-xs font-extrabold uppercase tracking-wider text-amber-700">
+                          Comunidad & Convocatoria Oficial
+                        </span>
+                        <span className="rounded-full bg-amber-200/70 text-amber-900 px-2 py-0.5 text-[10px] font-black">
+                          Cupos Abiertos
+                        </span>
+                      </div>
+                      <h3 className="font-display text-lg font-bold text-slate-900">
+                        Sé parte del Staff / Voluntariado
+                      </h3>
+                      <p className="mt-1 text-xs text-slate-600 leading-relaxed max-w-xl">
+                        Únete al equipo operativo en hidratación, entrega de kits, guardarropa y entrega de medallas. Recibe playera Dry-Fit oficial, kit de alimentación, medalla de staff y tu gafete digital con QR.
+                      </p>
+                    </div>
+                  </div>
+
+                  <Link
+                    href={`/carrera/${race.id}/voluntarios`}
+                    className="inline-flex items-center justify-center gap-2 rounded-full bg-linear-to-r from-amber-500 to-orange-600 px-5 py-2.5 text-xs font-black text-white hover:opacity-95 transition-all shrink-0 shadow-sm shadow-orange-500/20"
+                  >
+                    <span>Sé parte del Staff / Voluntariado</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                </div>
+              </div>
+            )}
 
             {/* Ficha Técnica: Kit del Corredor */}
             <RunnerKitGrid items={race.kitItems} />

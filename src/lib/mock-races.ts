@@ -13,6 +13,15 @@ export type DistanceOption = {
   recommendedPace?: string;
 };
 
+export type RaceFeatures = {
+  volunteers?: boolean;
+  liveTracking?: boolean;
+  photos?: boolean;
+  strategy?: boolean;
+  certificates?: boolean;
+  waiver?: boolean;
+};
+
 export type KitItem = {
   id: string;
   title: string;
@@ -39,6 +48,7 @@ export type Race = {
   startPoint?: string;
   endPoint?: string;
   surface?: string;
+  features?: RaceFeatures;
 
   // Campos extendidos para la vista de detalle
   description?: string;

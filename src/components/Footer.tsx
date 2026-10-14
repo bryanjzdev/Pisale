@@ -7,15 +7,30 @@ import { ArrowRight, Mail, MapPin, ShieldCheck, Smartphone } from "lucide-react"
 const COLUMNS = [
   {
     title: "Corredores",
-    links: ["Explorar carreras", "Calendario 2026", "Resultados en vivo", "Mis inscripciones", "Boleto digital"],
+    links: [
+      { label: "Explorar carreras", href: "/carreras" },
+      { label: "Resultados en vivo", href: "/resultados" },
+      { label: "Convocatoria Voluntarios", href: "/voluntarios" },
+      { label: "Mis inscripciones", href: "/dashboard" },
+    ],
   },
   {
     title: "Organizadores",
-    links: ["Crear evento", "Precios", "Panel de control", "Cronometraje RFID", "Casos de éxito"],
+    links: [
+      { label: "Crear evento", href: "/organizador/crear" },
+      { label: "Panel de control", href: "/organizador/dashboard" },
+      { label: "Calculadora de Cuotas", href: "/admin" },
+      { label: "Cronometraje RFID", href: "/resultados" },
+    ],
   },
   {
-    title: "Písale",
-    links: ["Sobre nosotros", "Blog", "Trabaja con nosotros", "Prensa", "Contacto"],
+    title: "Plataforma",
+    links: [
+      { label: "Live Tracking GPS", href: "/carreras" },
+      { label: "Certificado Finisher", href: "/resultados" },
+      { label: "Galería de Fotos AI", href: "/carreras" },
+      { label: "Staff & Voluntariado", href: "/voluntarios" },
+    ],
   },
 ];
 
@@ -89,18 +104,18 @@ export function Footer() {
         {/* Columnas */}
         <div className="grid gap-12 pb-16 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div>
-            <Link href="/" className="group inline-flex items-center gap-3">
-              <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-white/95 p-1 ring-1 ring-slate-200/90 shadow-sm backdrop-blur-md transition-all duration-300 group-hover:scale-105 group-hover:shadow-md">
+            <Link href="/" className="group inline-flex items-center gap-3 focus:outline-none">
+              <div className="relative flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
                 <Image
                   src="/assets/Logo_Pisale.png"
                   alt="Logo Písale"
-                  width={56}
-                  height={56}
-                  className="h-full w-full object-contain"
+                  width={1288}
+                  height={1600}
+                  className="h-12 w-auto object-contain drop-shadow-[0_2px_10px_rgba(255,87,34,0.25)] transition-all duration-300 group-hover:drop-shadow-[0_4px_18px_rgba(255,87,34,0.45)]"
                 />
               </div>
-              <span className="font-display text-2xl font-extrabold tracking-tight text-slate-900">
-                písale<span className="text-fuchsia-500">.</span>
+              <span className="font-display text-2xl font-black tracking-tight text-slate-900 group-hover:text-slate-950 transition-colors">
+                písale<span className="text-transparent bg-clip-text bg-linear-to-r from-orange-500 via-rose-500 to-fuchsia-600">.</span>
               </span>
             </Link>
             <p className="mt-4 max-w-xs text-sm font-medium leading-relaxed text-slate-500">
@@ -132,14 +147,14 @@ export function Footer() {
             <div key={col.title}>
               <h3 className="mb-5 text-xs font-bold uppercase tracking-[0.2em] text-slate-900">{col.title}</h3>
               <ul className="space-y-3">
-                {col.links.map((l) => (
-                  <li key={l}>
+                {col.links.map((linkItem) => (
+                  <li key={linkItem.label}>
                     <Link
-                      href="#"
+                      href={linkItem.href}
                       className="group inline-flex items-center gap-1 text-sm font-medium text-slate-500 transition-colors hover:text-violet-700"
                     >
                       <span className="h-px w-0 bg-fuchsia-500 transition-all duration-300 group-hover:w-3" />
-                      {l}
+                      {linkItem.label}
                     </Link>
                   </li>
                 ))}

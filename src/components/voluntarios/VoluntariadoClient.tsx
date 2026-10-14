@@ -637,16 +637,16 @@ export function VoluntariadoClient({ race, currentUser }: VoluntariadoClientProp
                 <div className="relative bg-linear-to-r from-violet-700 via-purple-700 to-fuchsia-700 px-6 py-5 text-white">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
-                      <div className="relative flex h-8 w-8 items-center justify-center rounded-xl bg-white p-0.5 shadow-sm">
+                      <div className="relative flex items-center justify-center">
                         <Image
                           src="/assets/Logo_Pisale.png"
                           alt="Logo Písale"
-                          width={32}
-                          height={32}
-                          className="h-full w-full object-contain"
+                          width={1288}
+                          height={1600}
+                          className="h-8 w-auto object-contain drop-shadow-sm"
                         />
                       </div>
-                      <span className="font-display font-extrabold text-lg tracking-tight text-white">
+                      <span className="font-display font-black text-lg tracking-tight text-white">
                         písale<span className="text-amber-400">.</span>
                       </span>
                     </div>

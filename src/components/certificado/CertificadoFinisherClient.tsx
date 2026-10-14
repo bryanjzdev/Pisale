@@ -381,11 +381,11 @@ export function CertificadoFinisherClient({
                 
                 {/* Logo & Marca Pisale Official Timing */}
                 <div className="flex items-center gap-3">
-                  <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-2xl bg-white border border-slate-200/90 p-1.5 shadow-sm flex items-center justify-center">
+                  <div className="relative flex items-center justify-center">
                     <img
                       src="/assets/Logo_Pisale.png"
                       alt="Logo Písale"
-                      className="h-full w-full object-contain"
+                      className="h-11 sm:h-13 w-auto object-contain drop-shadow-xs"
                     />
                   </div>
 

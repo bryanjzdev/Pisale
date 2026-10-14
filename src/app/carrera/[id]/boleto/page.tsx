@@ -180,11 +180,11 @@ export default async function BoletoPage({
           {/* Banda Superior Estilo Federación */}
           <div className="bg-gradient-to-r from-violet-600 via-fuchsia-600 to-orange-500 px-6 sm:px-10 py-4 flex flex-wrap items-center justify-between gap-4 text-white">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 backdrop-blur-md p-1 shadow-sm overflow-hidden">
+              <div className="relative flex items-center justify-center">
                 <img
                   src="/assets/Logo_Pisale.png"
                   alt="Logo Písale"
-                  className="h-full w-full object-contain"
+                  className="h-10 sm:h-11 w-auto object-contain drop-shadow-sm"
                 />
               </div>
               <div>
