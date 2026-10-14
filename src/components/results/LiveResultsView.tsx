@@ -13,6 +13,7 @@ import {
   Sparkles,
   ArrowRight,
   User,
+  Award,
 } from "lucide-react";
 import type { AthleteResult } from "@/app/actions/results";
 
@@ -326,9 +327,20 @@ export function LiveResultsView({
                     </td>
 
                     <td className="py-4 px-4 text-right">
-                      <button className="text-violet-600 font-black hover:text-violet-800 text-[11px] inline-flex items-center gap-1 cursor-pointer">
-                        Ver Detalle →
-                      </button>
+                      <div className="flex items-center justify-end gap-2">
+                        <Link
+                          href={`/carrera/${selectedRaceId}/certificado?registration_id=${r.id}`}
+                          onClick={(e) => e.stopPropagation()}
+                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-[11px] transition-all shadow-xs cursor-pointer"
+                          title="Descargar Certificado Oficial de Finisher"
+                        >
+                          <Award className="h-3.5 w-3.5" />
+                          Mi Certificado
+                        </Link>
+                        <button className="text-violet-600 font-black hover:text-violet-800 text-[11px] inline-flex items-center gap-1 cursor-pointer">
+                          Ver Detalle →
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -407,21 +419,30 @@ export function LiveResultsView({
             </div>
 
             {/* Botones de Acción */}
-            <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
+            <div className="space-y-2 pt-2">
               <Link
-                href={`/carrera/${selectedRaceId}/story?registration_id=${selectedAthlete.id}`}
-                className="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-fuchsia-600 p-3.5 text-xs font-bold text-white shadow-md hover:opacity-95 transition-opacity"
+                href={`/carrera/${selectedRaceId}/certificado?registration_id=${selectedAthlete.id}`}
+                className="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-amber-500 hover:bg-amber-600 p-3.5 text-xs font-black text-white shadow-md transition-all hover:scale-[1.01]"
               >
-                <Share2 className="h-4 w-4" />
-                Crear Story para Redes
+                <Award className="h-4 w-4" />
+                Mi Certificado Oficial (Diploma)
               </Link>
-              <button
-                onClick={() => window.print()}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3.5 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
-              >
-                <Printer className="h-4 w-4" />
-                Imprimir
-              </button>
+              <div className="flex flex-col sm:flex-row items-center gap-2.5">
+                <Link
+                  href={`/carrera/${selectedRaceId}/story?registration_id=${selectedAthlete.id}`}
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-fuchsia-600 p-3 text-xs font-bold text-white shadow-sm hover:opacity-95 transition-opacity"
+                >
+                  <Share2 className="h-4 w-4" />
+                  Crear Story para Redes
+                </Link>
+                <button
+                  onClick={() => window.print()}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                >
+                  <Printer className="h-4 w-4" />
+                  Imprimir
+                </button>
+              </div>
             </div>
 
           </div>

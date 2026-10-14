@@ -2,7 +2,7 @@ import { auth, signOut } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { stripe } from "@/lib/stripe";
-import { Calendar, Medal, Timer, TrendingUp, Trophy, QrCode, ArrowRight, Sparkles, CheckCircle2, Building2, LogOut, ShieldCheck, Printer, Download, AlertCircle, Share2, FileText, BookOpen } from "lucide-react";
+import { Calendar, Medal, Timer, TrendingUp, Trophy, QrCode, ArrowRight, Sparkles, CheckCircle2, Building2, LogOut, ShieldCheck, Printer, Download, AlertCircle, Share2, FileText, BookOpen, Award } from "lucide-react";
 import Link from "next/link";
 import { BotonEnviarCorreoTicket } from "@/components/common/BotonEnviarCorreoTicket";
 import { BotonDescartarPendiente } from "@/components/common/BotonDescartarPendiente";
@@ -373,6 +373,14 @@ export default async function DashboardPage() {
                               Ritmos
                             </Link>
                             <Link
+                              href={`/carrera/${reg.raceId}/certificado?registration_id=${reg.id}`}
+                              className="inline-flex items-center gap-1 font-bold text-amber-800 hover:text-amber-950 bg-amber-50 hover:bg-amber-100 px-2.5 py-1 rounded-full transition-colors border border-amber-200/60"
+                              title="Descargar Certificado Oficial de Finisher"
+                            >
+                              <Award className="h-3 w-3 text-amber-600" />
+                              Certificado
+                            </Link>
+                            <Link
                               href={`/carrera/${reg.raceId}/exito?session_id=${reg.stripeSessionId || `demo_${reg.id}`}`}
                               className="inline-flex items-center gap-1 font-bold text-violet-600 hover:text-violet-800 transition-colors"
                             >
@@ -429,6 +437,13 @@ export default async function DashboardPage() {
                     </div>
 
                     <div className="flex items-center gap-2">
+                      <Link
+                        href={`/carrera/${reg.raceId || "evento"}/certificado?registration_id=${reg.id}`}
+                        className="rounded-full bg-amber-500 hover:bg-amber-600 text-white px-3.5 py-1.5 text-xs font-bold transition-colors flex items-center gap-1 shadow-xs"
+                      >
+                        <Award className="h-3.5 w-3.5" />
+                        Mi Certificado
+                      </Link>
                       <Link
                         href={`/carrera/${reg.raceId || "evento"}/story?registration_id=${reg.id}`}
                         className="rounded-full bg-fuchsia-50 border border-fuchsia-200 text-fuchsia-700 px-3 py-1.5 text-xs font-bold hover:bg-fuchsia-100 transition-colors flex items-center gap-1"
