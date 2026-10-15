@@ -64,8 +64,8 @@ export function Navbar({ isLoggedIn }: { isLoggedIn?: boolean }) {
       <nav
         className={`border-beam relative mx-4 flex w-full items-center justify-between rounded-full border border-white/70 bg-white/65 pl-2.5 pr-2.5 backdrop-blur-2xl backdrop-saturate-150 transition-all duration-500 ${
           scrolled
-            ? "h-14 max-w-5xl shadow-[0_10px_40px_-12px_rgba(91,33,182,0.25)]"
-            : "h-16 max-w-6xl shadow-[0_4px_24px_-8px_rgba(91,33,182,0.15)]"
+            ? "h-14 max-w-5xl shadow-[0_10px_40px_-12px_rgba(234,88,12,0.18)]"
+            : "h-16 max-w-6xl shadow-[0_4px_24px_-8px_rgba(234,88,12,0.10)]"
         }`}
       >
         {/* Logo Libre y Sin Recuadro */}
@@ -81,7 +81,7 @@ export function Navbar({ isLoggedIn }: { isLoggedIn?: boolean }) {
             />
           </div>
           <span className="font-display text-[1.38rem] font-black tracking-tight text-slate-900 group-hover:text-slate-950 transition-colors">
-            písale<span className="text-transparent bg-clip-text bg-linear-to-r from-orange-500 via-rose-500 to-fuchsia-600">.</span>
+            písale<span className="text-transparent bg-clip-text bg-linear-to-r from-orange-500 via-amber-500 to-emerald-500">.</span>
           </span>
         </Link>
 
@@ -93,7 +93,7 @@ export function Navbar({ isLoggedIn }: { isLoggedIn?: boolean }) {
               onClick={() => setMegaOpen((v) => !v)}
               aria-expanded={megaOpen}
               className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
-                megaOpen ? "bg-violet-50 text-violet-700" : "text-slate-600 hover:bg-slate-900/[0.04] hover:text-slate-900"
+                megaOpen ? "bg-orange-50 text-orange-600" : "text-slate-600 hover:bg-slate-900/[0.04] hover:text-slate-900"
               }`}
             >
               Carreras
@@ -107,14 +107,14 @@ export function Navbar({ isLoggedIn }: { isLoggedIn?: boolean }) {
               }`}
               style={{ transform: `translateX(-50%) translateY(${megaOpen ? 0 : -8}px)` }}
             >
-              <div className="grid w-[720px] grid-cols-[1.4fr_1fr] gap-2 rounded-3xl border border-white/80 bg-white/90 p-2 shadow-[0_30px_80px_-20px_rgba(76,29,149,0.35)] backdrop-blur-2xl">
+              <div className="grid w-[720px] grid-cols-[1.4fr_1fr] gap-2 rounded-3xl border border-white/80 bg-white/90 p-2 shadow-[0_30px_80px_-20px_rgba(234,88,12,0.22)] backdrop-blur-2xl">
                 <div className="grid grid-cols-2 gap-1 p-2">
                   {RACE_CATEGORIES.map((cat) => (
                     <Link
                       key={cat.title}
                       href="#carreras"
                       onClick={() => setMegaOpen(false)}
-                      className="group/item flex items-start gap-3 rounded-2xl p-3 transition-colors hover:bg-violet-50/70"
+                      className="group/item flex items-start gap-3 rounded-2xl p-3 transition-colors hover:bg-orange-50/70"
                     >
                       <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-linear-to-br ${cat.color} text-white shadow-md transition-transform duration-300 group-hover/item:scale-110 group-hover/item:-rotate-6`}>
                         <cat.icon className="h-5 w-5" />
@@ -136,7 +136,7 @@ export function Navbar({ isLoggedIn }: { isLoggedIn?: boolean }) {
                     className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover/feat:scale-110"
                     style={{ backgroundImage: "url(https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&q=80&w=800)" }}
                   />
-                  <div className="absolute inset-0 bg-linear-to-t from-violet-950/85 via-fuchsia-900/30 to-transparent" />
+                  <div className="absolute inset-0 bg-linear-to-t from-slate-950/90 via-slate-900/40 to-transparent" />
                   <span className="relative mb-auto inline-flex w-fit items-center gap-1.5 rounded-full bg-white/20 px-3 py-1 text-[11px] font-bold uppercase tracking-wider backdrop-blur-md">
                     <Sparkles className="h-3 w-3" /> Destacado
                   </span>
@@ -175,7 +175,7 @@ export function Navbar({ isLoggedIn }: { isLoggedIn?: boolean }) {
           <Link
             id="nav-search"
             href="/carreras"
-            className="hidden items-center gap-2 rounded-full border border-slate-200/80 bg-white/70 py-2 pl-3 pr-2 text-sm text-slate-400 transition-all hover:border-violet-200 hover:text-slate-600 hover:shadow-sm md:flex"
+            className="hidden items-center gap-2 rounded-full border border-slate-200/80 bg-white/70 py-2 pl-3 pr-2 text-sm text-slate-400 transition-all hover:border-orange-200 hover:text-slate-600 hover:shadow-sm md:flex"
           >
             <Search className="h-4 w-4" />
             <span className="hidden xl:inline">Buscar carrera…</span>
@@ -184,7 +184,7 @@ export function Navbar({ isLoggedIn }: { isLoggedIn?: boolean }) {
 
           <Link
             href="/organizador/crear"
-            className="hidden items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold text-slate-600 transition-colors hover:text-violet-700 sm:flex"
+            className="hidden items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold text-slate-600 transition-colors hover:text-orange-600 sm:flex"
           >
             <Building2 className="h-4 w-4" /> Crear evento
           </Link>
@@ -193,7 +193,7 @@ export function Navbar({ isLoggedIn }: { isLoggedIn?: boolean }) {
             <Link
               id="nav-dashboard"
               href="/dashboard"
-              className="btn-shine flex h-10 items-center rounded-full bg-linear-to-r from-violet-600 via-fuchsia-600 to-orange-500 bg-[length:200%_100%] px-5 text-sm font-bold text-white shadow-lg shadow-fuchsia-500/25 transition-all duration-500 hover:bg-[position:100%_0] hover:shadow-fuchsia-500/40"
+              className="btn-shine flex h-10 items-center rounded-full bg-linear-to-r from-orange-600 to-amber-500 px-5 text-sm font-bold text-white shadow-lg shadow-orange-500/25 transition-all duration-300 hover:shadow-orange-500/40"
             >
               Dashboard
             </Link>
@@ -201,7 +201,7 @@ export function Navbar({ isLoggedIn }: { isLoggedIn?: boolean }) {
             <Link
               id="nav-login"
               href="/login"
-              className="btn-shine flex h-10 items-center rounded-full bg-linear-to-r from-violet-600 via-fuchsia-600 to-orange-500 bg-[length:200%_100%] px-5 text-sm font-bold text-white shadow-lg shadow-fuchsia-500/25 transition-all duration-500 hover:bg-[position:100%_0] hover:shadow-fuchsia-500/40"
+              className="btn-shine flex h-10 items-center rounded-full bg-linear-to-r from-orange-600 to-amber-500 px-5 text-sm font-bold text-white shadow-lg shadow-orange-500/25 transition-all duration-300 hover:shadow-orange-500/40"
             >
               Iniciar sesión
             </Link>
@@ -219,7 +219,7 @@ export function Navbar({ isLoggedIn }: { isLoggedIn?: boolean }) {
 
         {/* Menú móvil */}
         <div
-          className={`absolute inset-x-0 top-full mt-3 origin-top rounded-3xl border border-white/80 bg-white/95 p-3 shadow-2xl shadow-violet-900/15 backdrop-blur-2xl transition-all duration-300 lg:hidden ${
+          className={`absolute inset-x-0 top-full mt-3 origin-top rounded-3xl border border-white/80 bg-white/95 p-3 shadow-2xl shadow-orange-950/15 backdrop-blur-2xl transition-all duration-300 lg:hidden ${
             mobileOpen ? "scale-100 opacity-100" : "pointer-events-none scale-95 opacity-0"
           }`}
         >
@@ -229,7 +229,7 @@ export function Navbar({ isLoggedIn }: { isLoggedIn?: boolean }) {
                 key={cat.title}
                 href="#carreras"
                 onClick={() => setMobileOpen(false)}
-                className="flex items-center gap-2.5 rounded-2xl p-2.5 hover:bg-violet-50"
+                className="flex items-center gap-2.5 rounded-2xl p-2.5 hover:bg-orange-50"
               >
                 <span className={`flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br ${cat.color} text-white`}>
                   <cat.icon className="h-4 w-4" />

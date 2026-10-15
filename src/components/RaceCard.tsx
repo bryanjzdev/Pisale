@@ -8,7 +8,7 @@ import type { Race } from "@/lib/mock-races";
 const TONES = {
   hot: { badge: "bg-rose-500/90 text-white", dot: "bg-white" },
   open: { badge: "bg-emerald-500/90 text-white", dot: "bg-white" },
-  early: { badge: "bg-white/90 text-violet-700", dot: "bg-violet-500" },
+  early: { badge: "bg-white/95 text-orange-700 font-black", dot: "bg-orange-500" },
 } as const;
 
 const CATEGORY_LABEL = { ruta: "Ruta", trail: "Trail", nocturna: "Nocturna" } as const;
@@ -44,27 +44,27 @@ export function RaceCard({ race, index = 0 }: { race: Race; index?: number }) {
         ref={ref}
         onMouseMove={handleMove}
         onMouseLeave={handleLeave}
-        className="group relative flex h-full flex-col rounded-[1.75rem] border border-white bg-white/80 p-2 shadow-[0_8px_30px_-12px_rgba(76,29,149,0.18)] backdrop-blur-xl transition-[transform,box-shadow] duration-300 ease-out will-change-transform hover:shadow-[0_30px_60px_-20px_rgba(162,28,175,0.35)]"
+        className="group relative flex h-full flex-col rounded-[1.75rem] border border-white bg-white/85 p-2 shadow-[0_8px_30px_-12px_rgba(234,88,12,0.12)] backdrop-blur-xl transition-[transform,box-shadow] duration-300 ease-out will-change-transform hover:shadow-[0_26px_60px_-18px_rgba(234,88,12,0.28)]"
         style={{ transform: "rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg))", transformStyle: "preserve-3d" }}
       >
         {/* Spotlight */}
         <div
           className="pointer-events-none absolute inset-0 z-10 rounded-[1.75rem] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-          style={{ background: "radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(217,70,239,0.10), transparent 45%)" }}
+          style={{ background: "radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(249,115,22,0.12), transparent 45%)" }}
         />
 
         {/* Imagen */}
-        <div className="relative h-56 overflow-hidden rounded-[1.35rem] bg-linear-to-br from-violet-300 via-fuchsia-300 to-orange-200">
+        <div className="relative h-56 overflow-hidden rounded-[1.35rem] bg-linear-to-br from-slate-900 via-orange-950 to-slate-950">
           <div
             className="absolute inset-0 bg-cover bg-center transition-transform duration-[900ms] ease-out group-hover:scale-110"
             style={{ backgroundImage: `url(${race.imageUrl})` }}
           />
-          <div className="absolute inset-0 bg-linear-to-t from-violet-950/70 via-violet-950/10 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-slate-950/80 via-slate-950/15 to-transparent" />
 
           {/* Fecha */}
-          <div className="absolute left-3 top-3 flex flex-col items-center rounded-2xl bg-white/90 px-3 py-1.5 text-center shadow-lg backdrop-blur-md" style={{ transform: "translateZ(30px)" }}>
+          <div className="absolute left-3 top-3 flex flex-col items-center rounded-2xl bg-white/95 px-3 py-1.5 text-center shadow-lg backdrop-blur-md" style={{ transform: "translateZ(30px)" }}>
             <span className="font-display text-2xl font-extrabold leading-none text-slate-900">{race.day}</span>
-            <span className="text-[10px] font-bold uppercase tracking-widest text-fuchsia-600">{race.month}</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-orange-600">{race.month}</span>
           </div>
 
           {/* Status + like */}
@@ -86,13 +86,13 @@ export function RaceCard({ race, index = 0 }: { race: Race; index?: number }) {
           <div className="absolute inset-x-3 bottom-3 flex items-center justify-between">
             <div className="flex gap-1.5">
               {race.distances.map((d) => (
-                <span key={d} className="rounded-full border border-white/30 bg-white/15 px-2.5 py-1 font-display text-xs font-bold text-white backdrop-blur-md">
+                <span key={d} className="rounded-full border border-white/30 bg-slate-950/40 px-2.5 py-1 font-display text-xs font-bold text-white backdrop-blur-md">
                   {d}
                 </span>
               ))}
             </div>
             {race.elevation && (
-              <span className="flex items-center gap-1 rounded-full bg-white/15 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur-md">
+              <span className="flex items-center gap-1 rounded-full bg-slate-950/40 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur-md">
                 <Mountain className="h-3 w-3" /> {race.elevation}
               </span>
             )}
@@ -101,16 +101,16 @@ export function RaceCard({ race, index = 0 }: { race: Race; index?: number }) {
 
         {/* Contenido */}
         <div className="flex flex-1 flex-col px-3 pb-2 pt-4">
-          <span className="mb-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-violet-500">
+          <span className="mb-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-orange-600">
             {CATEGORY_LABEL[race.category]} · {race.year}
           </span>
-          <h3 className="font-display text-xl font-bold leading-tight text-slate-900 transition-colors group-hover:text-violet-700">
+          <h3 className="font-display text-xl font-bold leading-tight text-slate-900 transition-colors group-hover:text-orange-600">
             <Link href={`/carrera/${race.id}`} className="hover:underline">
               {race.title}
             </Link>
           </h3>
           <p className="mt-2 flex items-center gap-1.5 text-sm font-medium text-slate-500">
-            <MapPin className="h-4 w-4 text-fuchsia-500" /> {race.location}
+            <MapPin className="h-4 w-4 text-amber-500" /> {race.location}
           </p>
 
           {/* Cupo */}
@@ -123,7 +123,7 @@ export function RaceCard({ race, index = 0 }: { race: Race; index?: number }) {
             </div>
             <div className="h-2 overflow-hidden rounded-full bg-slate-100">
               <div
-                className="h-full rounded-full bg-linear-to-r from-violet-500 via-fuchsia-500 to-orange-400 bg-[length:200%_100%] animate-shimmer"
+                className="h-full rounded-full bg-linear-to-r from-orange-500 via-amber-500 to-emerald-400 bg-[length:200%_100%] animate-shimmer"
                 style={{ width: `${percent}%` }}
               />
             </div>
@@ -141,7 +141,7 @@ export function RaceCard({ race, index = 0 }: { race: Race; index?: number }) {
             <Link
               id={`race-cta-${race.id}`}
               href={`/carrera/${race.id}`}
-              className="btn-shine relative z-20 flex h-11 items-center gap-2 overflow-hidden rounded-full bg-linear-to-r from-violet-600 to-fuchsia-600 pl-5 pr-1.5 text-sm font-bold text-white shadow-lg shadow-fuchsia-500/25 transition-all duration-300 hover:shadow-fuchsia-500/45"
+              className="btn-shine relative z-20 flex h-11 items-center gap-2 overflow-hidden rounded-full bg-linear-to-r from-orange-600 to-amber-500 pl-5 pr-1.5 text-sm font-bold text-white shadow-lg shadow-orange-500/25 transition-all duration-300 hover:shadow-orange-500/40"
             >
               Inscribirme
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 transition-transform duration-300 group-hover:rotate-45">

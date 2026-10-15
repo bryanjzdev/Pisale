@@ -62,14 +62,14 @@ export function Footer() {
   const year = 2026;
 
   return (
-    <footer className="relative overflow-hidden border-t border-violet-100 bg-linear-to-b from-[#fbfaff] via-violet-50/60 to-fuchsia-50/70">
+    <footer className="relative overflow-hidden border-t border-orange-100 bg-linear-to-b from-[#fbfaff] via-amber-50/40 to-orange-50/60">
       {/* Halos de fondo */}
-      <div className="pointer-events-none absolute -left-40 top-20 h-96 w-96 rounded-full bg-violet-200/40 blur-[120px]" />
-      <div className="pointer-events-none absolute -right-40 bottom-0 h-96 w-96 rounded-full bg-orange-200/40 blur-[120px]" />
+      <div className="pointer-events-none absolute -left-40 top-20 h-96 w-96 rounded-full bg-orange-200/30 blur-[120px]" />
+      <div className="pointer-events-none absolute -right-40 bottom-0 h-96 w-96 rounded-full bg-amber-200/30 blur-[120px]" />
 
       <div className="relative mx-auto max-w-7xl px-4 pt-20">
         {/* Newsletter */}
-        <div className="border-beam mb-16 grid items-center gap-8 rounded-[2rem] border border-white bg-white/75 p-8 shadow-[0_20px_60px_-25px_rgba(91,33,182,0.3)] backdrop-blur-2xl md:grid-cols-[1.2fr_1fr] md:p-10">
+        <div className="border-beam mb-16 grid items-center gap-8 rounded-[2rem] border border-white bg-white/75 p-8 shadow-[0_20px_60px_-25px_rgba(234,88,12,0.18)] backdrop-blur-2xl md:grid-cols-[1.2fr_1fr] md:p-10">
           <div>
             <h2 className="font-display text-3xl font-extrabold tracking-tight text-slate-900 md:text-4xl">
               No te pierdas ninguna <span className="text-brand">salida</span>.
@@ -87,13 +87,13 @@ export function Footer() {
                 type="email"
                 required
                 placeholder="tu@correo.com"
-                className="h-14 w-full rounded-full border border-slate-200 bg-white pl-12 pr-4 text-sm font-medium text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-violet-300 focus:ring-4 focus:ring-violet-100"
+                className="h-14 w-full rounded-full border border-slate-200 bg-white pl-12 pr-4 text-sm font-medium text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-orange-300 focus:ring-4 focus:ring-orange-100"
               />
             </div>
             <button
               id="footer-subscribe"
               type="submit"
-              className="btn-shine group flex h-14 items-center justify-center gap-2 rounded-full bg-linear-to-r from-violet-600 via-fuchsia-600 to-orange-500 px-7 text-sm font-bold text-white shadow-lg shadow-fuchsia-500/25 transition-all hover:shadow-fuchsia-500/40"
+              className="btn-shine group flex h-14 items-center justify-center gap-2 rounded-full bg-linear-to-r from-orange-600 via-amber-500 to-orange-500 px-7 text-sm font-bold text-white shadow-lg shadow-orange-500/25 transition-all hover:shadow-orange-500/40"
             >
               Suscribirme
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -115,7 +115,7 @@ export function Footer() {
                 />
               </div>
               <span className="font-display text-2xl font-black tracking-tight text-slate-900 group-hover:text-slate-950 transition-colors">
-                písale<span className="text-transparent bg-clip-text bg-linear-to-r from-orange-500 via-rose-500 to-fuchsia-600">.</span>
+                písale<span className="text-transparent bg-clip-text bg-linear-to-r from-orange-500 via-amber-500 to-emerald-500">.</span>
               </span>
             </Link>
             <p className="mt-4 max-w-xs text-sm font-medium leading-relaxed text-slate-500">
@@ -128,7 +128,7 @@ export function Footer() {
                   key={s.label}
                   href="#"
                   aria-label={s.label}
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white bg-white/80 text-slate-500 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-linear-to-br hover:from-violet-600 hover:to-fuchsia-500 hover:text-white hover:shadow-lg hover:shadow-fuchsia-500/30"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white bg-white/80 text-slate-500 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-linear-to-br hover:from-orange-600 hover:to-amber-500 hover:text-white hover:shadow-lg hover:shadow-orange-500/30"
                 >
                   <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4" aria-hidden="true">
                     <path d={s.path} />
@@ -138,8 +138,8 @@ export function Footer() {
             </div>
 
             <div className="mt-6 flex flex-col gap-2 text-sm font-medium text-slate-500">
-              <span className="flex items-center gap-2"><MapPin className="h-4 w-4 text-fuchsia-500" /> Hecho en México 🇲🇽</span>
-              <span className="flex items-center gap-2"><Smartphone className="h-4 w-4 text-violet-500" /> App iOS y Android · Próximamente</span>
+              <span className="flex items-center gap-2"><MapPin className="h-4 w-4 text-orange-500" /> Hecho en México 🇲🇽</span>
+              <span className="flex items-center gap-2"><Smartphone className="h-4 w-4 text-amber-500" /> App iOS y Android · Próximamente</span>
             </div>
           </div>
 
@@ -151,9 +151,9 @@ export function Footer() {
                   <li key={linkItem.label}>
                     <Link
                       href={linkItem.href}
-                      className="group inline-flex items-center gap-1 text-sm font-medium text-slate-500 transition-colors hover:text-violet-700"
+                      className="group inline-flex items-center gap-1 text-sm font-medium text-slate-500 transition-colors hover:text-orange-600"
                     >
-                      <span className="h-px w-0 bg-fuchsia-500 transition-all duration-300 group-hover:w-3" />
+                      <span className="h-px w-0 bg-orange-500 transition-all duration-300 group-hover:w-3" />
                       {linkItem.label}
                     </Link>
                   </li>
@@ -164,12 +164,12 @@ export function Footer() {
         </div>
 
         {/* Barra inferior */}
-        <div className="flex flex-col items-center justify-between gap-4 border-t border-violet-100 py-8 text-sm font-medium text-slate-500 md:flex-row">
+        <div className="flex flex-col items-center justify-between gap-4 border-t border-orange-100 py-8 text-sm font-medium text-slate-500 md:flex-row">
           <p>© {year} Písale. Todos los derechos reservados.</p>
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
-            <Link href="#" className="hover:text-violet-700">Términos</Link>
-            <Link href="#" className="hover:text-violet-700">Privacidad</Link>
-            <Link href="#" className="hover:text-violet-700">Cookies</Link>
+            <Link href="#" className="hover:text-orange-600">Términos</Link>
+            <Link href="#" className="hover:text-orange-600">Privacidad</Link>
+            <Link href="#" className="hover:text-orange-600">Cookies</Link>
             <span className="flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">
               <ShieldCheck className="h-3.5 w-3.5" /> Pagos 100% seguros
             </span>
@@ -179,7 +179,7 @@ export function Footer() {
 
       {/* Wordmark gigante */}
       <div className="pointer-events-none relative -mb-[0.22em] select-none text-center font-display text-[22vw] font-extrabold leading-none tracking-tighter">
-        <span className="bg-linear-to-b from-violet-300/60 via-fuchsia-200/40 to-transparent bg-clip-text text-transparent">
+        <span className="bg-linear-to-b from-orange-300/30 via-amber-200/15 to-transparent bg-clip-text text-transparent">
           písale
         </span>
       </div>

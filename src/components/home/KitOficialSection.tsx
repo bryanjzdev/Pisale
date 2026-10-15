@@ -10,7 +10,7 @@ const KIT_ITEMS = [
     badge: "Garantía de Talla",
     badgeColor: "bg-emerald-500/10 text-emerald-700 border-emerald-500/20",
     description: "Tejido microperforado ultra ligero de secado rápido. Reserva tu talla exacta en tiempo real al inscribirte sin sorpresas el día del evento.",
-    gradient: "from-violet-500 to-indigo-600",
+    gradient: "from-orange-500 to-amber-600",
     imageUrl: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=600&auto=format&fit=crop",
     metric: "110g Peso Pluma",
   },
@@ -20,7 +20,7 @@ const KIT_ITEMS = [
     badge: "Coleccionable",
     badgeColor: "bg-amber-500/10 text-amber-700 border-amber-500/20",
     description: "Aleación metálica de alta densidad con relieve tridimensional y listón sublimado premium. Diseños exclusivos grabados para cada ruta.",
-    gradient: "from-amber-500 to-orange-600",
+    gradient: "from-amber-500 to-yellow-600",
     imageUrl: "https://images.unsplash.com/photo-1589487391730-58f20eb2c308?q=80&w=600&auto=format&fit=crop",
     metric: "Fundición Maciza",
   },
@@ -28,9 +28,9 @@ const KIT_ITEMS = [
     icon: Timer,
     title: "Dorsal Oficial + Chip RFID / QR",
     badge: "Cronometraje Oficial",
-    badgeColor: "bg-fuchsia-500/10 text-fuchsia-700 border-fuchsia-500/20",
+    badgeColor: "bg-orange-500/10 text-orange-700 border-orange-500/20",
     description: "Número impermeable en papel Tyvek resistente a lluvia y sudor con código QR criptográfico para check-in instantáneo y cronometraje de tapete.",
-    gradient: "from-fuchsia-500 to-rose-600",
+    gradient: "from-rose-500 to-orange-600",
     imageUrl: "/assets/run/aerial-pack.jpg",
     metric: "Precisión 1/1000s",
   },
@@ -48,9 +48,9 @@ const KIT_ITEMS = [
     icon: Smartphone,
     title: "Live Tracking & Boleto Digital",
     badge: "App Móvil PWA",
-    badgeColor: "bg-violet-500/10 text-violet-700 border-violet-500/20",
+    badgeColor: "bg-cyan-500/10 text-cyan-700 border-cyan-500/20",
     description: "Tus familiares siguen tu paso por cada parcial en vivo desde cualquier teléfono. Tu boleto vive en tu wallet digital con QR inviolable.",
-    gradient: "from-violet-600 to-purple-600",
+    gradient: "from-cyan-600 to-blue-600",
     imageUrl: "/assets/run/peloton-cycling.jpg",
     metric: "Paso en Tiempo Real",
   },
@@ -58,7 +58,7 @@ const KIT_ITEMS = [
     icon: Camera,
     title: "Diploma Finisher & Fotos HD",
     badge: "Instantáneo en Meta",
-    badgeColor: "bg-teal-500/10 text-teal-700 border-teal-500/20",
+    badgeColor: "bg-emerald-500/10 text-emerald-700 border-emerald-500/20",
     description: "Cruzas la meta y tu certificado oficial con tiempo chip exacto está listo para descargar y compartir. Búsqueda automática de tus fotos por dorsal.",
     gradient: "from-emerald-500 to-teal-600",
     imageUrl: "/assets/run/finish-street.jpg",
@@ -70,11 +70,11 @@ export function KitOficialSection() {
   return (
     <section className="relative z-10 mx-auto max-w-7xl px-4 py-24 sm:py-32">
       {/* Background Glow */}
-      <div className="pointer-events-none absolute -top-20 left-1/2 -z-10 h-96 w-[700px] -translate-x-1/2 rounded-full bg-linear-to-r from-violet-400/20 via-fuchsia-400/20 to-orange-400/20 blur-[130px]" />
+      <div className="pointer-events-none absolute -top-20 left-1/2 -z-10 h-96 w-[700px] -translate-x-1/2 rounded-full bg-linear-to-r from-orange-400/20 via-amber-400/20 to-sky-400/20 blur-[130px]" />
 
       {/* Header de la sección */}
       <div className="text-center max-w-3xl mx-auto mb-16">
-        <div className="inline-flex items-center gap-2 rounded-full border border-violet-500/20 bg-violet-500/10 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-violet-700 backdrop-blur-md mb-4">
+        <div className="inline-flex items-center gap-2 rounded-full border border-orange-500/20 bg-orange-500/10 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-orange-700 backdrop-blur-md mb-4">
           <Sparkles className="h-4 w-4 text-amber-500" />
           Experiencia de Carrera Completa
         </div>
@@ -93,7 +93,7 @@ export function KitOficialSection() {
           return (
             <div
               key={item.title}
-              className="group relative overflow-hidden rounded-[2rem] border border-white/80 bg-white/80 p-6 sm:p-7 shadow-[0_10px_35px_-10px_rgba(91,33,182,0.1)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_24px_50px_-12px_rgba(192,38,211,0.22)] flex flex-col justify-between"
+              className="group relative overflow-hidden rounded-[2rem] border border-white/80 bg-white/80 p-6 sm:p-7 shadow-[0_10px_35px_-10px_rgba(234,88,12,0.1)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_24px_50px_-12px_rgba(234,88,12,0.22)] flex flex-col justify-between"
             >
               {/* Imagen de fondo sutil con desenfoque suave al hacer hover */}
               <div className="relative h-44 w-full overflow-hidden rounded-2xl mb-5 bg-slate-100">
@@ -127,7 +127,7 @@ export function KitOficialSection() {
 
               {/* Contenido textual */}
               <div>
-                <h3 className="font-display text-xl sm:text-2xl font-black text-slate-900 group-hover:text-violet-700 transition-colors">
+                <h3 className="font-display text-xl sm:text-2xl font-black text-slate-900 group-hover:text-orange-600 transition-colors">
                   {item.title}
                 </h3>
                 <p className="mt-2.5 text-sm font-medium text-slate-600 leading-relaxed">
@@ -148,8 +148,8 @@ export function KitOficialSection() {
       </div>
 
       {/* Banner Comparativo Deportivo: Písale vs Modelos Antiguos */}
-      <div className="mt-14 overflow-hidden rounded-[2.5rem] border border-violet-200/80 bg-linear-to-br from-violet-900 via-indigo-950 to-slate-950 p-8 sm:p-12 text-white shadow-2xl relative">
-        <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-fuchsia-500/20 blur-3xl" />
+      <div className="mt-14 overflow-hidden rounded-[2.5rem] border border-orange-500/20 bg-linear-to-br from-slate-950 via-slate-900 to-orange-950 p-8 sm:p-12 text-white shadow-2xl relative">
+        <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-orange-500/20 blur-3xl" />
         <div className="absolute -left-20 -bottom-20 h-72 w-72 rounded-full bg-cyan-500/20 blur-3xl" />
 
         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
@@ -195,7 +195,7 @@ export function KitOficialSection() {
             </p>
             <Link
               href="/carreras"
-              className="mt-6 inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-violet-500 via-fuchsia-500 to-orange-500 px-7 text-xs font-extrabold text-white shadow-lg shadow-fuchsia-500/25 hover:opacity-95 transition-all"
+              className="mt-6 inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-orange-500 via-amber-500 to-emerald-500 px-7 text-xs font-extrabold text-white shadow-lg shadow-orange-500/25 hover:opacity-95 transition-all"
             >
               Explorar Carreras Disponibles
             </Link>
