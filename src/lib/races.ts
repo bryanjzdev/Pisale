@@ -117,15 +117,17 @@ export async function getRaceById(id: string): Promise<Race | null> {
 export async function getAllRaces(): Promise<Race[]> {
   try {
     const dbRaces = await prisma.race.findMany({
-      where: { isDemo: false },
       include: { distances: true, organization: true },
       orderBy: { createdAt: "desc" },
     });
 
-    if (dbRaces.length > 0) {
+    // Filtrar carreras demo en memoria para compatibilidad total con Prisma Client
+    const activeRaces = dbRaces.filter((r: any) => !r.isDemo && !r.title?.startsWith("Demo "));
+
+    if (activeRaces.length > 0) {
       const months = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
       
-      const mappedDbRaces: Race[] = dbRaces.map((dbRace) => {
+      const mappedDbRaces: Race[] = activeRaces.map((dbRace) => {
         const date = new Date(dbRace.date);
         const day = date.getDate().toString().padStart(2, "0");
         const month = months[date.getMonth()];
