@@ -27,6 +27,7 @@ import {
   Check,
   QrCode,
   Send,
+  Edit3,
 } from "lucide-react";
 import {
   BotonAprobarOrganizacion,
@@ -35,6 +36,7 @@ import {
 } from "@/components/admin/AdminActionButtons";
 import { BotonGenerarDemo3Dias } from "@/components/admin/BotonGenerarDemo3Dias";
 import { BotonEnviarCorreoTicket } from "@/components/common/BotonEnviarCorreoTicket";
+import { connection } from "next/server";
 
 export const instant = false;
 
@@ -44,6 +46,7 @@ export const metadata = {
 };
 
 export default async function AdminDashboardPage() {
+  await connection();
   const session = await auth();
 
   if (!session?.user?.email) {
@@ -613,7 +616,17 @@ export default async function AdminDashboardPage() {
                         </span>
                       </td>
                       <td className="px-6 py-4 text-right">
-                        <BotonToggleCarrera raceId={race.id} currentStatus={race.status as any} />
+                        <div className="flex items-center justify-end gap-1.5">
+                          <Link
+                            href={`/organizador/carrera/${race.id}/editar`}
+                            className="inline-flex items-center gap-1 rounded-xl bg-slate-100 hover:bg-slate-200 px-2.5 py-1 text-[11px] font-bold text-slate-700 transition-colors"
+                            title="Editar detalles del evento"
+                          >
+                            <Edit3 className="h-3 w-3 text-slate-500" />
+                            <span>Editar</span>
+                          </Link>
+                          <BotonToggleCarrera raceId={race.id} currentStatus={race.status as any} />
+                        </div>
                       </td>
                     </tr>
                   ))}

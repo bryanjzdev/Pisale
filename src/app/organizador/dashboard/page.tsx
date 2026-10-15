@@ -20,8 +20,10 @@ import {
   LogOut,
   ShieldCheck,
   HeartHandshake,
+  Edit3,
 } from "lucide-react";
 import { ExportCsvButton } from "@/components/organizador/ExportCsvButton";
+import { connection } from "next/server";
 
 export const instant = false;
 
@@ -31,6 +33,7 @@ export const metadata = {
 };
 
 export default async function OrganizadorDashboardPage() {
+  await connection();
   const session = await auth();
 
   if (!session?.user) {
@@ -330,6 +333,14 @@ export default async function OrganizadorDashboardPage() {
                       </div>
 
                       <div className="flex items-center gap-1.5">
+                        <Link
+                          href={`/organizador/carrera/${race.id}/editar`}
+                          className="inline-flex items-center gap-1 rounded-xl bg-slate-100 px-2.5 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-200 transition-colors"
+                          title="Editar información de la carrera"
+                        >
+                          <Edit3 className="h-3.5 w-3.5 text-slate-500" />
+                          <span>Editar</span>
+                        </Link>
                         <Link
                           href={`/carrera/${race.id}/voluntarios`}
                           className="inline-flex items-center gap-1 rounded-xl bg-amber-50 px-2.5 py-1.5 text-xs font-bold text-amber-850 hover:bg-amber-100 transition-colors"

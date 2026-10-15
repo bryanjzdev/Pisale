@@ -8,9 +8,12 @@ import { BotonEnviarCorreoTicket } from "@/components/common/BotonEnviarCorreoTi
 import { BotonDescartarPendiente } from "@/components/common/BotonDescartarPendiente";
 import { ModalTransferirBoleto } from "@/components/common/ModalTransferirBoleto";
 
+import { connection } from "next/server";
+
 export const instant = false;
 
 export default async function DashboardPage() {
+  await connection();
   const session = await auth();
 
   if (!session?.user) {

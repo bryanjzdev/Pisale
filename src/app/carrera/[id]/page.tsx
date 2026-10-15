@@ -8,7 +8,7 @@ import { RunnerKitGrid } from "@/components/race-detail/RunnerKitGrid";
 import { RouteElevationSection } from "@/components/race-detail/RouteElevationSection";
 import { RaceActionCard } from "@/components/race-detail/RaceActionCard";
 import { MobileFloatingCta } from "@/components/race-detail/MobileFloatingCta";
-import { Building2, Info, MapPin, PackageCheck, ShieldCheck, BookOpen, ArrowRight, Timer, Zap, Camera, HeartHandshake } from "lucide-react";
+import { Building2, Info, MapPin, PackageCheck, ShieldCheck, BookOpen, ArrowRight, Timer, Zap, Camera, HeartHandshake, Edit3 } from "lucide-react";
 
 export const instant = false;
 
@@ -39,7 +39,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+import { connection } from "next/server";
+
 export default async function CarreraDetallePage({ params }: Props) {
+  await connection();
   const { id } = await params;
   const race = await getRaceById(id);
 
@@ -50,6 +53,8 @@ export default async function CarreraDetallePage({ params }: Props) {
   const session = await auth();
   const isLoggedIn = !!session?.user;
   const userEmail = session?.user?.email;
+  const isOwnerEmail = userEmail?.toLowerCase() === "bjm.dev.soft@gmail.com";
+  const isAdminOrOwner = (session?.user as any)?.role === "ADMIN" || isOwnerEmail;
 
   return (
     <div className="relative min-h-screen bg-[#fbfaff] text-slate-900 selection:bg-fuchsia-200 selection:text-fuchsia-900 pb-24 lg:pb-16">
@@ -59,6 +64,29 @@ export default async function CarreraDetallePage({ params }: Props) {
         <div className="absolute -left-40 top-40 h-[500px] w-[500px] rounded-full bg-violet-300/30 blur-[130px]" />
         <div className="absolute right-0 top-20 h-[450px] w-[450px] rounded-full bg-fuchsia-300/25 blur-[120px]" />
       </div>
+
+      {/* Barra de Gestión Rápida para Administradores / Organizadores */}
+      {isAdminOrOwner && (
+        <div className="relative z-30 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-24 -mb-20">
+          <div className="rounded-2xl border border-violet-200 bg-white/95 p-3 sm:px-4 shadow-md backdrop-blur-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+            <div className="flex items-center gap-2">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-violet-100 text-violet-700 font-bold">
+                <Edit3 className="h-3.5 w-3.5" />
+              </span>
+              <span className="font-semibold text-slate-700">
+                <strong className="text-slate-900">Modo Organizador / Admin:</strong> Puedes actualizar horarios, precios, cupos, ruta o portada de este evento.
+              </span>
+            </div>
+            <Link
+              href={`/organizador/carrera/${race.id}/editar`}
+              className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-violet-600 hover:bg-violet-700 px-4 py-2 font-bold text-white transition-all shadow-xs shrink-0"
+            >
+              <Edit3 className="h-3 w-3" />
+              <span>Editar Información</span>
+            </Link>
+          </div>
+        </div>
+      )}
 
       {/* Hero Principal con Fotografía y Badges */}
       <RaceHero race={race} />

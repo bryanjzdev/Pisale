@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 import { CheckInScannerClient } from "@/components/organizador/CheckInScannerClient";
 
+import { connection } from "next/server";
+
 export const instant = false;
 
 export const metadata = {
@@ -20,6 +22,7 @@ export const metadata = {
 };
 
 export default async function CheckInPage() {
+  await connection();
   const session = await auth();
 
   if (!session?.user?.email) {

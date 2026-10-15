@@ -121,6 +121,8 @@ export async function createRace(input: CreateRaceInput) {
     revalidatePath("/");
     revalidatePath("/carreras");
     revalidatePath("/dashboard");
+    revalidatePath("/organizador/dashboard");
+    revalidatePath("/admin");
 
     return { success: true, raceId: race.id };
   } catch (error: any) {
@@ -130,3 +132,108 @@ export async function createRace(input: CreateRaceInput) {
     };
   }
 }
+
+export type UpdateRaceInput = {
+  title: string;
+  category: "RUTA" | "TRAIL" | "NOCTURNA";
+  date: string;
+  location: string;
+  imageUrl?: string;
+  startPoint?: string;
+  endPoint?: string;
+  surface?: string;
+  distances: DistanceInput[];
+};
+
+export async function actualizarCarrera(raceId: string, input: UpdateRaceInput) {
+  try {
+    const session = await auth();
+    if (!session?.user?.email) {
+      return { error: "Debes iniciar sesión para editar un evento." };
+    }
+
+    const dbUser = await prisma.user.findUnique({
+      where: { email: session.user.email },
+    });
+
+    const isOwnerEmail = session.user.email.toLowerCase() === "bjm.dev.soft@gmail.com";
+    const isAdmin = dbUser?.role === "ADMIN" || isOwnerEmail;
+
+    // Buscar carrera existente
+    const existingRace = await prisma.race.findUnique({
+      where: { id: raceId },
+      include: { organization: true },
+    });
+
+    if (!existingRace) {
+      return { error: "Carrera no encontrada." };
+    }
+
+    // Verificar si es dueño de la organización o SuperAdmin
+    const isOrgOwner = dbUser && existingRace.organization.ownerId === dbUser.id;
+    if (!isAdmin && !isOrgOwner) {
+      return { error: "No tienes permisos para modificar este evento." };
+    }
+
+    if (!input.title || input.title.trim().length < 4) {
+      return { error: "El título de la carrera debe tener al menos 4 caracteres." };
+    }
+
+    if (!input.location || input.location.trim().length < 3) {
+      return { error: "La ubicación es obligatoria." };
+    }
+
+    const raceDate = new Date(input.date);
+
+    // Actualizar carrera
+    await prisma.race.update({
+      where: { id: raceId },
+      data: {
+        title: input.title.trim(),
+        category: input.category,
+        date: raceDate,
+        location: input.location.trim(),
+        imageUrl: input.imageUrl?.trim() || existingRace.imageUrl,
+        startPoint: input.startPoint?.trim() || null,
+        endPoint: input.endPoint?.trim() || null,
+        surface: input.surface?.trim() || null,
+      },
+    });
+
+    // Actualizar o regenerar distancias si se proporcionaron
+    if (input.distances && input.distances.length > 0) {
+      // Eliminar distancias anteriores que no tienen inscripciones para evitar conflictos
+      await prisma.raceDistance.deleteMany({
+        where: { raceId, currentParticipants: 0 },
+      });
+
+      // Crear o actualizar nuevas distancias
+      for (const d of input.distances) {
+        await prisma.raceDistance.create({
+          data: {
+            raceId,
+            name: d.name,
+            distanceMeters: parseInt(d.name) ? parseInt(d.name) * 1000 : 10000,
+            price: Number(d.price) || 500,
+            maxParticipants: Number(d.maxParticipants) || 1000,
+            currentParticipants: 0,
+          },
+        });
+      }
+    }
+
+    revalidatePath("/");
+    revalidatePath("/carreras");
+    revalidatePath(`/carrera/${raceId}`);
+    revalidatePath("/organizador/dashboard");
+    revalidatePath("/admin");
+
+    return { success: true, raceId };
+  } catch (error: any) {
+    console.error("Error updating race:", error);
+    return {
+      error: error?.message || "Ocurrió un error al actualizar la información de la carrera.",
+    };
+  }
+}
+
