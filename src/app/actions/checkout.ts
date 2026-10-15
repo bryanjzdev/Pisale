@@ -45,7 +45,28 @@ export async function createCheckoutSession(input: CheckoutInput) {
       process.env.STRIPE_SECRET_KEY.startsWith("sk_") &&
       !process.env.STRIPE_SECRET_KEY.includes("placeholder");
 
-    // 1. Reutilizar registro previo pendiente o crear uno nuevo para evitar registros duplicados
+    // 1. Validar precio y cupo oficial en base de datos para prevenir manipulación del cliente y sobreventa
+    let officialPrice = input.price;
+    const dbDistance = await prisma.raceDistance.findFirst({
+      where: {
+        raceId: race.id,
+        name: { equals: input.distanceName, mode: "insensitive" },
+      },
+    });
+
+    if (dbDistance) {
+      officialPrice = dbDistance.price;
+      if (dbDistance.maxParticipants > 0 && dbDistance.currentParticipants >= dbDistance.maxParticipants) {
+        return { error: "Lo sentimos, los cupos para esta distancia están agotados." };
+      }
+    } else {
+      // Si no existe registro en raceDistance, usar el precio base de la carrera
+      if (race.price && race.price > 0) {
+        officialPrice = race.price;
+      }
+    }
+
+    // 2. Reutilizar registro previo pendiente o crear uno nuevo para evitar registros duplicados
     let registration = await prisma.registration.findFirst({
       where: {
         userId: userId,
@@ -60,7 +81,7 @@ export async function createCheckoutSession(input: CheckoutInput) {
         data: {
           raceTitle: race.title,
           distanceName: input.distanceName,
-          amountPaid: input.price,
+          amountPaid: officialPrice,
           shirtSize: input.shirtSize,
         },
       });
@@ -71,7 +92,7 @@ export async function createCheckoutSession(input: CheckoutInput) {
           raceId: race.id,
           raceTitle: race.title,
           distanceName: input.distanceName,
-          amountPaid: input.price,
+          amountPaid: officialPrice,
           shirtSize: input.shirtSize,
           status: isRealStripeKey ? "PENDING" : "CONFIRMED",
           bibNumber: isRealStripeKey
@@ -81,7 +102,7 @@ export async function createCheckoutSession(input: CheckoutInput) {
       });
     }
 
-    // 2. Si hay llaves reales de Stripe configuradas, crear sesión oficial
+    // 3. Si hay llaves reales de Stripe configuradas, crear sesión oficial
     if (isRealStripeKey) {
       // Validar si race.imageUrl es una URL HTTP(S) pública válida, ya que Stripe rechaza cadenas base64 ("Not a valid URL")
       const isValidHttpUrl = (str?: string | null) => {
@@ -106,7 +127,7 @@ export async function createCheckoutSession(input: CheckoutInput) {
                 description: `Talla: ${input.shirtSize} | Corredor: ${session.user.name || session.user.email}`,
                 images: stripeImages,
               },
-              unit_amount: Math.round(input.price * 100), // Stripe maneja centavos
+              unit_amount: Math.round(officialPrice * 100), // Stripe maneja centavos
             },
             quantity: 1,
           },
@@ -133,7 +154,7 @@ export async function createCheckoutSession(input: CheckoutInput) {
       return { url: stripeSession.url };
     }
 
-    // 3. Modo Simulación / Demo (sin llaves reales de Stripe configuradas aún)
+    // 4. Modo Simulación / Demo (sin llaves reales de Stripe configuradas aún)
     return {
       url: `${appUrl}/carrera/${race.id}/exito?session_id=demo_${registration.id}`,
     };
@@ -149,6 +170,7 @@ export async function createCheckoutSession(input: CheckoutInput) {
 
 /**
  * Permite al usuario descartar un intento de compra incompleto o cancelado
+ * Protegido contra ataques IDOR (valida propiedad del registro)
  */
 export async function descartarInscripcionPendiente(registrationId: string) {
   try {
@@ -157,12 +179,33 @@ export async function descartarInscripcionPendiente(registrationId: string) {
       return { success: false, error: "No autorizado" };
     }
 
+    let userId = session.user.id;
+    if (!userId && session.user.email) {
+      const dbUser = await prisma.user.findUnique({
+        where: { email: session.user.email },
+      });
+      if (dbUser) userId = dbUser.id;
+    }
+
     const reg = await prisma.registration.findUnique({
       where: { id: registrationId },
+      include: { user: true },
     });
 
     if (!reg) {
       return { success: true };
+    }
+
+    // Validación Anti-IDOR: Solo el dueño del registro o el Administrador pueden descartarlo
+    const isOwner =
+      reg.userId === userId ||
+      (session.user.email && reg.user?.email?.toLowerCase() === session.user.email.toLowerCase());
+    const isAdmin =
+      session.user.email?.toLowerCase() === "bjm.dev.soft@gmail.com" ||
+      (session.user as any).role === "ADMIN";
+
+    if (!isOwner && !isAdmin) {
+      return { success: false, error: "No tienes permiso para descartar esta inscripción." };
     }
 
     // Solo permitir eliminar si sigue PENDING

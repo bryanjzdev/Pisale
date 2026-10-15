@@ -14,9 +14,15 @@ export async function POST(req: NextRequest) {
   try {
     if (webhookSecret && !webhookSecret.includes("placeholder") && signature) {
       event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
-    } else {
-      // Si no hay firma estricta en local, parsear el JSON
+    } else if (process.env.NODE_ENV !== "production") {
+      // Solo en desarrollo local permitimos simular webhook sin secret estricto
       event = JSON.parse(body) as Stripe.Event;
+    } else {
+      console.error("⚠️ Webhook signature missing in production environment");
+      return NextResponse.json(
+        { error: "Webhook Error: Firma de webhook obligatoria en producción." },
+        { status: 400 }
+      );
     }
   } catch (err: any) {
     console.error("⚠️ Webhook signature verification failed:", err.message);
