@@ -14,6 +14,7 @@ import {
   Building2,
 } from "lucide-react";
 import { RacesSection } from "@/components/RacesSection";
+import { KitOficialSection } from "@/components/home/KitOficialSection";
 import { getAllRaces } from "@/lib/races";
 
 const CITIES = ["CDMX", "Monterrey", "Guadalajara", "Puebla", "Querétaro", "Mérida", "Oaxaca", "Tijuana", "León", "Cancún"];
@@ -108,76 +109,87 @@ export default async function Home() {
           </div>
         </div>
 
-        {/* Composición flotante */}
-        <div className="relative mx-auto h-[520px] w-full max-w-[480px]">
-          {/* Ticket digital */}
-          <div className="animate-float absolute left-0 top-6 z-20 w-[300px] sm:left-6">
-            <div className="border-beam rounded-[1.75rem] border border-white bg-white/85 p-2 shadow-[0_30px_70px_-20px_rgba(91,33,182,0.45)] backdrop-blur-2xl">
-              <div className="relative overflow-hidden rounded-[1.35rem] bg-linear-to-br from-violet-600 via-fuchsia-600 to-orange-500 p-5 text-white">
-                <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-white/15 blur-xl" />
-                <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-white/75">Boleto digital</p>
-                <p className="mt-1 font-display text-2xl font-extrabold leading-tight">Medio Maratón CDMX</p>
-                <div className="mt-4 flex gap-5 text-sm">
-                  <div><p className="text-[10px] uppercase text-white/70">Fecha</p><p className="font-bold">15 Nov</p></div>
-                  <div><p className="text-[10px] uppercase text-white/70">Salida</p><p className="font-bold">06:30</p></div>
-                  <div><p className="text-[10px] uppercase text-white/70">Bloque</p><p className="font-bold">B</p></div>
-                </div>
-              </div>
-              <div className="flex items-center justify-between px-4 py-4">
-                <div>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Número</p>
-                  <p className="font-display text-4xl font-extrabold tracking-tight text-slate-900">#2048</p>
-                </div>
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-violet-50 text-violet-700 ring-1 ring-violet-100">
-                  <QrCode className="h-10 w-10" />
-                </div>
-              </div>
-            </div>
-          </div>
+        {/* Composición Hero Deportiva: Imagen atlética en acción + Telemetría HUD + Ticket Digital */}
+        <div className="relative mx-auto h-[550px] w-full max-w-[500px]">
+          {/* Card Fotográfica Deportiva Central (Ultra-rápida y atlética) */}
+          <div className="relative h-[480px] w-full overflow-hidden rounded-[2.2rem] border border-white/80 bg-slate-900 shadow-[0_30px_90px_-20px_rgba(91,33,182,0.35)] backdrop-blur-2xl">
+            {/* Foto de corredor en máxima zancada */}
+            <div
+              className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 hover:scale-105"
+              style={{
+                backgroundImage: `url('https://images.unsplash.com/photo-1552674605-db6ffd4facb5?q=80&w=900&auto=format&fit=crop')`,
+              }}
+            />
+            {/* Gradientes deportivos atléticos para legibilidad */}
+            <div className="absolute inset-0 bg-linear-to-t from-slate-950 via-slate-950/20 to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-r from-violet-950/40 via-transparent to-orange-950/30" />
 
-          {/* Resultados en vivo */}
-          <div className="animate-float-slow absolute bottom-4 right-0 z-30 w-[280px] rounded-3xl border border-white bg-white/90 p-4 shadow-[0_30px_70px_-20px_rgba(190,24,93,0.35)] backdrop-blur-2xl" style={{ animationDelay: "1.2s" }}>
-            <div className="mb-3 flex items-center justify-between">
-              <p className="flex items-center gap-2 text-sm font-bold text-slate-900">
-                <Activity className="h-4 w-4 text-fuchsia-500" /> Resultados en vivo
-              </p>
-              <span className="flex items-center gap-1 rounded-full bg-rose-50 px-2 py-0.5 text-[10px] font-bold text-rose-600">
-                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-rose-500" /> LIVE
+            {/* HUD Telemetría Superior */}
+            <div className="absolute top-4 inset-x-4 flex items-center justify-between z-10">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-950/75 border border-white/20 px-3 py-1 text-[11px] font-black uppercase tracking-wider text-emerald-400 backdrop-blur-md">
+                <span className="h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
+                Live Tracking Activo
+              </span>
+              <span className="inline-flex items-center gap-1 rounded-full bg-white/20 border border-white/30 px-2.5 py-1 text-[11px] font-black text-white backdrop-blur-md">
+                KM 18.4 / 21K
               </span>
             </div>
-            <div className="space-y-2">
-              {LIVE_RESULTS.map((r) => (
-                <div key={r.pos} className="flex items-center gap-3 rounded-2xl bg-slate-50/80 p-2">
-                  <span className={`flex h-8 w-8 items-center justify-center rounded-xl bg-linear-to-br ${r.color} font-display text-sm font-extrabold text-slate-900`}>
-                    {r.pos}
-                  </span>
-                  <span className="flex-1 text-sm font-semibold text-slate-700">{r.name}</span>
-                  <span className="font-mono text-sm font-bold text-slate-900">{r.time}</span>
+
+            {/* HUD Telemetría Inferior del Atleta */}
+            <div className="absolute bottom-4 inset-x-4 z-10 rounded-2xl bg-slate-950/80 border border-white/15 p-3.5 backdrop-blur-xl">
+              <div className="grid grid-cols-3 gap-2 text-center">
+                <div className="border-r border-white/10 pr-2">
+                  <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">Ritmo</p>
+                  <p className="font-mono text-base sm:text-lg font-black text-amber-400">3:58 <span className="text-[10px] font-bold text-slate-400">/km</span></p>
                 </div>
-              ))}
+                <div className="border-r border-white/10 pr-2">
+                  <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">Cadencia</p>
+                  <p className="font-mono text-base sm:text-lg font-black text-teal-300">178 <span className="text-[10px] font-bold text-slate-400">spm</span></p>
+                </div>
+                <div>
+                  <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">Pulso</p>
+                  <p className="font-mono text-base sm:text-lg font-black text-rose-400">164 <span className="text-[10px] font-bold text-slate-400">bpm</span></p>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Chip de ritmo */}
-          <div className="animate-float absolute right-4 top-0 z-10 flex items-center gap-3 rounded-2xl border border-white bg-white/85 px-4 py-3 shadow-xl shadow-violet-900/10 backdrop-blur-xl" style={{ animationDelay: "0.6s" }}>
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-emerald-400 to-teal-500 text-white">
-              <TrendingUp className="h-5 w-5" />
+          {/* Ticket digital superpuesto */}
+          <div className="animate-float absolute -left-4 sm:-left-8 top-10 z-20 w-[270px] sm:w-[290px]">
+            <div className="border-beam rounded-[1.75rem] border border-white bg-white/90 p-2 shadow-[0_25px_60px_-15px_rgba(91,33,182,0.5)] backdrop-blur-2xl">
+              <div className="relative overflow-hidden rounded-[1.35rem] bg-linear-to-br from-violet-600 via-fuchsia-600 to-orange-500 p-4 text-white">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">Boleto Digital Oficial</p>
+                <p className="mt-0.5 font-display text-xl font-black leading-tight">Maratón Teotihuacán</p>
+                <div className="mt-3 flex gap-4 text-xs">
+                  <div><p className="text-[9px] uppercase text-white/70">Distancia</p><p className="font-black">21K</p></div>
+                  <div><p className="text-[9px] uppercase text-white/70">Kit</p><p className="font-black">Dry-Fit (M)</p></div>
+                  <div><p className="text-[9px] uppercase text-white/70">Bloque</p><p className="font-black">Elite A</p></div>
+                </div>
+              </div>
+              <div className="flex items-center justify-between px-3 py-3">
+                <div>
+                  <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Dorsal</p>
+                  <p className="font-display text-3xl font-black tracking-tight text-slate-900">#2048</p>
+                </div>
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-violet-100 text-violet-700">
+                  <QrCode className="h-7 w-7" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Chip de confirmación y medalla */}
+          <div className="animate-float-slow absolute -right-3 bottom-20 z-30 flex items-center gap-2 rounded-full border border-white bg-white/95 py-2 pl-2 pr-4 shadow-xl shadow-fuchsia-900/20 backdrop-blur-xl" style={{ animationDelay: "1.5s" }}>
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-linear-to-r from-amber-400 to-orange-500 text-white shadow-md">
+              <Trophy className="h-4 w-4" />
             </span>
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Nuevo PR</p>
-              <p className="font-display text-lg font-extrabold text-slate-900">4:52 /km</p>
+              <p className="text-xs font-black text-slate-900">Medalla 3D Finisher</p>
+              <p className="text-[10px] font-bold text-emerald-600">Garantizada con Kit</p>
             </div>
           </div>
 
-          {/* Chip de confirmación */}
-          <div className="animate-float-slow absolute bottom-40 left-0 z-30 flex items-center gap-2 rounded-full border border-white bg-white/90 py-2 pl-2 pr-4 shadow-xl shadow-violet-900/10 backdrop-blur-xl" style={{ animationDelay: "2s" }}>
-            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-violet-600 text-white">
-              <BadgeCheck className="h-4 w-4" />
-            </span>
-            <p className="text-sm font-bold text-slate-800">Inscripción confirmada</p>
-          </div>
-
-          {/* Halo */}
+          {/* Halo deportivo */}
           <div className="absolute left-1/2 top-1/2 -z-0 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-linear-to-br from-violet-400/40 via-fuchsia-400/30 to-orange-300/40 blur-3xl" />
         </div>
       </section>
@@ -221,6 +233,9 @@ export default async function Home() {
 
       {/* ===== Carreras ===== */}
       <RacesSection initialRaces={races} />
+
+      {/* ===== Anatomía del Kit Oficial (Experiencia de Carrera) ===== */}
+      <KitOficialSection />
 
       {/* ===== CTA organizadores ===== */}
       <section id="organizadores" className="relative z-10 mx-auto max-w-7xl px-4 pb-28">
