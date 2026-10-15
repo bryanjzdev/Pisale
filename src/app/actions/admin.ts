@@ -139,6 +139,8 @@ export async function generarDemo3Dias() {
     const expiresAt = new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000); // 72 horas
     const raceDate = new Date(now.getTime() + 15 * 24 * 60 * 60 * 1000); // 15 días adelante
 
+    const demoToken = `trial_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
+
     const demoRace = await prisma.race.create({
       data: {
         title: `Demo 10K & 21K Experiencia Písale #${Math.floor(100 + Math.random() * 900)}`,
@@ -147,10 +149,42 @@ export async function generarDemo3Dias() {
         category: "RUTA",
         status: "PUBLISHED",
         organizationId: demoOrg.id,
-        imageUrl: "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&q=80&w=1200",
+        imageUrl: "/assets/run/hero-cdmx-angel.jpg",
         surface: "Asfalto certificado",
         startPoint: "Arco Central Parque La Mexicana",
         endPoint: "Meta Principal La Mexicana",
+        isDemo: true,
+        demoExpiresAt: expiresAt,
+        demoToken: demoToken,
+        kitItems: [
+          {
+            id: "kit-1",
+            title: "Playera Oficial Dry-Fit Sublimada",
+            description: "Corte atlético transpirable con reserva de talla garantizada en el registro.",
+            icon: "shirt",
+            highlight: true,
+          },
+          {
+            id: "kit-2",
+            title: "Medalla Metálica de Finalista 3D",
+            description: "Fundición conmemorativa pesada con listón sublimado de edición limitada.",
+            icon: "medal",
+            highlight: true,
+          },
+          {
+            id: "kit-3",
+            title: "Número de Corredor con Chip RFID y QR",
+            description: "Papel Tyvek impermeable para escaneo móvil en 3 segundos en entrega de kits.",
+            icon: "timer",
+            highlight: true,
+          },
+          {
+            id: "kit-4",
+            title: "Hidratación y Electrolitos en Ruta",
+            description: "Puntos de abasto oficiales cada 2.5K y guardarropa con custodia digital.",
+            icon: "droplet",
+          },
+        ],
         distances: {
           create: [
             { name: "10K Express", distanceMeters: 10000, price: 450, maxParticipants: 300, currentParticipants: 24 },

@@ -3,6 +3,7 @@
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import { revalidatePath } from "next/cache";
+import { sanitizeKitItems, type KitItem } from "@/lib/kits";
 
 export type DistanceInput = {
   name: string;
@@ -24,6 +25,7 @@ export type CreateRaceInput = {
   endPoint?: string;
   surface?: string;
   distances: DistanceInput[];
+  kitItems?: KitItem[];
 };
 
 export async function createRace(input: CreateRaceInput) {
@@ -61,12 +63,20 @@ export async function createRace(input: CreateRaceInput) {
       return { error: "Debes configurar al menos una distancia para la carrera." };
     }
 
-    // 1. Obtener o crear una organización para el usuario
+    // 1. Exigir organización verificada (o rol Admin) para publicar
+    const dbUserForRole = await prisma.user.findUnique({ where: { id: userId } });
+    const isAdminUser =
+      dbUserForRole?.role === "ADMIN" ||
+      session.user.email?.toLowerCase() === "bjm.dev.soft@gmail.com";
+
     let organization = await prisma.organization.findFirst({
       where: { ownerId: userId },
     });
 
     if (!organization) {
+      if (!isAdminUser) {
+        return { error: "Primero registra tu organización para poder publicar carreras." };
+      }
       organization = await prisma.organization.create({
         data: {
           name: input.organizationName || session.user.name || "Club Organizador",
@@ -74,6 +84,10 @@ export async function createRace(input: CreateRaceInput) {
           status: "VERIFIED",
         },
       });
+    }
+
+    if (organization.status !== "VERIFIED" && !isAdminUser) {
+      return { error: "Tu organización aún está en revisión. Podrás publicar en cuanto sea aprobada." };
     }
 
     // 2. Imagen por defecto según categoría si no se proporciona
@@ -102,6 +116,7 @@ export async function createRace(input: CreateRaceInput) {
         startPoint: input.startPoint?.trim() || null,
         endPoint: input.endPoint?.trim() || null,
         surface: input.surface?.trim() || null,
+        kitItems: sanitizeKitItems(input.kitItems),
         distances: {
           create: input.distances.map((d) => ({
             name: d.name,
@@ -143,6 +158,7 @@ export type UpdateRaceInput = {
   endPoint?: string;
   surface?: string;
   distances: DistanceInput[];
+  kitItems?: KitItem[];
 };
 
 export async function actualizarCarrera(raceId: string, input: UpdateRaceInput) {
@@ -197,28 +213,50 @@ export async function actualizarCarrera(raceId: string, input: UpdateRaceInput) 
         startPoint: input.startPoint?.trim() || null,
         endPoint: input.endPoint?.trim() || null,
         surface: input.surface?.trim() || null,
+        ...(input.kitItems !== undefined ? { kitItems: sanitizeKitItems(input.kitItems) } : {}),
       },
     });
 
-    // Actualizar o regenerar distancias si se proporcionaron
+    // Sincronizar distancias sin duplicar las que ya tienen inscritos
     if (input.distances && input.distances.length > 0) {
-      // Eliminar distancias anteriores que no tienen inscripciones para evitar conflictos
-      await prisma.raceDistance.deleteMany({
-        where: { raceId, currentParticipants: 0 },
-      });
+      const existing = await prisma.raceDistance.findMany({ where: { raceId } });
+      const normalize = (s: string) => s.trim().toLowerCase();
+      const incomingNames = new Set(input.distances.map((d) => normalize(d.name)));
 
-      // Crear o actualizar nuevas distancias
+      // Eliminar solo las distancias que ya no vienen y que no tienen corredores
+      const removable = existing.filter(
+        (e) => !incomingNames.has(normalize(e.name)) && e.currentParticipants === 0
+      );
+      if (removable.length > 0) {
+        await prisma.raceDistance.deleteMany({ where: { id: { in: removable.map((r) => r.id) } } });
+      }
+
       for (const d of input.distances) {
-        await prisma.raceDistance.create({
-          data: {
-            raceId,
-            name: d.name,
-            distanceMeters: parseInt(d.name) ? parseInt(d.name) * 1000 : 10000,
-            price: Number(d.price) || 500,
-            maxParticipants: Number(d.maxParticipants) || 1000,
-            currentParticipants: 0,
-          },
-        });
+        const match = existing.find((e) => normalize(e.name) === normalize(d.name));
+        const price = Number(d.price) || 500;
+        const requestedMax = Number(d.maxParticipants) || 1000;
+
+        if (match) {
+          await prisma.raceDistance.update({
+            where: { id: match.id },
+            data: {
+              price,
+              // Nunca dejar el cupo por debajo de los ya inscritos
+              maxParticipants: Math.max(requestedMax, match.currentParticipants),
+            },
+          });
+        } else {
+          await prisma.raceDistance.create({
+            data: {
+              raceId,
+              name: d.name.trim(),
+              distanceMeters: parseInt(d.name) ? parseInt(d.name) * 1000 : 10000,
+              price,
+              maxParticipants: requestedMax,
+              currentParticipants: 0,
+            },
+          });
+        }
       }
     }
 

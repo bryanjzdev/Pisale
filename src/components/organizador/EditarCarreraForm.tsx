@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { actualizarCarrera, type DistanceInput } from "@/app/actions/races";
+import { KitBuilder } from "@/components/organizador/KitBuilder";
+import { DEFAULT_KIT_SELECTION, sanitizeKitItems, type KitItem } from "@/lib/kits";
 import {
   Calendar,
   MapPin,
@@ -35,6 +37,7 @@ interface EditarCarreraFormProps {
     startPoint?: string | null;
     endPoint?: string | null;
     surface?: string | null;
+    kitItems?: any;
     distances: Array<{
       id?: string;
       name: string;
@@ -63,6 +66,10 @@ export function EditarCarreraForm({ race }: EditarCarreraFormProps) {
   const [imageUrl, setImageUrl] = useState(
     race.imageUrl || "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&q=80&w=1200"
   );
+  const [kitItems, setKitItems] = useState<KitItem[]>(() => {
+    const parsed = sanitizeKitItems(race.kitItems);
+    return parsed.length > 0 ? parsed : DEFAULT_KIT_SELECTION;
+  });
   const [distances, setDistances] = useState<DistanceInput[]>(
     race.distances.length > 0
       ? race.distances.map((d) => ({
@@ -111,6 +118,7 @@ export function EditarCarreraForm({ race }: EditarCarreraFormProps) {
       endPoint,
       surface,
       distances,
+      kitItems,
     });
 
     setIsSubmitting(false);
@@ -364,6 +372,13 @@ export function EditarCarreraForm({ race }: EditarCarreraFormProps) {
           ))}
         </div>
       </div>
+
+      {/* 4. Kit Oficial del Corredor */}
+      <KitBuilder
+        value={kitItems}
+        onChange={setKitItems}
+        stepLabel="4. Kit Oficial del Corredor"
+      />
 
       {/* Mensajes de feedback */}
       {errorMessage && (

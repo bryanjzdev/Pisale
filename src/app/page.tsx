@@ -117,7 +117,7 @@ export default async function Home() {
             <div
               className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 hover:scale-105"
               style={{
-                backgroundImage: `url('https://images.unsplash.com/photo-1552674605-db6ffd4facb5?q=80&w=900&auto=format&fit=crop')`,
+                backgroundImage: `url('/assets/run/hero-cdmx-angel.jpg')`,
               }}
             />
             {/* Gradientes deportivos atléticos para legibilidad */}

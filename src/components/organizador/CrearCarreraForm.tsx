@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createRace, type DistanceInput } from "@/app/actions/races";
+import { KitBuilder } from "@/components/organizador/KitBuilder";
+import { DEFAULT_KIT_SELECTION, type KitItem } from "@/lib/kits";
 import {
   Calendar,
   MapPin,
@@ -35,8 +37,18 @@ import {
 const IMAGE_PRESETS = [
   {
     category: "RUTA",
-    label: "Ruta Urbana (Avenida)",
-    url: "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&q=80&w=1200",
+    label: "Maratón CDMX Paseo de la Reforma (Ángel)",
+    url: "/assets/run/hero-cdmx-angel.jpg",
+  },
+  {
+    category: "RUTA",
+    label: "Pelotón de Corredores (Vista Aérea)",
+    url: "/assets/run/aerial-pack.jpg",
+  },
+  {
+    category: "RUTA",
+    label: "Llegada a Meta Multitudinaria",
+    url: "/assets/run/finish-street.jpg",
   },
   {
     category: "TRAIL",
@@ -73,6 +85,9 @@ export function CrearCarreraForm({
   const [imageSourceMode, setImageSourceMode] = useState<"upload" | "presets" | "url">("upload");
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
+
+  // Kit oficial del corredor
+  const [kitItems, setKitItems] = useState<KitItem[]>(DEFAULT_KIT_SELECTION);
 
   // Distancias dinámicas
   const [distances, setDistances] = useState<DistanceInput[]>([
@@ -187,6 +202,7 @@ export function CrearCarreraForm({
         endPoint: isCircuit ? "Mismo punto de salida (Circuito cerrado)" : (endPoint || location),
         surface,
         distances,
+        kitItems,
       });
 
       if (res?.error) {
@@ -792,7 +808,10 @@ export function CrearCarreraForm({
         </div>
       </div>
 
-      {/* 5. Módulos y Funcionalidades del Evento (Modularidad Flexible) */}
+      {/* 6. Kit Oficial del Corredor */}
+      <KitBuilder value={kitItems} onChange={setKitItems} stepLabel="6. Kit Oficial del Corredor" />
+
+      {/* 7. Módulos y Funcionalidades del Evento (Modularidad Flexible) */}
       <div className="rounded-3xl border border-white/80 bg-white/90 p-6 sm:p-8 shadow-[0_15px_40px_-10px_rgba(91,33,182,0.1)] backdrop-blur-2xl space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
           <div>
@@ -801,7 +820,7 @@ export function CrearCarreraForm({
                 <SlidersHorizontal className="h-3.5 w-3.5" />
               </span>
               <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-800">
-                5. Módulos y Funcionalidades de tu Evento
+                7. Módulos y Funcionalidades de tu Evento
               </label>
             </div>
             <p className="text-xs text-slate-500 mt-1">

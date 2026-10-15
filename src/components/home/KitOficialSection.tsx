@@ -31,7 +31,7 @@ const KIT_ITEMS = [
     badgeColor: "bg-fuchsia-500/10 text-fuchsia-700 border-fuchsia-500/20",
     description: "Número impermeable en papel Tyvek resistente a lluvia y sudor con código QR criptográfico para check-in instantáneo y cronometraje de tapete.",
     gradient: "from-fuchsia-500 to-rose-600",
-    imageUrl: "https://images.unsplash.com/photo-1530549387789-4c1017266635?q=80&w=600&auto=format&fit=crop",
+    imageUrl: "/assets/run/aerial-pack.jpg",
     metric: "Precisión 1/1000s",
   },
   {
@@ -51,7 +51,7 @@ const KIT_ITEMS = [
     badgeColor: "bg-violet-500/10 text-violet-700 border-violet-500/20",
     description: "Tus familiares siguen tu paso por cada parcial en vivo desde cualquier teléfono. Tu boleto vive en tu wallet digital con QR inviolable.",
     gradient: "from-violet-600 to-purple-600",
-    imageUrl: "https://images.unsplash.com/photo-1510519138111-550da64d6736?q=80&w=600&auto=format&fit=crop",
+    imageUrl: "/assets/run/peloton-cycling.jpg",
     metric: "Paso en Tiempo Real",
   },
   {
@@ -61,7 +61,7 @@ const KIT_ITEMS = [
     badgeColor: "bg-teal-500/10 text-teal-700 border-teal-500/20",
     description: "Cruzas la meta y tu certificado oficial con tiempo chip exacto está listo para descargar y compartir. Búsqueda automática de tus fotos por dorsal.",
     gradient: "from-emerald-500 to-teal-600",
-    imageUrl: "https://images.unsplash.com/photo-1571008887538-b36bb32f4571?q=80&w=600&auto=format&fit=crop",
+    imageUrl: "/assets/run/finish-street.jpg",
     metric: "Descarga en 1 Clic",
   },
 ];

@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db";
 import { MOCK_RACES, type Race, type RaceCategory } from "@/lib/mock-races";
+import { parseStoredKitItems, DEFAULT_KIT_SELECTION } from "@/lib/kits";
 
 /**
  * Obtiene la información completa de una carrera por su identificador.
@@ -96,7 +97,7 @@ export async function getRaceById(id: string): Promise<Race | null> {
         startPoint: dbRace.startPoint || startPointName,
         endPoint: dbRace.endPoint || "Mismo punto de salida (Circuito cerrado)",
         surface: calculatedSurface,
-        kitItems: mockMatch?.kitItems,
+        kitItems: parseStoredKitItems(dbRace.kitItems) || mockMatch?.kitItems || DEFAULT_KIT_SELECTION,
         organizer: {
           name: dbRace.organization?.name || "Organización Pisale",
           verified: true,
@@ -116,6 +117,7 @@ export async function getRaceById(id: string): Promise<Race | null> {
 export async function getAllRaces(): Promise<Race[]> {
   try {
     const dbRaces = await prisma.race.findMany({
+      where: { isDemo: false },
       include: { distances: true, organization: true },
       orderBy: { createdAt: "desc" },
     });

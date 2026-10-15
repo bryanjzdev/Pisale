@@ -124,11 +124,20 @@ model Race {
   surface        String?
   createdAt      DateTime     @default(now())
 
+  // Kit oficial configurable por el organizador (lista de KitItem en JSON)
+  kitItems       Json?
+
+  // Demos comerciales de 3 días (no aparecen en el catálogo público)
+  isDemo         Boolean      @default(false)
+  demoExpiresAt  DateTime?
+  demoToken      String?      @unique
+
   organization   Organization @relation(fields: [organizationId], references: [id])
   distances      RaceDistance[]
 
   @@index([organizationId])
   @@index([status, date])
+  @@index([isDemo])
 }
 
 model RaceDistance {
