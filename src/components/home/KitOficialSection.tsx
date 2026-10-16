@@ -1,6 +1,7 @@
 "use client";
 
-import { Shirt, Award, Timer, Droplets, Smartphone, Camera, CheckCircle2, Zap, Sparkles, ShieldCheck } from "lucide-react";
+import { useState } from "react";
+import { Shirt, Award, Timer, Droplets, Smartphone, Camera, CheckCircle2, Zap, Sparkles, ShieldCheck, ZoomIn, X } from "lucide-react";
 import Link from "next/link";
 
 const KIT_ITEMS = [
@@ -11,7 +12,7 @@ const KIT_ITEMS = [
     badgeColor: "bg-emerald-500/10 text-emerald-700 border-emerald-500/20",
     description: "Tejido microperforado ultra ligero de secado rápido. Reserva tu talla exacta en tiempo real al inscribirte sin sorpresas el día del evento.",
     gradient: "from-orange-500 to-amber-600",
-    imageUrl: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=600&auto=format&fit=crop",
+    imageUrl: "/assets/productos/PISALE%20Shirt.png",
     metric: "110g Peso Pluma",
   },
   {
@@ -21,7 +22,7 @@ const KIT_ITEMS = [
     badgeColor: "bg-amber-500/10 text-amber-700 border-amber-500/20",
     description: "Aleación metálica de alta densidad con relieve tridimensional y listón sublimado premium. Diseños exclusivos grabados para cada ruta.",
     gradient: "from-amber-500 to-yellow-600",
-    imageUrl: "https://images.unsplash.com/photo-1589487391730-58f20eb2c308?q=80&w=600&auto=format&fit=crop",
+    imageUrl: "/assets/productos/PISALE%20Medala.png",
     metric: "Fundición Maciza",
   },
   {
@@ -31,7 +32,7 @@ const KIT_ITEMS = [
     badgeColor: "bg-orange-500/10 text-orange-700 border-orange-500/20",
     description: "Número impermeable en papel Tyvek resistente a lluvia y sudor con código QR criptográfico para check-in instantáneo y cronometraje de tapete.",
     gradient: "from-rose-500 to-orange-600",
-    imageUrl: "/assets/run/aerial-pack.jpg",
+    imageUrl: "/assets/productos/PISALE%20dorsal.png",
     metric: "Precisión 1/1000s",
   },
   {
@@ -67,6 +68,8 @@ const KIT_ITEMS = [
 ];
 
 export function KitOficialSection() {
+  const [activeModalItem, setActiveModalItem] = useState<(typeof KIT_ITEMS)[number] | null>(null);
+
   return (
     <section className="relative z-10 mx-auto max-w-7xl px-4 py-24 sm:py-32">
       {/* Background Glow */}
@@ -82,7 +85,7 @@ export function KitOficialSection() {
           Todo lo que incluye tu <span className="text-brand">Kit Oficial</span>.
         </h2>
         <p className="mt-5 text-base sm:text-xl font-medium text-slate-600 leading-relaxed">
-          En Písale cada inscripción es una experiencia de primer nivel. Materiales premium, cronometraje de alta precisión y entrega ágil en 3 segundos sin filas.
+          En Písale cada inscripción es una experiencia de primer nivel. Diseños oficiales grabados, materiales técnicos ligeros y entrega ágil en 3 segundos sin filas.
         </p>
       </div>
 
@@ -93,33 +96,43 @@ export function KitOficialSection() {
           return (
             <div
               key={item.title}
-              className="group relative overflow-hidden rounded-[2rem] border border-white/80 bg-white/80 p-6 sm:p-7 shadow-[0_10px_35px_-10px_rgba(234,88,12,0.1)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_24px_50px_-12px_rgba(234,88,12,0.22)] flex flex-col justify-between"
+              className="group relative overflow-hidden rounded-[2rem] border border-white/80 bg-white/85 p-6 sm:p-7 shadow-[0_10px_35px_-10px_rgba(234,88,12,0.1)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_24px_50px_-12px_rgba(234,88,12,0.22)] flex flex-col justify-between"
             >
-              {/* Imagen de fondo sutil con desenfoque suave al hacer hover */}
-              <div className="relative h-44 w-full overflow-hidden rounded-2xl mb-5 bg-slate-100">
+              {/* Imagen con zoom y preview */}
+              <div
+                onClick={() => setActiveModalItem(item)}
+                className="relative h-56 sm:h-60 w-full overflow-hidden rounded-2xl mb-5 bg-slate-950/5 border border-slate-200/60 cursor-pointer group/img"
+              >
                 <div
-                  className="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105"
-                  style={{ backgroundImage: `url(${item.imageUrl})` }}
+                  className="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover/img:scale-108"
+                  style={{ backgroundImage: `url('${item.imageUrl}')` }}
                 />
-                <div className="absolute inset-0 bg-linear-to-t from-slate-950/70 via-slate-950/20 to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-t from-slate-950/70 via-slate-950/10 to-transparent transition-opacity group-hover/img:opacity-85" />
 
                 {/* Badge flotante en la foto */}
-                <div className="absolute top-3 left-3">
-                  <span className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-black uppercase tracking-wider backdrop-blur-md bg-white/95 ${item.badgeColor}`}>
+                <div className="absolute top-3 left-3 z-10">
+                  <span className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-black uppercase tracking-wider backdrop-blur-md bg-white/95 ${item.badgeColor} shadow-xs`}>
                     {item.badge}
                   </span>
                 </div>
 
+                {/* Botón flotante para ver detalle en HD */}
+                <div className="absolute top-3 right-3 z-10 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-slate-950/80 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-white backdrop-blur-md border border-white/20 shadow-md">
+                    <ZoomIn className="h-3 w-3 text-amber-400" /> Ver HD
+                  </span>
+                </div>
+
                 {/* Icono temático con gradiente */}
-                <div className="absolute bottom-3 right-3 flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br text-white shadow-lg shadow-black/20" style={{ backgroundImage: `linear-gradient(to bottom right, var(--tw-gradient-stops))` }}>
+                <div className="absolute bottom-3 right-3 z-10 flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br text-white shadow-lg shadow-black/20">
                   <span className={`flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br ${item.gradient} text-white`}>
                     <Icon className="h-5 w-5" />
                   </span>
                 </div>
 
                 {/* Métrica clave */}
-                <div className="absolute bottom-3 left-3 text-white">
-                  <span className="font-mono text-xs font-black tracking-wide text-white/95 drop-shadow-sm">
+                <div className="absolute bottom-3 left-3 z-10 text-white">
+                  <span className="font-mono text-xs font-black tracking-wide text-white drop-shadow-md">
                     {item.metric}
                   </span>
                 </div>
@@ -135,12 +148,18 @@ export function KitOficialSection() {
                 </p>
               </div>
 
-              {/* Indicador de calidad */}
+              {/* Indicador de calidad y botón ver HD */}
               <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-slate-400">
                 <span className="flex items-center gap-1.5 text-emerald-600">
-                  <CheckCircle2 className="h-4 w-4" /> 100% Certificado Písale
+                  <CheckCircle2 className="h-4 w-4" /> 100% Oficial Písale
                 </span>
-                <span className="font-mono text-slate-400">0{idx + 1}</span>
+                <button
+                  type="button"
+                  onClick={() => setActiveModalItem(item)}
+                  className="inline-flex items-center gap-1 text-[11px] font-extrabold text-orange-600 hover:text-orange-700 transition-colors"
+                >
+                  <ZoomIn className="h-3 w-3" /> Ver producto
+                </button>
               </div>
             </div>
           );
@@ -202,6 +221,62 @@ export function KitOficialSection() {
           </div>
         </div>
       </div>
+
+      {/* Lightbox / Modal de vista previa en Alta Definición */}
+      {activeModalItem && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          onClick={() => setActiveModalItem(null)}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 p-4 backdrop-blur-md animate-fade-in"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-[2rem] border border-white/30 bg-slate-900 shadow-2xl text-white"
+          >
+            {/* Header del Modal */}
+            <div className="flex items-center justify-between border-b border-white/10 px-6 py-4 bg-slate-950/60 backdrop-blur-md">
+              <div className="flex items-center gap-2">
+                <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-500/20 text-orange-400">
+                  <activeModalItem.icon className="h-4 w-4" />
+                </span>
+                <div>
+                  <h4 className="font-display text-base sm:text-lg font-black">{activeModalItem.title}</h4>
+                  <p className="text-[11px] font-bold text-amber-400 uppercase tracking-widest">{activeModalItem.metric}</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setActiveModalItem(null)}
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white/80 hover:bg-white/20 hover:text-white transition-colors"
+                aria-label="Cerrar vista previa"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Imagen en Alta Definición */}
+            <div className="relative flex-1 overflow-auto bg-slate-950/40 p-4 flex items-center justify-center min-h-[320px] max-h-[65vh]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={activeModalItem.imageUrl}
+                alt={activeModalItem.title}
+                className="max-h-[60vh] w-auto rounded-xl object-contain shadow-2xl"
+              />
+            </div>
+
+            {/* Footer con especificaciones */}
+            <div className="border-t border-white/10 p-5 bg-slate-950/80 backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+              <p className="text-slate-300 font-medium text-center sm:text-left">
+                {activeModalItem.description}
+              </p>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/20 text-emerald-400 px-3 py-1 font-black shrink-0">
+                <CheckCircle2 className="h-3.5 w-3.5" /> 100% Oficial Písale
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
